@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +44,14 @@ public class Contest {
     @OneToMany(mappedBy = "eventContest", orphanRemoval = true)
     @Builder.Default
     private List<Event> events = new ArrayList<>();
+
+    @OneToMany(mappedBy = "contestPrize", orphanRemoval = true)
+    @Builder.Default
+    private List<Prize> prizes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "contestDraw", orphanRemoval = true)
+    @Builder.Default
+    private List<Draw> draws = new ArrayList<>();
 
     public void setMemberContest(Member member){
         this.contestMember = member;

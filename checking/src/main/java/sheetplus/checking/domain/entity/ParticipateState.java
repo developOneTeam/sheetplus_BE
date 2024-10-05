@@ -30,6 +30,12 @@ public class ParticipateState {
     @JoinColumn(name = "event_id")
     private Event participateEvent;
 
+    @OneToOne(mappedBy = "participateStatePrize")
+    private Prize prizeParticipateState;
+
+    @OneToOne(mappedBy = "participateStateDraw")
+    private Draw drawParticipateState;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -42,5 +48,19 @@ public class ParticipateState {
     public void setEventParticipate(Event event){
         this.participateEvent = event;
         participateEvent.getParticipateStates().add(this);
+    }
+
+    public void setPrizeParticipateState(Prize prize){
+        this.prizeParticipateState = prize;
+        if(prizeParticipateState.getParticipateStatePrize() != this){
+            prizeParticipateState.setParticipateStatePrize(this);
+        }
+    }
+
+    public void setDrawParticipateState(Draw draw){
+        this.drawParticipateState = draw;
+        if(drawParticipateState.getParticipateStateDraw() != this){
+            drawParticipateState.setParticipateStateDraw(this);
+        }
     }
 }
