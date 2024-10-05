@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sheetplus.checking.domain.entity.Event;
 import sheetplus.checking.domain.entity.Member;
 import sheetplus.checking.domain.entity.ParticipateState;
+import sheetplus.checking.domain.entity.enums.ContestCategory;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
 import sheetplus.checking.domain.entity.enums.MemberType;
@@ -46,9 +47,12 @@ class ParticipateStateRepositoryTest {
                 .startTime("2024-11-01 09:00")
                 .endTime("2024-11-01 09:30")
                 .speakerName("김승우 총장")
-                .location("대학본관")
+                .building("인문대")
+                .location("101호")
+                .major("SW융합대학")
                 .eventType(EventType.CHECKING)
                 .eventCondition(ContestCondition.BEFORE)
+                .contestCategory(ContestCategory.ONE)
                 .build();
         participateState = ParticipateState.builder()
                 .build();

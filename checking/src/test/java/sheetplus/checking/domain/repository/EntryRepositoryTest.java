@@ -30,8 +30,11 @@ class EntryRepositoryTest {
     void before(){
         entry = Entry.builder()
                 .name("학내순환버스 도착/출발정보 안내 서비스")
-                .location("미디어랩스 4층")
-                .teamName("가지각색")
+                .building("미디어랩스")
+                .location("4층")
+                .teamNumber("IoT-416")
+                .professorName("전창완")
+                .leaderName("황제연")
                 .entryType(EntryType.PRELIMINARY)
                 .build();
         contest = Contest.builder()
