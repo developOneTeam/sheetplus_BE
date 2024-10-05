@@ -26,12 +26,12 @@ public class Member {
     @Column(nullable = false)
     private String major;
 
-    @Column(nullable = false, name = "university_email")
+    @Column(nullable = false)
     private String universityEmail;
 
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "member_type")
+    @Column(nullable = false)
     private MemberType memberType;
 
     @OneToMany(mappedBy = "contestMember", orphanRemoval = true)
