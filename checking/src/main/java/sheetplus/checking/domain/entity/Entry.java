@@ -24,7 +24,16 @@ public class Entry {
     private String location;
 
     @Column(nullable = false)
-    private String teamName;
+    private String building;
+
+    @Column(nullable = false)
+    private String teamNumber;
+
+    @Column(nullable = false)
+    private String professorName;
+
+    @Column(nullable = false)
+    private String leaderName;
 
     @Enumerated(EnumType.STRING)
     private EntryType entryType;

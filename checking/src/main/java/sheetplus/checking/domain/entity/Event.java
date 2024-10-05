@@ -2,10 +2,11 @@ package sheetplus.checking.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sheetplus.checking.domain.entity.enums.ContestCategory;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
 
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +36,25 @@ public class Event {
     private String location;
 
     @Column(nullable = false)
+    private String building;
+
+    @Column(nullable = false)
     private String speakerName;
 
+    @Column(nullable = false)
+    private String major;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EventType eventType;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ContestCondition eventCondition;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ContestCategory contestCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contest_id")
