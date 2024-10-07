@@ -20,6 +20,10 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+
+    @Column(nullable = false)
+    private String name;
+
     @Column(nullable = false, name = "student_id")
     private String studentId;
 
