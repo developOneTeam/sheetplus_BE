@@ -1,0 +1,110 @@
+package sheetplus.checking.domain.service;
+
+
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checking.domain.entity.TemporaryMember;
+import sheetplus.checking.domain.repository.TemporaryMemberRepository;
+import sheetplus.checking.util.MailUtil;
+import software.amazon.awssdk.services.ses.SesClient;
+import software.amazon.awssdk.services.ses.model.*;
+
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class EmailService {
+
+    private final TemporaryMemberRepository temporaryMemberRepository;
+    private final SesClient sesClient;
+    private final MailUtil mailUtil;
+
+    @Value("${email.subject}")
+    private String SUBJECT;
+    @Value("${email.mail-html}")
+    private String MAIL_HTML;
+    @Value("${email.email-domain}")
+    private String EMAIL_DOMAIN;
+    @Value("${email.sender-email")
+    private String SENDER_EMAIL;
+    @Value("${email.encode-type}")
+    private String ENCODE_TYPE;
+
+    private final String SEPARATOR = "@";
+
+    public String sendMail(String toEmail) {
+
+        String code = mailUtil.createCodeUtil();
+
+        SendEmailRequest request = SendEmailRequest.builder()
+                .destination(Destination.builder()
+                        .toAddresses(toEmail)
+                        .build())
+                .message(Message.builder()
+                        .subject(Content.builder()
+                                .data(SUBJECT)
+                                .charset(ENCODE_TYPE)
+                                .build())
+                        .body(Body.builder()
+                                .html(Content.builder()
+                                        .data(mailUtil
+                                                .setContextUtil(code
+                                                        , MAIL_HTML))
+                                        .charset(ENCODE_TYPE)
+                                        .build())
+                                .build())
+                        .build())
+                .source(SENDER_EMAIL)
+                .build();
+
+        sesClient.sendEmail(request);
+        return code;
+    }
+
+    @Transactional
+    public void createTemporaryMember(String email, String code){
+        TemporaryMember temporaryMember = TemporaryMember
+                .builder()
+                .email(email)
+                .code(code)
+                .build();
+        temporaryMemberRepository.save(temporaryMember);
+    }
+
+
+    // email 삭제 대상 없을 경우에 대한 예외처리 구현 예정
+    @Transactional
+    public void deleteTemporaryMember(String email){
+        temporaryMemberRepository.deleteById(email);
+    }
+
+
+    public boolean verifyEmail(String checkEmail, String code) {
+        TemporaryMember temporaryMember =
+                temporaryMemberRepository.findById(checkEmail)
+                .orElse(null);
+
+        if(temporaryMember == null || !temporaryMember.getCode().equals(code)){
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean verifyEmailDomain(String email){
+        String emailDomain = email.
+                substring(email
+                        .lastIndexOf(SEPARATOR)+1);
+
+        if(!emailDomain.equals(EMAIL_DOMAIN)){
+            return false;
+        }
+
+        return true;
+    }
+
+}
