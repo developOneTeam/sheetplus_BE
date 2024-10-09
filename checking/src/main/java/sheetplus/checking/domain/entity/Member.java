@@ -39,12 +39,12 @@ public class Member {
     @Column(nullable = false)
     private MemberType memberType;
 
-    @OneToMany(mappedBy = "contestMember", orphanRemoval = true)
+    @OneToMany(mappedBy = "contestMember")
     @Builder.Default
     private List<Contest> contests = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "participateMember", orphanRemoval = true)
+    @OneToMany(mappedBy = "participateMember")
     @Builder.Default
     private List<ParticipateState> participateStates = new ArrayList<>();
 

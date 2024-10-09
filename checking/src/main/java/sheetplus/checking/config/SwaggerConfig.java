@@ -13,17 +13,30 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI(){
-        return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("JWT"))
-                .components(new Components().addSecuritySchemes("JWT", createAPIKeyScheme()))
+        return new OpenAPI().addSecurityItem(new SecurityRequirement()
+                        .addList("JWT AccessToken")
+                        .addList("JWT RefreshToken"))
+                .components(new Components().addSecuritySchemes("JWT AccessToken", createAccessTokenScheme())
+                        .addSecuritySchemes("JWT RefreshToken", createRefreshTokenScheme()))
                 .info(new Info().title("Chekcing App API")
                         .description("This is How to Use API")
                         .version("v0.1"));
     }
 
 
-    private SecurityScheme createAPIKeyScheme() {
-        return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+    private SecurityScheme createAccessTokenScheme() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
                 .bearerFormat("JWT")
-                .scheme("bearer");
+                .scheme("bearer")
+                .description("JWT Access Token");
+    }
+
+    private SecurityScheme createRefreshTokenScheme() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.HEADER)
+                .name("refresh-token")
+                .description("JWT Refresh Token");
     }
 }

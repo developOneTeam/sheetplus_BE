@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checking.domain.dto.LoginDto;
+import sheetplus.checking.domain.dto.MemberInfoDto;
 import sheetplus.checking.domain.dto.TokenDto;
 import sheetplus.checking.config.security.CustomUserDetailsService;
 import sheetplus.checking.domain.entity.Member;
@@ -29,10 +30,6 @@ public class TokenService {
      */
     @Transactional
     public TokenDto refreshTokens(String refreshToken) {
-        if (!jwtUtil.validateToken(refreshToken)) {
-            log.info("유효하지 않은 Refresh Token입니다.");
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
-        }
 
         Long memberId = jwtUtil.getMemberId(refreshToken);
         Token storedToken = refreshTokenRepository.findById(memberId).orElse(null);
@@ -46,17 +43,30 @@ public class TokenService {
 
         String newAccessToken = jwtUtil.createAccessToken(loginDto);
         String newRefreshToken = jwtUtil.createRefreshToken(loginDto);
-
+        log.info("새로운 access token: {}, 새로운 refresh token: {}",
+                newAccessToken, newRefreshToken);
 
         refreshTokenRepository.delete(storedToken);
         refreshTokenRepository.save(new Token(memberId, newRefreshToken));
         Member member = memberRepository.findById(memberId).orElse(null);
 
+        if(member == null){
+            //예외로직 추가 필요
+            return null;
+        }
+
 
         return TokenDto.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
-                .memberInfo(member)
+                .memberInfo(MemberInfoDto.builder()
+                        .id(member.getId())
+                        .name(member.getName())
+                        .major(member.getMajor())
+                        .studentId(member.getStudentId())
+                        .email(member.getUniversityEmail())
+                        .memberType(member.getMemberType())
+                        .build())
                 .build();
     }
 
