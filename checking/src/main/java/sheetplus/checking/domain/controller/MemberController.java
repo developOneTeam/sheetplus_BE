@@ -18,7 +18,7 @@ public class MemberController {
     private final MemberCRUDService memberCRUDService;
     private final AuthService authService;
 
-    @PostMapping("/register")
+    @PostMapping("public/register")
     public ResponseEntity<TokenDto> createMember(
             @RequestBody MemberRequestDto memberRequestDto){
         Member member = memberCRUDService.createMember(memberRequestDto);
@@ -36,7 +36,7 @@ public class MemberController {
 
     @PatchMapping("private/update")
     public ResponseEntity<MemberUpdateRequestDto> updateMember(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody MemberUpdateRequestDto memberUpdateRequestDto
     ){
 
@@ -51,7 +51,7 @@ public class MemberController {
 
     @DeleteMapping("private/delete")
     public ResponseEntity<String> deleteMember(
-            @RequestHeader("Authorization") String token){
+            @RequestHeader(value = "Authorization", required = false) String token){
         memberCRUDService.deleteMember(token.replace("Bearer ", ""));
         return ResponseEntity.ok()
                 .body("삭제 완료");
