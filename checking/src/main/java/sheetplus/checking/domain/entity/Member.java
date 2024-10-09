@@ -2,6 +2,7 @@ package sheetplus.checking.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sheetplus.checking.domain.dto.MemberUpdateRequestDto;
 import sheetplus.checking.domain.entity.enums.MemberType;
 
 import java.util.ArrayList;
@@ -48,5 +49,10 @@ public class Member {
     private List<ParticipateState> participateStates = new ArrayList<>();
 
 
+    public void memberInfoUpdate(MemberUpdateRequestDto memberUpdateRequestDto){
+        this.name = memberUpdateRequestDto.getName();
+        this.major = memberUpdateRequestDto.getMajor();
+        this.studentId = memberUpdateRequestDto.getStudentId();
+    }
 
 }
