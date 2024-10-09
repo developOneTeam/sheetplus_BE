@@ -7,7 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import sheetplus.checking.domain.dto.MemberInfoDto;
+import sheetplus.checking.domain.dto.LoginDto;
 
 
 import java.security.Key;
@@ -33,19 +33,19 @@ public class JwtUtil {
         this.refreshTokenExpire = refreshTokenExpireTime;
     }
 
-    public String createAccessToken(MemberInfoDto memberInfoDto){
-        return createToken(memberInfoDto, accessTokenExpire);
+    public String createAccessToken(LoginDto loginDto){
+        return createToken(loginDto, accessTokenExpire);
     }
 
-    public String createRefreshToken(MemberInfoDto memberInfoDto){
-        return createToken(memberInfoDto, refreshTokenExpire);
+    public String createRefreshToken(LoginDto loginDto){
+        return createToken(loginDto, refreshTokenExpire);
     }
 
-    private String createToken(MemberInfoDto memberInfoDto, long expireTime) {
+    private String createToken(LoginDto loginDto, long expireTime) {
         Claims claims = Jwts.claims();
-        claims.put("memberId", memberInfoDto.getId());
-        claims.put("email", memberInfoDto.getEmail());
-        claims.put("memberType", memberInfoDto.getMemberType());
+        claims.put("memberId", loginDto.getId());
+        claims.put("email", loginDto.getEmail());
+        claims.put("memberType", loginDto.getMemberType());
 
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime tokenValidity = now.plusSeconds(expireTime);

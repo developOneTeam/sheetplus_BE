@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sheetplus.checking.domain.dto.MemberInfoDto;
+import sheetplus.checking.domain.dto.LoginDto;
 import sheetplus.checking.domain.dto.TokenDto;
 import sheetplus.checking.config.security.CustomUserDetailsService;
+import sheetplus.checking.domain.entity.Member;
 import sheetplus.checking.domain.entity.Token;
+import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.TokenRepository;
 import sheetplus.checking.util.JwtUtil;
 
@@ -19,6 +21,7 @@ public class TokenService {
     private final JwtUtil jwtUtil;
     private final TokenRepository refreshTokenRepository;
     private final CustomUserDetailsService customUserDetailsService;
+    private final MemberRepository memberRepository;
 
 
     /**
@@ -38,20 +41,22 @@ public class TokenService {
             throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
         }
 
-        MemberInfoDto memberInfoDto = customUserDetailsService.loadUserByMemberId(memberId);
+        LoginDto loginDto = customUserDetailsService.loadUserByMemberId(memberId);
 
 
-        String newAccessToken = jwtUtil.createAccessToken(memberInfoDto);
-        String newRefreshToken = jwtUtil.createRefreshToken(memberInfoDto);
+        String newAccessToken = jwtUtil.createAccessToken(loginDto);
+        String newRefreshToken = jwtUtil.createRefreshToken(loginDto);
 
 
         refreshTokenRepository.delete(storedToken);
         refreshTokenRepository.save(new Token(memberId, newRefreshToken));
+        Member member = memberRepository.findById(memberId).orElse(null);
+
 
         return TokenDto.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
-                .memberInfo(memberInfoDto)
+                .memberInfo(member)
                 .build();
     }
 

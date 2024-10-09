@@ -1,6 +1,7 @@
 package sheetplus.checking.domain.dto;
 
 import lombok.*;
+import sheetplus.checking.domain.entity.Member;
 
 @Getter @Setter
 @Builder @AllArgsConstructor
@@ -9,6 +10,6 @@ public class TokenDto {
 
     private String accessToken;
     private String refreshToken;
-    private MemberInfoDto memberInfo;
+    private Member memberInfo;
 
 }
