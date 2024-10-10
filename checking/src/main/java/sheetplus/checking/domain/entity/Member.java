@@ -39,9 +39,9 @@ public class Member {
     @Column(nullable = false)
     private MemberType memberType;
 
-    @OneToMany(mappedBy = "contestMember")
+    @OneToMany(mappedBy = "memberParticipateContestState")
     @Builder.Default
-    private List<Contest> contests = new ArrayList<>();
+    private List<ParticipateContestState> memberParticipateContestStates = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "participateMember")
