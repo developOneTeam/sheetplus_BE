@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Event;
-import sheetplus.checking.domain.entity.enums.ContestCategory;
+import sheetplus.checking.domain.entity.enums.EventCategory;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
 
@@ -45,7 +45,7 @@ class EventRepositoryTest {
                 .major("SW융합대학")
                 .eventType(EventType.CHECKING)
                 .eventCondition(ContestCondition.BEFORE)
-                .contestCategory(ContestCategory.ONE)
+                .eventCategory(EventCategory.ONE)
                 .build();
     }
 

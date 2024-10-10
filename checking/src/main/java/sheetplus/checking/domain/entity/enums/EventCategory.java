@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ContestCategory {
+public enum EventCategory {
 
     ONE("개회식"),
     TWO("프로젝트 발표"),
