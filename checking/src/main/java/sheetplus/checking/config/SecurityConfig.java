@@ -52,7 +52,7 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         http.addFilterBefore(new JwtAuthFilter(customUserDetailsService,
-                jwtUtil, tokenService), UsernamePasswordAuthenticationFilter.class);
+                jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         // 권한 규칙 작성
         http.authorizeHttpRequests(authorize -> authorize
