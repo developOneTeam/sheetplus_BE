@@ -46,9 +46,14 @@ public class TokenService {
         log.info("새로운 access token: {}, 새로운 refresh token: {}",
                 newAccessToken, newRefreshToken);
 
-        refreshTokenRepository.delete(storedToken);
-        refreshTokenRepository.save(new Token(memberId, newRefreshToken));
-        Member member = memberRepository.findById(memberId).orElse(null);
+        refreshTokenRepository.findById(memberId)
+                .ifPresent(refreshTokenRepository::delete);
+        refreshTokenRepository.save(Token.builder()
+                        .id(memberId)
+                        .refreshToken(newRefreshToken)
+                        .build());
+        Member member = memberRepository.findById(memberId)
+                .orElse(null);
 
         if(member == null){
             //예외로직 추가 필요
