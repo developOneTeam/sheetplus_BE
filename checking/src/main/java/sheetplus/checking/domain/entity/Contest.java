@@ -3,6 +3,7 @@ package sheetplus.checking.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sheetplus.checking.domain.dto.ContestRequestDto;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 
 import java.util.ArrayList;
@@ -33,9 +34,9 @@ public class Contest {
     @Column(nullable = false)
     private ContestCondition condition;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member contestMember;
+    @OneToMany(mappedBy = "contestParticipateContestState")
+    @Builder.Default
+    private List<ParticipateContestState> participateContestStates = new ArrayList<>();
 
     @OneToMany(mappedBy = "entryContest", orphanRemoval = true)
     @Builder.Default
@@ -53,9 +54,12 @@ public class Contest {
     @Builder.Default
     private List<Draw> draws = new ArrayList<>();
 
-    public void setMemberContest(Member member){
-        this.contestMember = member;
-        contestMember.getContests().add(this);
+
+    public void updateContest(ContestRequestDto contestRequestDto){
+        this.name = contestRequestDto.getName();
+        this.startDate = contestRequestDto.getStartDateTime();
+        this.endDate = contestRequestDto.getEndDateTime();
+        this.condition = contestRequestDto.getCondition();
     }
 
 }

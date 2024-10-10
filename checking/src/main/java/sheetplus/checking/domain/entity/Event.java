@@ -2,7 +2,8 @@ package sheetplus.checking.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sheetplus.checking.domain.entity.enums.ContestCategory;
+import sheetplus.checking.domain.dto.EventRequestDto;
+import sheetplus.checking.domain.entity.enums.EventCategory;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
 
@@ -54,7 +55,7 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ContestCategory contestCategory;
+    private EventCategory eventCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contest_id")
@@ -67,6 +68,20 @@ public class Event {
     public void setContestEvent(Contest contest){
         this.eventContest = contest;
         eventContest.getEvents().add(this);
+    }
+
+
+    public void updateEvent(EventRequestDto eventRequestDto){
+        this.name = eventRequestDto.getName();
+        this.startTime = eventRequestDto.getStartTime();
+        this.endTime = eventRequestDto.getEndTime();
+        this.location = eventRequestDto.getLocation();
+        this.building = eventRequestDto.getBuilding();
+        this.speakerName = eventRequestDto.getSpeakerName();
+        this.major = eventRequestDto.getMajor();
+        this.eventType = eventRequestDto.getEventType();
+        this.eventCondition = eventRequestDto.getCondition();
+        this.eventCategory = eventRequestDto.getCategory();
     }
 
 }
