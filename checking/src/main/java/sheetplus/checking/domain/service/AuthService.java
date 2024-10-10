@@ -57,4 +57,9 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
+    public TokenDto refreshTokens(String refreshToken){
+        return refreshTokenService.refreshTokens(refreshToken);
+    }
+
 }
