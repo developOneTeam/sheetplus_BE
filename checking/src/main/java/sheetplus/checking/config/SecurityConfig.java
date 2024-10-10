@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import sheetplus.checking.config.filter.JwtAuthFilter;
 import sheetplus.checking.config.security.CustomUserDetailsService;
-import sheetplus.checking.domain.service.TokenService;
 import sheetplus.checking.util.JwtUtil;
 
 @Configuration
@@ -27,7 +26,6 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
-    private final TokenService tokenService;
 
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/member/**", "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
@@ -57,9 +55,9 @@ public class SecurityConfig {
         // 권한 규칙 작성
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                .requestMatchers("/student/**").hasRole("STUDENT")
-                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
-                .requestMatchers("/super/admin/**").hasRole("SUPER_ADMIN")
+                .requestMatchers("/private/student/**").hasAnyRole("STUDENT", "ADMIN", "SUPER_ADMIN")
+                .requestMatchers("private/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                .requestMatchers("/private/super/admin/**").hasRole("SUPER_ADMIN")
                 .requestMatchers("/private/**").authenticated()
         );
 
