@@ -86,8 +86,6 @@ public class QrcodeService {
                 .studentName(member.getName())
                 .studentId(member.getStudentId())
                 .eventName(event.getName())
-                .participateCreatedTime(participateContestState.getCreatedAt())
-                .participateUpdatedTime(participateContestState.getUpdatedAt())
                 .build();
     }
 
