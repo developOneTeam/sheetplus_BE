@@ -23,9 +23,6 @@ class PrizeRepositoryTest {
     @Autowired
     ContestRepository contestRepository;
 
-    @Autowired
-    ParticipateStateRepository participateStateRepository;
-
     Prize prize;
     Contest contest;
 
