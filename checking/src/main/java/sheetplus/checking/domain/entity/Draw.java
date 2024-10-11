@@ -24,20 +24,9 @@ public class Draw {
     @Column(nullable = false)
     private ReceiveCondition receiveCondition;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "participate_state_id")
-    private ParticipateState participateStateDraw;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contest_id")
     private Contest contestDraw;
-
-    public void setParticipateStateDraw(ParticipateState participateState) {
-        this.participateStateDraw = participateState;
-        if(participateStateDraw.getDrawParticipateState() != this){
-            participateStateDraw.setDrawParticipateState(this);
-        }
-    }
 
     public void setContestDraw(Contest contestDraw) {
         this.contestDraw = contestDraw;

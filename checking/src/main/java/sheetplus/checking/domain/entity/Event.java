@@ -61,9 +61,6 @@ public class Event {
     @JoinColumn(name = "contest_id")
     private Contest eventContest;
 
-    @OneToMany(mappedBy = "participateEvent", orphanRemoval = true)
-    @Builder.Default
-    private List<ParticipateState> participateStates = new ArrayList<>();
 
     public void setContestEvent(Contest contest){
         this.eventContest = contest;

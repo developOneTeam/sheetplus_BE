@@ -44,11 +44,6 @@ public class Member {
     private List<ParticipateContestState> memberParticipateContestStates = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "participateMember")
-    @Builder.Default
-    private List<ParticipateState> participateStates = new ArrayList<>();
-
-
     public void memberInfoUpdate(MemberUpdateRequestDto memberUpdateRequestDto){
         this.name = memberUpdateRequestDto.getName();
         this.major = memberUpdateRequestDto.getMajor();
