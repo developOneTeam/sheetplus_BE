@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -27,7 +29,7 @@ public class CryptoUtil {
 
     public Long decrypt(String id){
         try{
-            byte[] combined = Base64.getDecoder().decode(id);
+            byte[] combined = Base64.getDecoder().decode(URLDecoder.decode(id, StandardCharsets.UTF_8));
             byte[] iv = Arrays.copyOfRange(combined, 0, 16);
             byte[] encryptedBytes = Arrays.copyOfRange(combined, 16, combined.length);
             log.info("IV length: {}", iv.length);
@@ -69,7 +71,7 @@ public class CryptoUtil {
             System.arraycopy(iv, 0, combined, 0, iv.length);
             System.arraycopy(encrypted, 0, combined, iv.length, encrypted.length);
 
-            return Base64.getEncoder().encodeToString(combined);
+            return URLEncoder.encode(Base64.getEncoder().encodeToString(combined), StandardCharsets.UTF_8);
         }catch (Exception e){
             log.error("Encryption failed: ", e);
         }
