@@ -2,6 +2,7 @@ package sheetplus.checking.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sheetplus.checking.domain.dto.EntryRequestDto;
 import sheetplus.checking.domain.entity.enums.EntryType;
 
 @Entity
@@ -45,6 +46,16 @@ public class Entry {
     public void setContestEntry(Contest contest){
         this.entryContest = contest;
         entryContest.getEntries().add(this);
+    }
+
+    public void updateEntry(EntryRequestDto entryRequestDto){
+        this.name = entryRequestDto.getName();
+        this.location = entryRequestDto.getLocation();
+        this.building = entryRequestDto.getBuilding();
+        this.teamNumber = entryRequestDto.getTeamNumber();
+        this.professorName = entryRequestDto.getProfessorName();
+        this.leaderName = entryRequestDto.getLeaderName();
+        this.entryType = entryRequestDto.getEntryType();
     }
 
 }
