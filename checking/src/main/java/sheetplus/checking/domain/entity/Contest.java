@@ -46,11 +46,7 @@ public class Contest {
     @Builder.Default
     private List<Event> events = new ArrayList<>();
 
-    @OneToMany(mappedBy = "contestPrize", orphanRemoval = true)
-    @Builder.Default
-    private List<Prize> prizes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "contestDraw", orphanRemoval = true)
+    @OneToMany(mappedBy = "drawContest", orphanRemoval = true)
     @Builder.Default
     private List<Draw> draws = new ArrayList<>();
 
