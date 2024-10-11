@@ -6,6 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import sheetplus.checking.domain.entity.enums.EventCategory;
+import sheetplus.checking.domain.entity.enums.MeritType;
+import sheetplus.checking.domain.entity.enums.ReceiveCondition;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -35,7 +37,15 @@ public class ParticipateContestState {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReceiveCondition receiveCondition;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MeritType meritType;
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member memberParticipateContestState;
 
@@ -55,7 +65,9 @@ public class ParticipateContestState {
 
     public void setMemberParticipateContestStates(Member member){
         this.memberParticipateContestState = member;
-        member.getMemberParticipateContestStates().add(this);
+        if(this.memberParticipateContestState.getMemberParticipateContestStates() != this){
+            member.setMemberParticipateContestStates(this);
+        }
     }
 
     public void setContestParticipateContestStates(Contest contest){
