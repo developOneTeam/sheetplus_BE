@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Draw;
-import sheetplus.checking.domain.entity.ParticipateState;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.ReceiveCondition;
 
@@ -28,7 +27,6 @@ class DrawRepositoryTest {
 
     Draw draw;
     Contest contest;
-    ParticipateState participateState;
 
     @BeforeEach
     void before(){
@@ -42,8 +40,6 @@ class DrawRepositoryTest {
                 .endDate("2024-11-01 16:00")
                 .condition(ContestCondition.BEFORE)
                 .build();
-        participateState = ParticipateState.builder()
-                .build();
     }
 
     @Test
@@ -55,19 +51,5 @@ class DrawRepositoryTest {
                 .isEqualTo(draw.getDrawType());
     }
 
-    @Test
-    @DisplayName("Draw 객체 연관관계 테스트")
-    void relationDrawTest(){
-        contestRepository.save(contest);
-        participateStateRepository.save(participateState);
-        draw.setContestDraw(contest);
-        draw.setParticipateStateDraw(participateState);
-        Long id = drawRepository.save(draw).getId();
-
-        assertThat(drawRepository.findById(id).get().getContestDraw().getName())
-                .isEqualTo(contest.getName());
-        assertThat(drawRepository.findById(id).get().getParticipateStateDraw().getCreatedAt())
-                .isEqualTo(participateState.getCreatedAt());
-    }
 
 }

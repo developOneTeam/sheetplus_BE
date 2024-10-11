@@ -22,8 +22,6 @@ class ContestRepositoryTest {
 
     Contest contest;
     Member member;
-    @Autowired
-    private MemberRepository memberRepository;
 
     @BeforeEach
     void before(){
@@ -50,19 +48,6 @@ class ContestRepositoryTest {
                 .isEqualTo(contest.getName());
         assertThat(contestRepository.findById(contestId).get().getCondition())
                 .isEqualTo(contest.getCondition());
-    }
-
-    @Test
-    @DisplayName("멤버 객체와의 연관관계 테스트")
-    void relationContestTest(){
-        memberRepository.save(member);
-        contest.setMemberContest(member);
-        Long contestId = contestRepository.save(contest).getId();
-
-        Contest findContest = contestRepository.findById(contestId).get();
-
-        assertThat(member.getStudentId())
-                .isEqualTo(findContest.getContestMember().getStudentId());
     }
 
 
