@@ -5,7 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import sheetplus.checking.domain.entity.enums.EventType;
+import sheetplus.checking.domain.entity.enums.EventCategory;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -25,6 +25,8 @@ public class ParticipateContestState {
     @Column(name = "participate_contest_state_id")
     private Long id;
 
+    @Column(nullable = false)
+    private Integer eventsCount;
 
     @CreatedDate
     @Column(updatable = false)
@@ -47,7 +49,8 @@ public class ParticipateContestState {
             joinColumns = @JoinColumn(name = "participate_contest_state_id")
     )
     @Builder.Default
-    private Set<EventType> eventTypeSet = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private Set<EventCategory> eventTypeSet = new HashSet<>();
 
 
     public void setMemberParticipateContestStates(Member member){
@@ -58,6 +61,10 @@ public class ParticipateContestState {
     public void setContestParticipateContestStates(Contest contest){
         this.contestParticipateContestState = contest;
         contest.getParticipateContestStates().add(this);
+    }
+
+    public void addCounts(){
+        this.eventsCount++;
     }
 
 }
