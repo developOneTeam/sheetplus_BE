@@ -26,11 +26,23 @@ public class Draw {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contest_id")
-    private Contest contestDraw;
+    private Contest drawContest;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member drawMember;
 
     public void setContestDraw(Contest contestDraw) {
-        this.contestDraw = contestDraw;
-        contestDraw.getDraws().add(this);
+        this.drawContest = contestDraw;
+        drawContest.getDraws().add(this);
+    }
+
+    public void setMemberDraw(Member member){
+        this.drawMember = member;
+        if(drawMember.getMemberDraw() != this){
+            member.setDrawMember(this);
+        }
+
     }
 
 }
