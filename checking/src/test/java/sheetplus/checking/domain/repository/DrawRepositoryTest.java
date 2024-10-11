@@ -22,9 +22,6 @@ class DrawRepositoryTest {
     @Autowired
     ContestRepository contestRepository;
 
-    @Autowired
-    ParticipateStateRepository participateStateRepository;
-
     Draw draw;
     Contest contest;
 
