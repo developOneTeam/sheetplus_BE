@@ -13,6 +13,8 @@ import sheetplus.checking.domain.entity.Member;
 import sheetplus.checking.domain.entity.ParticipateContestState;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
+import sheetplus.checking.domain.entity.enums.MeritType;
+import sheetplus.checking.domain.entity.enums.ReceiveCondition;
 import sheetplus.checking.domain.repository.EventRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.ParticipateContestStateRepository;
@@ -66,6 +68,8 @@ public class QrcodeService {
         if(participateContestStateList.isEmpty()){
             participateContestState = ParticipateContestState.builder()
                     .eventsCount(1)
+                    .meritType(MeritType.NON_TARGET)
+                    .receiveCondition(ReceiveCondition.NOT_RECEIVED)
                     .build();
             participateContestState.setContestParticipateContestStates(contest);
             participateContestState.setMemberParticipateContestStates(member);
