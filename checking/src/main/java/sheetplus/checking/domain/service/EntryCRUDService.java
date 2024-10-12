@@ -28,6 +28,7 @@ public class EntryCRUDService {
                 .building(entryRequestDto.getBuilding())
                 .teamNumber(entryRequestDto.getTeamNumber())
                 .professorName(entryRequestDto.getProfessorName())
+                .major(entryRequestDto.getMajor())
                 .leaderName(entryRequestDto.getLeaderName())
                 .entryType(entryRequestDto.getEntryType())
                 .build();
@@ -43,6 +44,7 @@ public class EntryCRUDService {
                 .teamNumber(entry.getTeamNumber())
                 .professorName(entry.getProfessorName())
                 .leaderName(entry.getLeaderName())
+                .major(entry.getMajor())
                 .entryType(entry.getEntryType().getMessage())
                 .build();
     }
