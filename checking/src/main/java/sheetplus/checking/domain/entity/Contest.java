@@ -6,6 +6,7 @@ import lombok.*;
 import sheetplus.checking.domain.dto.ContestRequestDto;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +27,9 @@ public class Contest {
     private String name;
 
     @Column(nullable = false)
-    private String startDate;
+    private LocalDateTime startDate;
     @Column(nullable = false)
-    private String endDate;
+    private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
