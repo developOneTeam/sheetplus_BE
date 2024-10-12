@@ -57,15 +57,11 @@ public class QrcodeService {
             throw new RuntimeException("현재 진행중인 행사가 아닙니다.");
         }
 
+        ParticipateContestState participateContestState = participateContestStateRepository
+                .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
+                        member.getId(), contest.getId()).orElse(null);
 
-        List<ParticipateContestState> participateContestStateList =
-                participateContestStateRepository
-                        .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
-                                member.getId(), contest.getId());
-
-        ParticipateContestState participateContestState;
-
-        if(participateContestStateList.isEmpty()){
+        if(participateContestState == null){
             participateContestState = ParticipateContestState.builder()
                     .eventsCount(1)
                     .meritType(MeritType.NON_TARGET)
@@ -77,7 +73,6 @@ public class QrcodeService {
 
             participateContestStateRepository.save(participateContestState);
         }else{
-            participateContestState = participateContestStateList.getFirst();
             if(participateContestState.getEventTypeSet().contains(event.getEventCategory())){
                throw new RuntimeException("이미 참여한 행사입니다.");
             }
