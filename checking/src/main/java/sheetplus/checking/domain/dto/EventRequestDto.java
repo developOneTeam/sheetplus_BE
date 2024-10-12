@@ -5,14 +5,16 @@ import sheetplus.checking.domain.entity.enums.EventCategory;
 import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 @Builder
 public class EventRequestDto {
 
     private String name;
-    private String startTime;
-    private String endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String location;
     private String building;
     private String speakerName;

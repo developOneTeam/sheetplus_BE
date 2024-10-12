@@ -13,6 +13,7 @@ public class EntryRequestDto {
     private String building;
     private String teamNumber;
     private String professorName;
+    private String major;
     private String leaderName;
     private EntryType entryType;
 

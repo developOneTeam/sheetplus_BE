@@ -31,6 +31,9 @@ public class Entry {
     private String teamNumber;
 
     @Column(nullable = false)
+    private String major;
+
+    @Column(nullable = false)
     private String professorName;
 
     @Column(nullable = false)

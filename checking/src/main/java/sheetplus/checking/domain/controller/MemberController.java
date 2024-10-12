@@ -9,6 +9,7 @@ import sheetplus.checking.domain.dto.MemberUpdateRequestDto;
 import sheetplus.checking.domain.dto.TokenDto;
 import sheetplus.checking.domain.entity.Member;
 import sheetplus.checking.domain.service.AuthService;
+import sheetplus.checking.domain.service.CommonPageService;
 import sheetplus.checking.domain.service.MemberCRUDService;
 
 @RestController

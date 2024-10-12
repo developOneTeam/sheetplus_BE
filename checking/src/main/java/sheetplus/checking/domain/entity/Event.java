@@ -8,8 +8,7 @@ import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,10 +27,10 @@ public class Event {
     private String name;
 
     @Column(nullable = false)
-    private String startTime;
+    private LocalDateTime startTime;
 
     @Column(nullable = false)
-    private String endTime;
+    private LocalDateTime endTime;
 
     @Column(nullable = false)
     private String location;
