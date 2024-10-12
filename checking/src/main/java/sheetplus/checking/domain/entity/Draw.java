@@ -45,4 +45,8 @@ public class Draw {
 
     }
 
+    public void setReceiveCondition(ReceiveCondition receiveCondition) {
+        this.receiveCondition = receiveCondition;
+    }
+
 }
