@@ -12,6 +12,7 @@ public class EntryResponseDto {
     private String location;
     private String building;
     private String teamNumber;
+    private String major;
     private String professorName;
     private String leaderName;
     private String entryType;
