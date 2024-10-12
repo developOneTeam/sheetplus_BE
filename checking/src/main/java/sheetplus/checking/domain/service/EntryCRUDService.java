@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checking.domain.dto.EntryRequestDto;
 import sheetplus.checking.domain.dto.EntryResponseDto;
+import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Entry;
+import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.EntryRepository;
 
 @Service
@@ -15,10 +17,11 @@ import sheetplus.checking.domain.repository.EntryRepository;
 public class EntryCRUDService {
 
     private final EntryRepository entryRepository;
+    private final ContestRepository contestRepository;
 
 
     @Transactional
-    public EntryResponseDto createEntry(EntryRequestDto entryRequestDto){
+    public EntryResponseDto createEntry(Long contestId, EntryRequestDto entryRequestDto){
         Entry entry = Entry.builder()
                 .name(entryRequestDto.getName())
                 .location(entryRequestDto.getLocation())
@@ -28,6 +31,8 @@ public class EntryCRUDService {
                 .leaderName(entryRequestDto.getLeaderName())
                 .entryType(entryRequestDto.getEntryType())
                 .build();
+        Contest contest = contestRepository.findById(contestId).orElse(null);
+        entry.setContestEntry(contest);
         Long id = entryRepository.save(entry).getId();
 
         return EntryResponseDto.builder()

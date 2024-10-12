@@ -15,12 +15,13 @@ public class EntryController {
 
     private final EntryCRUDService entryCRUDService;
 
-    @PostMapping("private/admin/entry/create")
+    @PostMapping("private/admin/contest/{contest}/entry/create")
     public ResponseEntity<EntryResponseDto> createEntry(
+            @PathVariable(name = "contest") Long contestId,
             @RequestBody EntryRequestDto entryRequestDto) {
 
         return ResponseEntity.ok()
-                .body(entryCRUDService.createEntry(entryRequestDto));
+                .body(entryCRUDService.createEntry(contestId, entryRequestDto));
     }
 
 
@@ -33,7 +34,7 @@ public class EntryController {
                 .body(entryCRUDService.updateEntry(entryId, entryRequestDto));
     }
 
-    @DeleteMapping("private/admin/entry{entry}/delete")
+    @DeleteMapping("private/admin/entry/{entry}/delete")
     public ResponseEntity<String> deleteEntry(
             @PathVariable(name = "entry") Long entryId
     ){
