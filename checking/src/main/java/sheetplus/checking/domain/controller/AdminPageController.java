@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import sheetplus.checking.domain.dto.AdminHomeResponseDto;
 import sheetplus.checking.domain.dto.MemberInfoDto;
 import sheetplus.checking.domain.service.AdminPageService;
+import sheetplus.checking.response.Api;
 
 import java.util.List;
 
@@ -20,27 +21,24 @@ public class AdminPageController {
     private final AdminPageService adminPageService;
 
     @GetMapping("/{contest}/home")
-    public ResponseEntity<AdminHomeResponseDto> readAdminHome(
+    public Api<AdminHomeResponseDto> readAdminHome(
             @PathVariable(name = "contest") Long contestId){
         AdminHomeResponseDto adminHomeResponseDto =
                 adminPageService.adminHomeRead(contestId);
-        return ResponseEntity.ok()
-                .body(adminHomeResponseDto);
+        return Api.READ(adminHomeResponseDto);
     }
 
     @GetMapping("/{contest}/eventManage/draw/member/list")
-    public ResponseEntity<List<MemberInfoDto>> readDrawMemberList(
+    public Api<List<MemberInfoDto>> readDrawMemberList(
             @PathVariable("contest") Long contestId){
-        return ResponseEntity.ok()
-                .body(adminPageService.readDrawMemberList(contestId));
+        return Api.READ(adminPageService.readDrawMemberList(contestId));
     }
 
 
     @GetMapping("/{contest}/eventManage/prize/member/list")
-    public ResponseEntity<List<MemberInfoDto>> readPrizeMemberList(
+    public Api<List<MemberInfoDto>> readPrizeMemberList(
             @PathVariable("contest") Long contestId){
-        return ResponseEntity.ok()
-                .body(adminPageService.readPrizeMemberList(contestId));
+        return Api.READ(adminPageService.readPrizeMemberList(contestId));
     }
 
 }

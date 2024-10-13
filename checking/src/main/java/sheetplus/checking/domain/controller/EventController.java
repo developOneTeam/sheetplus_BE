@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import sheetplus.checking.domain.dto.EventRequestDto;
 import sheetplus.checking.domain.dto.EventResponseDto;
 import sheetplus.checking.domain.service.EventCRUDService;
+import sheetplus.checking.response.Api;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,37 +19,34 @@ public class EventController {
     private final EventCRUDService eventCRUDService;
 
     @PostMapping("admin/contest/{contest}/event/create")
-    public ResponseEntity<EventResponseDto> createEvent(
+    public Api<EventResponseDto> createEvent(
             @PathVariable(name = "contest") Long id,
             @RequestBody EventRequestDto eventRequest) {
         EventResponseDto eventResponseDto
                 = eventCRUDService.createEvent(id, eventRequest);
 
 
-        return ResponseEntity.ok()
-                .body(eventResponseDto);
+        return Api.CREATED(eventResponseDto);
     }
 
     @PatchMapping("admin/event/{event}/update")
-    public ResponseEntity<EventResponseDto> updateEvent(
+    public Api<EventResponseDto> updateEvent(
             @PathVariable(name = "event") Long id,
             @RequestBody EventRequestDto eventRequestDto){
         EventResponseDto eventResponseDto
                 = eventCRUDService.updateEvent(id, eventRequestDto);
 
-        return ResponseEntity.ok()
-                .body(eventResponseDto);
+        return Api.UPDATED(eventResponseDto);
     }
 
 
     @DeleteMapping("admin/event/{event}/delete")
-    public ResponseEntity<String> deleteEvent(
+    public Api<String> deleteEvent(
             @PathVariable(name = "event") Long id
     ){
         eventCRUDService.deleteEvent(id);
 
-        return ResponseEntity.ok()
-                .body("삭제 완료");
+        return Api.DELETE("삭제 완료");
     }
 
 }

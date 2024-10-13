@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sheetplus.checking.domain.dto.EntryRequestDto;
 import sheetplus.checking.domain.dto.EntryResponseDto;
 import sheetplus.checking.domain.service.EntryCRUDService;
+import sheetplus.checking.response.Api;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,31 +17,28 @@ public class EntryController {
     private final EntryCRUDService entryCRUDService;
 
     @PostMapping("private/admin/contest/{contest}/entry/create")
-    public ResponseEntity<EntryResponseDto> createEntry(
+    public Api<EntryResponseDto> createEntry(
             @PathVariable(name = "contest") Long contestId,
             @RequestBody EntryRequestDto entryRequestDto) {
 
-        return ResponseEntity.ok()
-                .body(entryCRUDService.createEntry(contestId, entryRequestDto));
+        return Api.CREATED(entryCRUDService.createEntry(contestId, entryRequestDto));
     }
 
 
     @PatchMapping("private/admin/entry/{entry}/update")
-    public ResponseEntity<EntryResponseDto> updateEntry(
+    public Api<EntryResponseDto> updateEntry(
             @PathVariable(name = "entry") Long entryId,
             @RequestBody EntryRequestDto entryRequestDto
     ){
-        return ResponseEntity.ok()
-                .body(entryCRUDService.updateEntry(entryId, entryRequestDto));
+        return Api.UPDATED(entryCRUDService.updateEntry(entryId, entryRequestDto));
     }
 
     @DeleteMapping("private/admin/entry/{entry}/delete")
-    public ResponseEntity<String> deleteEntry(
+    public Api<String> deleteEntry(
             @PathVariable(name = "entry") Long entryId
     ){
         entryCRUDService.deleteEntry(entryId);
-        return ResponseEntity.ok()
-                .body("삭제 완료");
+        return Api.DELETE("삭제 완료");
     }
 
 }
