@@ -2,7 +2,7 @@ package sheetplus.checking.domain.dto;
 
 import lombok.*;
 import sheetplus.checking.domain.entity.enums.EventCategory;
-import sheetplus.checking.domain.entity.enums.ContestCondition;
+import sheetplus.checking.domain.entity.enums.ContestCons;
 import sheetplus.checking.domain.entity.enums.EventType;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ public class EventRequestDto {
     private String building;
     private String speakerName;
     private String major;
-    private ContestCondition condition;
+    private ContestCons condition;
     private EventType eventType;
     private EventCategory category;
 

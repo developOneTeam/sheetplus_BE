@@ -10,18 +10,16 @@ import sheetplus.checking.domain.dto.QrcodeResponseDto;
 import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Event;
 import sheetplus.checking.domain.entity.Member;
-import sheetplus.checking.domain.entity.ParticipateContestState;
-import sheetplus.checking.domain.entity.enums.ContestCondition;
+import sheetplus.checking.domain.entity.ParticipateContest;
+import sheetplus.checking.domain.entity.enums.ContestCons;
 import sheetplus.checking.domain.entity.enums.EventType;
 import sheetplus.checking.domain.entity.enums.MeritType;
-import sheetplus.checking.domain.entity.enums.ReceiveCondition;
+import sheetplus.checking.domain.entity.enums.ReceiveCons;
 import sheetplus.checking.domain.repository.EventRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.ParticipateContestStateRepository;
 import sheetplus.checking.util.CryptoUtil;
 import sheetplus.checking.util.JwtUtil;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -51,33 +49,33 @@ public class QrcodeService {
         }
 
         Contest contest = event.getEventContest();
-        if(!contest.getCondition().equals(ContestCondition.PROGRESS)
-        || !event.getEventCondition().equals(ContestCondition.PROGRESS)){
+        if(!contest.getCons().equals(ContestCons.EVENT_PROGRESS)
+        || !event.getEventCondition().equals(ContestCons.EVENT_PROGRESS)){
             // 예외 발생
             throw new RuntimeException("현재 진행중인 행사가 아닙니다.");
         }
 
-        ParticipateContestState participateContestState = participateContestStateRepository
+        ParticipateContest participateContest = participateContestStateRepository
                 .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
                         member.getId(), contest.getId()).orElse(null);
 
-        if(participateContestState == null){
-            participateContestState = ParticipateContestState.builder()
+        if(participateContest == null){
+            participateContest = ParticipateContest.builder()
                     .eventsCount(1)
-                    .meritType(MeritType.NON_TARGET)
-                    .receiveCondition(ReceiveCondition.NOT_RECEIVED)
+                    .meritType(MeritType.PRIZE_NON_TARGET)
+                    .receiveCons(ReceiveCons.PRIZE_NOT_RECEIVED)
                     .build();
-            participateContestState.setContestParticipateContestStates(contest);
-            participateContestState.setMemberParticipateContestStates(member);
-            participateContestState.getEventTypeSet().add(event.getEventCategory());
+            participateContest.setContestParticipateContestStates(contest);
+            participateContest.setMemberParticipateContestStates(member);
+            participateContest.getEventTypeSet().add(event.getEventCategory());
 
-            participateContestStateRepository.save(participateContestState);
+            participateContestStateRepository.save(participateContest);
         }else{
-            if(participateContestState.getEventTypeSet().contains(event.getEventCategory())){
+            if(participateContest.getEventTypeSet().contains(event.getEventCategory())){
                throw new RuntimeException("이미 참여한 행사입니다.");
             }
-            participateContestState.addCounts();
-            participateContestState.getEventTypeSet().add(event.getEventCategory());
+            participateContest.addCounts();
+            participateContest.getEventTypeSet().add(event.getEventCategory());
 
         }
 

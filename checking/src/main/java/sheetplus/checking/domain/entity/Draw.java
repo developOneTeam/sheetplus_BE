@@ -2,7 +2,7 @@ package sheetplus.checking.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sheetplus.checking.domain.entity.enums.ReceiveCondition;
+import sheetplus.checking.domain.entity.enums.ReceiveCons;
 
 
 @Entity
@@ -22,7 +22,7 @@ public class Draw {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReceiveCondition receiveCondition;
+    private ReceiveCons receiveCons;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contest_id")
@@ -45,8 +45,8 @@ public class Draw {
 
     }
 
-    public void setReceiveCondition(ReceiveCondition receiveCondition) {
-        this.receiveCondition = receiveCondition;
+    public void setReceiveCons(ReceiveCons receiveCons) {
+        this.receiveCons = receiveCons;
     }
 
 }

@@ -10,7 +10,8 @@ import sheetplus.checking.domain.entity.enums.MeritType;
 
 import java.util.List;
 
-import static sheetplus.checking.domain.entity.QParticipateContestState.participateContestState;
+import static sheetplus.checking.domain.entity.QParticipateContest.participateContest;
+
 
 @RequiredArgsConstructor
 @Slf4j
@@ -21,23 +22,23 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
     @Override
     public void targetUpdates(int condition) {
         queryFactory
-                .update(participateContestState)
-                .set(participateContestState.meritType, MeritType.TARGET)
-                .where(participateContestState.eventsCount.goe(condition))
+                .update(participateContest)
+                .set(participateContest.meritType, MeritType.PRIZE_TARGET)
+                .where(participateContest.eventsCount.goe(condition))
                 .execute();
     }
 
     @Override
     public ParticipateInfoDto participateContestCounts(Long id) {
         Long countOne = queryFactory
-                .select(participateContestState.count())
-                .from(participateContestState)
-                .where(participateContestState.eventsCount.goe(1))
+                .select(participateContest.count())
+                .from(participateContest)
+                .where(participateContest.eventsCount.goe(1))
                 .fetchOne();
         Long countAll = queryFactory
-                .select(participateContestState.count())
-                .from(participateContestState)
-                .where(participateContestState.eventsCount.goe(5))
+                .select(participateContest.count())
+                .from(participateContest)
+                .where(participateContest.eventsCount.goe(5))
                 .fetchOne();
 
         return ParticipateInfoDto.builder()
@@ -50,11 +51,11 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
     @Override
     public List<MemberInfoDto> participateMemberInfoRead(Long contestId) {
         List<Member> members = queryFactory
-                .select(participateContestState.memberParticipateContestState)
-                .from(participateContestState)
-                .where(participateContestState.contestParticipateContestState.id.eq(contestId).and(
-                        participateContestState.eventsCount.goe(5).or(
-                                participateContestState.meritType.eq(MeritType.TARGET)
+                .select(participateContest.memberParticipateContestState)
+                .from(participateContest)
+                .where(participateContest.contestParticipateContestState.id.eq(contestId).and(
+                        participateContest.eventsCount.goe(5).or(
+                                participateContest.meritType.eq(MeritType.PRIZE_TARGET)
                         )
                 ))
                 .fetch();
@@ -74,9 +75,9 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
     @Override
     public List<MemberInfoDto> drawMemberInfoRead(Long contestId) {
         List<Member> members = queryFactory
-                .select(participateContestState.memberParticipateContestState)
-                .from(participateContestState)
-                .where(participateContestState.contestParticipateContestState.id.eq(contestId))
+                .select(participateContest.memberParticipateContestState)
+                .from(participateContest)
+                .where(participateContest.contestParticipateContestState.id.eq(contestId))
                 .fetch();
 
         return members.stream()

@@ -7,8 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MeritType {
 
-    NON_TARGET("비대상"),
-    TARGET("수령대상");
+    PRIZE_NON_TARGET("비대상"),
+    PRIZE_TARGET("수령대상");
 
     private String message;
 

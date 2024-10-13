@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checking.domain.dto.EventResponseDto;
 import sheetplus.checking.domain.dto.StudentPageActivitiesResponseDto;
-import sheetplus.checking.domain.dto.StudentPageRequestDto;
 import sheetplus.checking.domain.dto.StudentHomePageResponseDto;
-import sheetplus.checking.domain.entity.Event;
 import sheetplus.checking.domain.entity.Member;
-import sheetplus.checking.domain.entity.ParticipateContestState;
+import sheetplus.checking.domain.entity.ParticipateContest;
 import sheetplus.checking.domain.entity.enums.EventCategory;
 import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
@@ -55,16 +53,16 @@ public class StudentPageService {
     @Transactional(readOnly = true)
     public StudentPageActivitiesResponseDto readStudentActivitiesPage(
             String token, Long contestId){
-        ParticipateContestState participateContestState = participateContestStateRepository
+        ParticipateContest participateContest = participateContestStateRepository
                 .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
                         jwtUtil.getMemberId(token),contestId).orElse(null);
 
-        List<EventCategory> events = new ArrayList<>(participateContestState.getEventTypeSet());
+        List<EventCategory> events = new ArrayList<>(participateContest.getEventTypeSet());
 
 
         return StudentPageActivitiesResponseDto
                 .builder()
-                .eventCounts(participateContestState.getEventsCount().toString())
+                .eventCounts(participateContest.getEventsCount().toString())
                 .events(contestRepository.findParticipateEvents(contestId, events))
                 .build();
     }

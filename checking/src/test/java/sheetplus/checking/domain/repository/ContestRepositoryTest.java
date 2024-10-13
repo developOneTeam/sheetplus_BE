@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Member;
-import sheetplus.checking.domain.entity.enums.ContestCondition;
+import sheetplus.checking.domain.entity.enums.ContestCons;
 import sheetplus.checking.domain.entity.enums.MemberType;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,9 +35,9 @@ class ContestRepositoryTest {
                 .build();
         contest = Contest.builder()
                 .name("학술제")
-                .startDate("2024-11-01 09:00")
-                .endDate("2024-11-01 16:00")
-                .condition(ContestCondition.BEFORE)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now())
+                .cons(ContestCons.EVENT_BEFORE)
                 .build();
     }
 
@@ -46,8 +48,8 @@ class ContestRepositoryTest {
 
         assertThat(contestRepository.findById(contestId).get().getName())
                 .isEqualTo(contest.getName());
-        assertThat(contestRepository.findById(contestId).get().getCondition())
-                .isEqualTo(contest.getCondition());
+        assertThat(contestRepository.findById(contestId).get().getCons())
+                .isEqualTo(contest.getCons());
     }
 
 

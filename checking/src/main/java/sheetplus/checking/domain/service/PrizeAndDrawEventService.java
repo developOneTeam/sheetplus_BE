@@ -33,7 +33,7 @@ public class PrizeAndDrawEventService {
     public DrawEventResponseDto createDrawMember(DrawEventRequestDto drawEventRequestDto){
         Draw draw = Draw.builder()
                 .drawType(drawEventRequestDto.getPrizeType())
-                .receiveCondition(drawEventRequestDto.getReceiveCondition())
+                .receiveCons(drawEventRequestDto.getReceiveCons())
                 .build();
         Member member = memberRepository.findById(drawEventRequestDto.getMemberId())
                 .orElse(null);
@@ -49,18 +49,18 @@ public class PrizeAndDrawEventService {
                 .memberStudentId(member.getStudentId())
                 .contestName(contest.getName())
                 .prizeType(draw.getDrawType())
-                .receiveConditionMessage(draw.getReceiveCondition().getMessage())
+                .receiveConditionMessage(draw.getReceiveCons().getMessage())
                 .build();
     }
 
     @Transactional
     public DrawUpdateResponseDto updateDrawReceived(DrawUpdateRequestDto drawUpdateRequestDto){
         Draw draw = drawRepository.findById(drawUpdateRequestDto.getDrawId()).orElse(null);
-        draw.setReceiveCondition(draw.getReceiveCondition());
+        draw.setReceiveCons(draw.getReceiveCons());
 
         return DrawUpdateResponseDto.builder()
                 .prizeType(draw.getDrawType())
-                .receiveConditionMessage(draw.getReceiveCondition().getMessage())
+                .receiveConditionMessage(draw.getReceiveCons().getMessage())
                 .build();
     }
 

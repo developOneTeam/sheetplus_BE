@@ -46,7 +46,7 @@ public class MemberCRUDService {
         return MemberUpdateRequestDto.builder()
                 .major(member.getMajor())
                 .name(member.getName())
-                .major(member.getStudentId())
+                .studentId(member.getStudentId())
                 .build();
     }
 

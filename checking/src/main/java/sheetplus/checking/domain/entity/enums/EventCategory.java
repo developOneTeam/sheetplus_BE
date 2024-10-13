@@ -7,12 +7,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum EventCategory {
 
-    ONE("개회식"),
-    TWO("프로젝트 발표"),
-    THREE("졸업생 토크 콘서트"),
-    FOUR("전문가 특강"),
-    FIVE("게임 경진대회"),
-    SIX("폐회식");
+    EVENT_ONE("개회식"),
+    EVENT_TWO("프로젝트 발표"),
+    EVENT_THREE("졸업생 토크 콘서트"),
+    EVENT_FOUR("전문가 특강"),
+    EVENT_FIVE("게임 경진대회"),
+    EVENT_SIX("폐회식");
 
     private String message;
 

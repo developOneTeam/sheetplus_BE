@@ -23,7 +23,7 @@ public class ContestCRUDService {
                 .name(contestRequestDto.getName())
                 .startDate(contestRequestDto.getStartDateTime())
                 .endDate(contestRequestDto.getEndDateTime())
-                .condition(contestRequestDto.getCondition())
+                .cons(contestRequestDto.getCondition())
                 .build();
         Long id = contestRepository.save(contest).getId();
 
@@ -47,7 +47,7 @@ public class ContestCRUDService {
                 .name(contest.getName())
                 .startDate(contest.getStartDate())
                 .endDate(contest.getEndDate())
-                .condition(contest.getCondition().getMessage())
+                .condition(contest.getCons().getMessage())
                 .build();
     }
 
