@@ -8,16 +8,18 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import sheetplus.checking.domain.dto.TokenDto;
 import sheetplus.checking.domain.service.AuthService;
+import sheetplus.checking.response.Api;
+
 @RequiredArgsConstructor
 @RestController
 @Slf4j
 public class AuthController {
     public final AuthService authService;
     @PostMapping("public/refresh")
-    public ResponseEntity<TokenDto> refreshToken(@RequestHeader(value = "refresh-token"
+    public Api<TokenDto> refreshToken(@RequestHeader(value = "refresh-token"
             , required = false) String refreshToken){
         TokenDto tokenDto = authService.refreshTokens(refreshToken);
-        return ResponseEntity.ok(tokenDto);
+        return Api.OK(tokenDto);
     }
 
 }

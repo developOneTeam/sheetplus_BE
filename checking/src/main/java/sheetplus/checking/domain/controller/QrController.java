@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sheetplus.checking.domain.dto.QrcodeRequestDto;
 import sheetplus.checking.domain.dto.QrcodeResponseDto;
 import sheetplus.checking.domain.service.QrcodeService;
+import sheetplus.checking.response.Api;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class QrController {
     private final QrcodeService qrcodeService;
 
     @PostMapping("/qrcode/check")
-    public ResponseEntity<QrcodeResponseDto> qrcodeCheck(
+    public Api<QrcodeResponseDto> qrcodeCheck(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody QrcodeRequestDto qrcodeRequestDto){
 
@@ -25,8 +26,7 @@ public class QrController {
                 = qrcodeService.createParticipation(
                         token.replace("Bearer","").trim(), qrcodeRequestDto);
 
-        return ResponseEntity.ok()
-                .body(qrcodeResponseDto);
+        return Api.OK(qrcodeResponseDto);
     }
 
 

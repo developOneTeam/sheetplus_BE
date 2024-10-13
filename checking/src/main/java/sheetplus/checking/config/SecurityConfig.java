@@ -1,6 +1,7 @@
 package sheetplus.checking.config;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,17 +16,21 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import sheetplus.checking.config.filter.JwtAuthFilter;
+import sheetplus.checking.config.filter.JwtExceptionFilter;
 import sheetplus.checking.config.security.CustomUserDetailsService;
+import sheetplus.checking.handler.JwtAccessDeniedHandler;
+import sheetplus.checking.handler.JwtAuthenticationEntryPoint;
 import sheetplus.checking.util.JwtUtil;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/member/**", "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
@@ -49,8 +54,15 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
 
+        http.addFilterBefore(new JwtExceptionFilter(objectMapper),
+                UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JwtAuthFilter(customUserDetailsService,
                 jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
+        http.exceptionHandling(configurer -> {
+            configurer.accessDeniedHandler(new JwtAccessDeniedHandler(objectMapper));
+            configurer.authenticationEntryPoint(new JwtAuthenticationEntryPoint(objectMapper));
+        });
 
         // 권한 규칙 작성
         http.authorizeHttpRequests(authorize -> authorize

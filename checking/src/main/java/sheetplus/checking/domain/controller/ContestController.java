@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import sheetplus.checking.domain.dto.ContestRequestDto;
 import sheetplus.checking.domain.dto.ContestResponseDto;
 import sheetplus.checking.domain.service.ContestCRUDService;
+import sheetplus.checking.response.Api;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,30 +19,28 @@ public class ContestController {
     private final ContestCRUDService contestCRUDService;
 
     @PostMapping("admin/contest/create")
-    public ContestResponseDto createContest(
+    public Api<ContestResponseDto> createContest(
             @RequestBody ContestRequestDto contestRequestDto) {
 
-        return contestCRUDService.createContest(contestRequestDto);
+        return Api.CREATED(contestCRUDService.createContest(contestRequestDto));
     }
 
     @PatchMapping("admin/contest/{contest}/update")
-    public ResponseEntity<ContestResponseDto> updateContest(
+    public Api<ContestResponseDto> updateContest(
             @PathVariable("contest") Long contestId,
             @RequestBody ContestRequestDto contestRequestDto
     ){
-        return ResponseEntity.ok()
-                        .body(contestCRUDService
+        return Api.UPDATED(contestCRUDService
                                 .updateContest(contestId, contestRequestDto));
     }
 
     @DeleteMapping("admin/contest/{contest}/delete")
-    public ResponseEntity<String> deleteContest(
+    public Api<String> deleteContest(
             @PathVariable("contest") Long contestId
     ){
         contestCRUDService.deleteContest(contestId);
 
-        return ResponseEntity.ok()
-                .body("삭제완료");
+        return Api.DELETE("삭제완료");
     }
 
 

@@ -10,6 +10,7 @@ import sheetplus.checking.domain.dto.DrawUpdateRequestDto;
 import sheetplus.checking.domain.dto.DrawUpdateResponseDto;
 import sheetplus.checking.domain.service.PrizeAndDrawEventService;
 import sheetplus.checking.domain.service.PrizeConditionRequestDto;
+import sheetplus.checking.response.Api;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,29 +28,26 @@ public class DrawAndPrizeController {
     }
 
     @PostMapping("private/admin/draw/create")
-    public ResponseEntity<DrawEventResponseDto> createDraw(
+    public Api<DrawEventResponseDto> createDraw(
             @RequestBody DrawEventRequestDto drawEventRequestDto
     ){
-        return ResponseEntity.ok()
-                .body(prizeAndDrawEventService.createDrawMember(drawEventRequestDto));
+        return Api.CREATED(prizeAndDrawEventService.createDrawMember(drawEventRequestDto));
     }
 
     @PatchMapping("private/admin/draw/receive/update")
-    public ResponseEntity<DrawUpdateResponseDto> updateDrawEventReceiveCondition(
+    public Api<DrawUpdateResponseDto> updateDrawEventReceiveCondition(
             @RequestBody DrawUpdateRequestDto drawUpdateRequestDto
             ){
         
-        return ResponseEntity.ok()
-                .body(prizeAndDrawEventService.updateDrawReceived(drawUpdateRequestDto));
+        return Api.UPDATED(prizeAndDrawEventService.updateDrawReceived(drawUpdateRequestDto));
     }
     
     @DeleteMapping("private/admin/draw/{draw}/delete")
-    public ResponseEntity<String> deleteDrawEventReceiveCondition(
+    public Api<String> deleteDrawEventReceiveCondition(
             @PathVariable(name = "draw") Long id
     ){
         prizeAndDrawEventService.deleteDraw(id);
-        return ResponseEntity.ok()
-                .body("삭제 완료");
+        return Api.DELETE("삭제 완료");
     }
 
 
