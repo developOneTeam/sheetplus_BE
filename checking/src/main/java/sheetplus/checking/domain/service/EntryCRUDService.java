@@ -10,6 +10,10 @@ import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Entry;
 import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.EntryRepository;
+import sheetplus.checking.exception.ApiException;
+
+import static sheetplus.checking.error.ApiError.CONTEST_NOT_FOUND;
+import static sheetplus.checking.error.ApiError.ENTRY_NOT_FOUND;
 
 @Service
 @Slf4j
@@ -32,7 +36,8 @@ public class EntryCRUDService {
                 .leaderName(entryRequestDto.getLeaderName())
                 .entryType(entryRequestDto.getEntryType())
                 .build();
-        Contest contest = contestRepository.findById(contestId).orElse(null);
+        Contest contest = contestRepository.findById(contestId)
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         entry.setContestEntry(contest);
         Long id = entryRepository.save(entry).getId();
 
@@ -51,7 +56,8 @@ public class EntryCRUDService {
 
     @Transactional
     public EntryResponseDto updateEntry(Long id, EntryRequestDto entryRequestDto){
-        Entry entry = entryRepository.findById(id).orElse(null);
+        Entry entry = entryRepository.findById(id)
+                .orElseThrow(() -> new ApiException(ENTRY_NOT_FOUND));;
         entry.updateEntry(entryRequestDto);
 
 

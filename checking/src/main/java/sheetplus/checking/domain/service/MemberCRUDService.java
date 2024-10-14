@@ -7,7 +7,10 @@ import sheetplus.checking.domain.dto.MemberRequestDto;
 import sheetplus.checking.domain.dto.MemberUpdateRequestDto;
 import sheetplus.checking.domain.entity.Member;
 import sheetplus.checking.domain.repository.MemberRepository;
+import sheetplus.checking.exception.ApiException;
 import sheetplus.checking.util.JwtUtil;
+
+import static sheetplus.checking.error.ApiError.MEMBER_NOT_FOUND;
 
 
 @Service
@@ -35,7 +38,8 @@ public class MemberCRUDService {
 
     @Transactional
     public MemberUpdateRequestDto updateMember(MemberUpdateRequestDto memberUpdateRequestDto, String token){
-        Member member = memberRepository.findById(jwtUtil.getMemberId(token)).orElse(null);
+        Member member = memberRepository.findById(jwtUtil.getMemberId(token))
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
         if(member == null){
             // 예외처리

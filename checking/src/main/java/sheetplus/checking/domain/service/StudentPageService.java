@@ -14,10 +14,14 @@ import sheetplus.checking.domain.entity.enums.EventCategory;
 import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.ParticipateContestStateRepository;
+import sheetplus.checking.exception.ApiException;
 import sheetplus.checking.util.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static sheetplus.checking.error.ApiError.MEMBER_NOT_FOUND;
+import static sheetplus.checking.error.ApiError.PARTICIPATE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +36,8 @@ public class StudentPageService {
 
     @Transactional(readOnly = true)
     public StudentHomePageResponseDto readStudentHomePage(String token, Long contestId) {
-        Member member = memberRepository.findById(jwtUtil.getMemberId(token)).orElse(null);
+        Member member = memberRepository.findById(jwtUtil.getMemberId(token))
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
         return StudentHomePageResponseDto.builder()
                 .studentName(member.getName())
@@ -55,7 +60,8 @@ public class StudentPageService {
             String token, Long contestId){
         ParticipateContest participateContest = participateContestStateRepository
                 .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
-                        jwtUtil.getMemberId(token),contestId).orElse(null);
+                        jwtUtil.getMemberId(token),contestId)
+                .orElseThrow(() -> new ApiException(PARTICIPATE_NOT_FOUND));
 
         List<EventCategory> events = new ArrayList<>(participateContest.getEventTypeSet());
 

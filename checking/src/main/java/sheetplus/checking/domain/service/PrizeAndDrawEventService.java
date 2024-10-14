@@ -12,6 +12,9 @@ import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.DrawRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.ParticipateContestStateRepository;
+import sheetplus.checking.exception.ApiException;
+
+import static sheetplus.checking.error.ApiError.*;
 
 
 @RequiredArgsConstructor
@@ -36,9 +39,9 @@ public class PrizeAndDrawEventService {
                 .receiveCons(drawEventRequestDto.getReceiveCons())
                 .build();
         Member member = memberRepository.findById(drawEventRequestDto.getMemberId())
-                .orElse(null);
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
         Contest contest = contestRepository.findById(drawEventRequestDto.getContestId())
-                .orElse(null);
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         draw.setMemberDraw(member);
         draw.setContestDraw(contest);
         Long id = drawRepository.save(draw).getId();
@@ -55,7 +58,8 @@ public class PrizeAndDrawEventService {
 
     @Transactional
     public DrawUpdateResponseDto updateDrawReceived(DrawUpdateRequestDto drawUpdateRequestDto){
-        Draw draw = drawRepository.findById(drawUpdateRequestDto.getDrawId()).orElse(null);
+        Draw draw = drawRepository.findById(drawUpdateRequestDto.getDrawId())
+                .orElseThrow(() -> new ApiException(DRAW_NOT_FOUND));
         draw.setReceiveCons(draw.getReceiveCons());
 
         return DrawUpdateResponseDto.builder()
