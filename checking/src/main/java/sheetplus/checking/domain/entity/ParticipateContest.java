@@ -7,7 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import sheetplus.checking.domain.entity.enums.EventCategory;
 import sheetplus.checking.domain.entity.enums.MeritType;
-import sheetplus.checking.domain.entity.enums.ReceiveCondition;
+import sheetplus.checking.domain.entity.enums.ReceiveCons;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-public class ParticipateContestState {
+public class ParticipateContest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +39,7 @@ public class ParticipateContestState {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReceiveCondition receiveCondition;
+    private ReceiveCons receiveCons;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -56,7 +56,7 @@ public class ParticipateContestState {
     @ElementCollection
     @CollectionTable(
             name = "participate_event_type",
-            joinColumns = @JoinColumn(name = "participate_contest_state_id")
+            joinColumns = @JoinColumn(name = "participate_contest_id")
     )
     @Builder.Default
     @Enumerated(EnumType.STRING)
@@ -72,7 +72,7 @@ public class ParticipateContestState {
 
     public void setContestParticipateContestStates(Contest contest){
         this.contestParticipateContestState = contest;
-        contest.getParticipateContestStates().add(this);
+        contest.getParticipateContests().add(this);
     }
 
     public void addCounts(){

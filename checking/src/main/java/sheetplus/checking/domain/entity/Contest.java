@@ -4,7 +4,7 @@ package sheetplus.checking.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import sheetplus.checking.domain.dto.ContestRequestDto;
-import sheetplus.checking.domain.entity.enums.ContestCondition;
+import sheetplus.checking.domain.entity.enums.ContestCons;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,11 +33,11 @@ public class Contest {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ContestCondition condition;
+    private ContestCons cons;
 
     @OneToMany(mappedBy = "contestParticipateContestState")
     @Builder.Default
-    private List<ParticipateContestState> participateContestStates = new ArrayList<>();
+    private List<ParticipateContest> participateContests = new ArrayList<>();
 
     @OneToMany(mappedBy = "entryContest", orphanRemoval = true)
     @Builder.Default
@@ -56,7 +56,7 @@ public class Contest {
         this.name = contestRequestDto.getName();
         this.startDate = contestRequestDto.getStartDateTime();
         this.endDate = contestRequestDto.getEndDateTime();
-        this.condition = contestRequestDto.getCondition();
+        this.cons = contestRequestDto.getCondition();
     }
 
 }

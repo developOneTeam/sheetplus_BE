@@ -10,7 +10,11 @@ import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Event;
 import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.EventRepository;
+import sheetplus.checking.exception.ApiException;
 import sheetplus.checking.util.CryptoUtil;
+
+import static sheetplus.checking.error.ApiError.CONTEST_NOT_FOUND;
+import static sheetplus.checking.error.ApiError.EVENT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +29,7 @@ public class EventCRUDService {
     public EventResponseDto createEvent(Long contestId, EventRequestDto eventRequestDto) {
         // null에 대한 Exception은 이후 만들 계획
         Contest contest = contestRepository.findById(contestId)
-                .orElse(null);
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));;
 
         Event event = Event.builder()
                 .name(eventRequestDto.getName())
@@ -62,7 +66,7 @@ public class EventCRUDService {
     public EventResponseDto updateEvent(Long eventId
             , EventRequestDto eventRequestDto) {
         Event event = eventRepository.findById(eventId)
-                .orElse(null);
+                .orElseThrow(() -> new ApiException(EVENT_NOT_FOUND));;
 
         event.updateEvent(eventRequestDto);
 

@@ -12,6 +12,9 @@ import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.DrawRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.ParticipateContestStateRepository;
+import sheetplus.checking.exception.ApiException;
+
+import static sheetplus.checking.error.ApiError.*;
 
 
 @RequiredArgsConstructor
@@ -33,12 +36,12 @@ public class PrizeAndDrawEventService {
     public DrawEventResponseDto createDrawMember(DrawEventRequestDto drawEventRequestDto){
         Draw draw = Draw.builder()
                 .drawType(drawEventRequestDto.getPrizeType())
-                .receiveCondition(drawEventRequestDto.getReceiveCondition())
+                .receiveCons(drawEventRequestDto.getReceiveCons())
                 .build();
         Member member = memberRepository.findById(drawEventRequestDto.getMemberId())
-                .orElse(null);
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
         Contest contest = contestRepository.findById(drawEventRequestDto.getContestId())
-                .orElse(null);
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         draw.setMemberDraw(member);
         draw.setContestDraw(contest);
         Long id = drawRepository.save(draw).getId();
@@ -49,18 +52,19 @@ public class PrizeAndDrawEventService {
                 .memberStudentId(member.getStudentId())
                 .contestName(contest.getName())
                 .prizeType(draw.getDrawType())
-                .receiveConditionMessage(draw.getReceiveCondition().getMessage())
+                .receiveConditionMessage(draw.getReceiveCons().getMessage())
                 .build();
     }
 
     @Transactional
     public DrawUpdateResponseDto updateDrawReceived(DrawUpdateRequestDto drawUpdateRequestDto){
-        Draw draw = drawRepository.findById(drawUpdateRequestDto.getDrawId()).orElse(null);
-        draw.setReceiveCondition(draw.getReceiveCondition());
+        Draw draw = drawRepository.findById(drawUpdateRequestDto.getDrawId())
+                .orElseThrow(() -> new ApiException(DRAW_NOT_FOUND));
+        draw.setReceiveCons(draw.getReceiveCons());
 
         return DrawUpdateResponseDto.builder()
                 .prizeType(draw.getDrawType())
-                .receiveConditionMessage(draw.getReceiveCondition().getMessage())
+                .receiveConditionMessage(draw.getReceiveCons().getMessage())
                 .build();
     }
 

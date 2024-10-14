@@ -9,6 +9,9 @@ import sheetplus.checking.domain.dto.ContestRequestDto;
 import sheetplus.checking.domain.dto.ContestResponseDto;
 import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.repository.ContestRepository;
+import sheetplus.checking.exception.ApiException;
+
+import static sheetplus.checking.error.ApiError.CONTEST_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,7 @@ public class ContestCRUDService {
                 .name(contestRequestDto.getName())
                 .startDate(contestRequestDto.getStartDateTime())
                 .endDate(contestRequestDto.getEndDateTime())
-                .condition(contestRequestDto.getCondition())
+                .cons(contestRequestDto.getCondition())
                 .build();
         Long id = contestRepository.save(contest).getId();
 
@@ -38,7 +41,8 @@ public class ContestCRUDService {
 
     @Transactional
     public ContestResponseDto updateContest(Long id, ContestRequestDto contestRequestDto) {
-        Contest contest = contestRepository.findById(id).orElse(null);
+        Contest contest = contestRepository.findById(id)
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));;
 
         contest.updateContest(contestRequestDto);
 
@@ -47,7 +51,7 @@ public class ContestCRUDService {
                 .name(contest.getName())
                 .startDate(contest.getStartDate())
                 .endDate(contest.getEndDate())
-                .condition(contest.getCondition().getMessage())
+                .condition(contest.getCons().getMessage())
                 .build();
     }
 

@@ -7,19 +7,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checking.domain.dto.EventResponseDto;
 import sheetplus.checking.domain.dto.StudentPageActivitiesResponseDto;
-import sheetplus.checking.domain.dto.StudentPageRequestDto;
 import sheetplus.checking.domain.dto.StudentHomePageResponseDto;
-import sheetplus.checking.domain.entity.Event;
 import sheetplus.checking.domain.entity.Member;
-import sheetplus.checking.domain.entity.ParticipateContestState;
+import sheetplus.checking.domain.entity.ParticipateContest;
 import sheetplus.checking.domain.entity.enums.EventCategory;
 import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.ParticipateContestStateRepository;
+import sheetplus.checking.exception.ApiException;
 import sheetplus.checking.util.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static sheetplus.checking.error.ApiError.MEMBER_NOT_FOUND;
+import static sheetplus.checking.error.ApiError.PARTICIPATE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,8 @@ public class StudentPageService {
 
     @Transactional(readOnly = true)
     public StudentHomePageResponseDto readStudentHomePage(String token, Long contestId) {
-        Member member = memberRepository.findById(jwtUtil.getMemberId(token)).orElse(null);
+        Member member = memberRepository.findById(jwtUtil.getMemberId(token))
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
         return StudentHomePageResponseDto.builder()
                 .studentName(member.getName())
@@ -55,16 +58,17 @@ public class StudentPageService {
     @Transactional(readOnly = true)
     public StudentPageActivitiesResponseDto readStudentActivitiesPage(
             String token, Long contestId){
-        ParticipateContestState participateContestState = participateContestStateRepository
+        ParticipateContest participateContest = participateContestStateRepository
                 .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
-                        jwtUtil.getMemberId(token),contestId).orElse(null);
+                        jwtUtil.getMemberId(token),contestId)
+                .orElseThrow(() -> new ApiException(PARTICIPATE_NOT_FOUND));
 
-        List<EventCategory> events = new ArrayList<>(participateContestState.getEventTypeSet());
+        List<EventCategory> events = new ArrayList<>(participateContest.getEventTypeSet());
 
 
         return StudentPageActivitiesResponseDto
                 .builder()
-                .eventCounts(participateContestState.getEventsCount().toString())
+                .eventCounts(participateContest.getEventsCount().toString())
                 .events(contestRepository.findParticipateEvents(contestId, events))
                 .build();
     }

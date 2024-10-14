@@ -12,9 +12,12 @@ import sheetplus.checking.domain.repository.ContestRepository;
 import sheetplus.checking.domain.repository.EntryRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.ParticipateContestStateRepository;
+import sheetplus.checking.exception.ApiException;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static sheetplus.checking.error.ApiError.CONTEST_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +32,8 @@ public class AdminPageService {
     @Transactional(readOnly = true)
     public AdminHomeResponseDto adminHomeRead(Long contestId){
         Contest contest = contestRepository
-                .findById(contestId).orElse(null);
-        Long memberCounts = memberRepository.count();
+                .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
+        long memberCounts = memberRepository.count();
         ParticipateInfoDto participateInfoDto = participateContestStateRepository
                 .participateContestCounts(contest.getId());
         List<Event> events = contest.getEvents();
@@ -64,7 +67,7 @@ public class AdminPageService {
 
 
         return AdminHomeResponseDto.builder()
-                .memberCounts(memberCounts.toString())
+                .memberCounts(Long.toString(memberCounts))
                 .completeEventMemberCounts(participateInfoDto
                         .getCompleteEventMemberCounts().toString())
                 .moreThanOneCounts(participateInfoDto
@@ -105,13 +108,15 @@ public class AdminPageService {
 
 
     public List<MemberInfoDto> readDrawMemberList(Long contestId){
-        Contest contest = contestRepository.findById(contestId).orElse(null);
+        Contest contest = contestRepository.findById(contestId)
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         return participateContestStateRepository
                 .participateMemberInfoRead(contest.getId());
     }
 
     public List<MemberInfoDto> readPrizeMemberList(Long contestId){
-        Contest contest = contestRepository.findById(contestId).orElse(null);
+        Contest contest = contestRepository.findById(contestId)
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         return participateContestStateRepository
                 .drawMemberInfoRead(contest.getId());
     }

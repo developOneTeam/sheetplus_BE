@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Draw;
-import sheetplus.checking.domain.entity.enums.ContestCondition;
-import sheetplus.checking.domain.entity.enums.ReceiveCondition;
+import sheetplus.checking.domain.entity.enums.ContestCons;
+import sheetplus.checking.domain.entity.enums.ReceiveCons;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,14 +30,14 @@ class DrawRepositoryTest {
     @BeforeEach
     void before(){
         draw = Draw.builder()
-                .receiveCondition(ReceiveCondition.NOT_RECEIVED)
+                .receiveCons(ReceiveCons.PRIZE_NOT_RECEIVED)
                 .drawType("1등")
                 .build();
         contest = Contest.builder()
                 .name("학술제")
-                .startDate("2024-11-01 09:00")
-                .endDate("2024-11-01 16:00")
-                .condition(ContestCondition.BEFORE)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now())
+                .cons(ContestCons.EVENT_BEFORE)
                 .build();
     }
 

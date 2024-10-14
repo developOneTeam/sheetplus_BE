@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sheetplus.checking.domain.entity.Contest;
 import sheetplus.checking.domain.entity.Event;
+import sheetplus.checking.domain.entity.enums.ContestCons;
 import sheetplus.checking.domain.entity.enums.EventCategory;
-import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,21 +33,21 @@ class EventRepositoryTest {
     void before(){
         contest = Contest.builder()
                 .name("학술제")
-                .startDate("2024-11-01 09:00")
-                .endDate("2024-11-01 16:00")
-                .condition(ContestCondition.BEFORE)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now())
+                .cons(ContestCons.EVENT_BEFORE)
                 .build();
         event = Event.builder()
                 .name("개회식")
-                .startTime("2024-11-01 09:00")
-                .endTime("2024-11-01 09:30")
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now())
                 .speakerName("김승우 총장")
                 .building("인문대")
                 .location("101호")
                 .major("SW융합대학")
                 .eventType(EventType.CHECKING)
-                .eventCondition(ContestCondition.BEFORE)
-                .eventCategory(EventCategory.ONE)
+                .eventCondition(ContestCons.EVENT_BEFORE)
+                .eventCategory(EventCategory.EVENT_ONE)
                 .build();
     }
 

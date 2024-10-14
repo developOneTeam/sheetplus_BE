@@ -13,7 +13,11 @@ import sheetplus.checking.domain.entity.Member;
 import sheetplus.checking.domain.entity.Token;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.TokenRepository;
+import sheetplus.checking.exception.ApiException;
 import sheetplus.checking.util.JwtUtil;
+
+import static sheetplus.checking.error.ApiError.MEMBER_NOT_FOUND;
+import static sheetplus.checking.error.ApiError.TOKEN_NOT_VALID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +36,8 @@ public class TokenService {
     public TokenDto refreshTokens(String refreshToken) {
 
         Long memberId = jwtUtil.getMemberId(refreshToken);
-        Token storedToken = refreshTokenRepository.findById(memberId).orElse(null);
-        if (storedToken == null || !storedToken.getRefreshToken().equals(refreshToken)) {
-            log.info("유효하지 않은 Refresh Token입니다.");
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
-        }
+        refreshTokenRepository.findById(memberId)
+                .orElseThrow(() -> new ApiException(TOKEN_NOT_VALID));
 
         LoginDto loginDto = customUserDetailsService.loadUserByMemberId(memberId);
 
@@ -53,12 +54,7 @@ public class TokenService {
                         .refreshToken(newRefreshToken)
                         .build());
         Member member = memberRepository.findById(memberId)
-                .orElse(null);
-
-        if(member == null){
-            //예외로직 추가 필요
-            return null;
-        }
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
 
         return TokenDto.builder()

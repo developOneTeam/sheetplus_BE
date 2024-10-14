@@ -38,7 +38,7 @@ public class Member {
     private MemberType memberType;
 
     @OneToOne(mappedBy = "memberParticipateContestState")
-    private ParticipateContestState memberParticipateContestStates;
+    private ParticipateContest memberParticipateContestStates;
 
     @OneToOne(mappedBy = "drawMember")
     private Draw memberDraw;
@@ -51,7 +51,7 @@ public class Member {
     }
 
     public void setMemberParticipateContestStates(
-            ParticipateContestState memberParticipateContestStates) {
+            ParticipateContest memberParticipateContestStates) {
         this.memberParticipateContestStates = memberParticipateContestStates;
         if(memberParticipateContestStates.getMemberParticipateContestState() != this){
             memberParticipateContestStates.setMemberParticipateContestStates(this);

@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checking.domain.entity.TemporaryMember;
 import sheetplus.checking.domain.repository.TemporaryMemberRepository;
+import sheetplus.checking.exception.ApiException;
 import sheetplus.checking.util.MailUtil;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
+
+import static sheetplus.checking.error.ApiError.TEMPORARY_NOT_FOUND;
 
 
 @Slf4j
@@ -76,7 +79,6 @@ public class EmailService {
     }
 
 
-    // email 삭제 대상 없을 경우에 대한 예외처리 구현 예정
     @Transactional
     public void deleteTemporaryMember(String email){
         temporaryMemberRepository.deleteById(email);
@@ -86,10 +88,10 @@ public class EmailService {
     public boolean verifyEmail(String checkEmail, String code) {
         TemporaryMember temporaryMember =
                 temporaryMemberRepository.findById(checkEmail)
-                .orElse(null);
+                        .orElseThrow(() -> new ApiException(TEMPORARY_NOT_FOUND));
 
-        if(temporaryMember == null || !temporaryMember.getCode().equals(code)){
-            return false;
+        if(!temporaryMember.getCode().equals(code)){
+           throw new ApiException(TEMPORARY_NOT_FOUND);
         }
 
         return true;

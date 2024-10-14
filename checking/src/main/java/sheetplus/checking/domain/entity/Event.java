@@ -3,8 +3,8 @@ package sheetplus.checking.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import sheetplus.checking.domain.dto.EventRequestDto;
+import sheetplus.checking.domain.entity.enums.ContestCons;
 import sheetplus.checking.domain.entity.enums.EventCategory;
-import sheetplus.checking.domain.entity.enums.ContestCondition;
 import sheetplus.checking.domain.entity.enums.EventType;
 
 
@@ -50,7 +50,7 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ContestCondition eventCondition;
+    private ContestCons eventCondition;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

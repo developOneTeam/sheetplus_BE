@@ -1,7 +1,7 @@
 package sheetplus.checking.domain.dto;
 
 import lombok.*;
-import sheetplus.checking.domain.entity.enums.ReceiveCondition;
+import sheetplus.checking.domain.entity.enums.ReceiveCons;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -10,6 +10,6 @@ import sheetplus.checking.domain.entity.enums.ReceiveCondition;
 public class DrawUpdateRequestDto {
 
     private Long drawId;
-    private ReceiveCondition receiveCondition;
+    private ReceiveCons receiveCons;
 
 }

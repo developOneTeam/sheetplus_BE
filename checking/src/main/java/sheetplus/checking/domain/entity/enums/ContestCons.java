@@ -3,12 +3,14 @@ package sheetplus.checking.domain.entity.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public enum ReceiveCondition {
+@Getter
+public enum ContestCons {
 
-    RECEIVED("수령"),
-    NOT_RECEIVED("미수령");
+    EVENT_BEFORE("시작전"),
+    EVENT_PROGRESS("진행중"),
+    EVENT_FINISH("종료");
 
     private String message;
+
 }
