@@ -34,33 +34,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
                                     HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        log.info("JwtExceptionFilter request : {}" , request.getRequestURI());
 
-        try {
-            filterChain.doFilter(request, response);
-        }catch (JwtException e) {
-            if (e.getErrorCodeIfs().getHttpStatusCode() == 2000) {
-                response(response, TokenError.INVALID_TOKEN);
-            } else if (e.getErrorCodeIfs().getHttpStatusCode() == 2001) {
-                response(response, TokenError.EXPIRED_TOKEN);
-            }else if (e.getErrorCodeIfs().getHttpStatusCode() == 2003) {
-                response(response, TokenError.AUTHORIZATION_TOKEN_NOT_FOUND);
-            } else if (e.getErrorCodeIfs().getHttpStatusCode() == 2004) {
-                response(response, TokenError.REFRESH_TOKEN_NOT_VALID);
-            } else {
-                response(response, TokenError.TOKEN_EXCEPTION);
-            }
-        }
     }
 
-    private void response(HttpServletResponse response, ErrorCodeIfs errorCodeIfs)
-            throws IOException {
-        Api apiResponse = Api.ERROR(errorCodeIfs);
-        String responseBody = objectMapper.writeValueAsString(apiResponse);
 
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(apiResponse.getResult().getResultCode());
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(responseBody);
-    }
 }
