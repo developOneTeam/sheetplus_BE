@@ -18,8 +18,11 @@ import sheetplus.checking.domain.entity.enums.ReceiveCons;
 import sheetplus.checking.domain.repository.EventRepository;
 import sheetplus.checking.domain.repository.MemberRepository;
 import sheetplus.checking.domain.repository.ParticipateContestStateRepository;
+import sheetplus.checking.exception.ApiException;
 import sheetplus.checking.util.CryptoUtil;
 import sheetplus.checking.util.JwtUtil;
+
+import static sheetplus.checking.error.ApiError.*;
 
 @RequiredArgsConstructor
 @Service
@@ -40,24 +43,26 @@ public class QrcodeService {
 
         // 2. member 탐색
         Member member = memberRepository.findById(jwtUtil.getMemberId(token))
-                .orElse(null);
-        Event event = eventRepository.findById(id).orElse(null);
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new ApiException(EVENT_NOT_FOUND));
 
         if(event.getEventType().equals(EventType.NO_CHECKING)){
             // 예외 발생
-            throw new RuntimeException("QR코드 인증 대상이 아닙니다.");
+            throw new ApiException(QR_NOT_VALID);
         }
 
         Contest contest = event.getEventContest();
         if(!contest.getCons().equals(ContestCons.EVENT_PROGRESS)
         || !event.getEventCondition().equals(ContestCons.EVENT_PROGRESS)){
             // 예외 발생
-            throw new RuntimeException("현재 진행중인 행사가 아닙니다.");
+            throw new ApiException(EVENT_NOT_PROGRESS);
         }
 
         ParticipateContest participateContest = participateContestStateRepository
                 .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
-                        member.getId(), contest.getId()).orElse(null);
+                        member.getId(), contest.getId())
+                .orElseThrow(() -> new ApiException(PARTICIPATE_NOT_FOUND));
 
         if(participateContest == null){
             participateContest = ParticipateContest.builder()

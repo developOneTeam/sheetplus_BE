@@ -1,7 +1,6 @@
 package sheetplus.checking.domain.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checking.domain.dto.LoginDto;
 import sheetplus.checking.domain.dto.MemberRequestDto;

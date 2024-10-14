@@ -68,8 +68,7 @@ public class Result {
         return Result.builder()
                 .resultCode(errorCode)
                 .resultMessage(errorDescription)
-                .build()
-                ;
+                .build();
     }
 
 
