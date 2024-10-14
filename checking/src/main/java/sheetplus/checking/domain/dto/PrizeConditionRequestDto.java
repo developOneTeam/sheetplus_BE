@@ -1,4 +1,4 @@
-package sheetplus.checking.domain.service;
+package sheetplus.checking.domain.dto;
 
 import lombok.*;
 
