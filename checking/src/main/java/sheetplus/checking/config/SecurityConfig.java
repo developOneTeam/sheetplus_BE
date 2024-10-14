@@ -16,7 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import sheetplus.checking.config.filter.JwtAuthFilter;
-import sheetplus.checking.config.filter.JwtExceptionFilter;
 import sheetplus.checking.config.security.CustomUserDetailsService;
 import sheetplus.checking.handler.JwtAccessDeniedHandler;
 import sheetplus.checking.handler.JwtAuthenticationEntryPoint;
@@ -53,11 +52,8 @@ public class SecurityConfig {
 
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-
-        http.addFilterBefore(new JwtExceptionFilter(objectMapper),
-                UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JwtAuthFilter(customUserDetailsService,
-                jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
 
         http.exceptionHandling(configurer -> {
             configurer.accessDeniedHandler(new JwtAccessDeniedHandler(objectMapper));
