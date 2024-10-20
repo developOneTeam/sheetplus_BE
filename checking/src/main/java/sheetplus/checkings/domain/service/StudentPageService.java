@@ -39,11 +39,18 @@ public class StudentPageService {
         Member member = memberRepository.findById(jwtUtil.getMemberId(token))
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
+        if(member.getMemberParticipateContestStates() == null){
+            throw new ApiException(PARTICIPATE_NOT_FOUND);
+        }
+
+        Integer eventCounts = member.getMemberParticipateContestStates()
+                .getEventsCount();
+
+
         return StudentHomePageResponseDto.builder()
                 .studentName(member.getName())
                 .studentMajor(member.getMajor())
-                .eventCounts(member.getMemberParticipateContestStates()
-                        .getEventsCount().toString())
+                .eventCounts(eventCounts.toString())
                 .events(contestRepository.findNowAfterEvents(
                         contestId))
                 .build();

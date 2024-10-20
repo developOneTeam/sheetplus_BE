@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static sheetplus.checkings.error.ApiError.CONTEST_NOT_FOUND;
+import static sheetplus.checkings.error.ApiError.EVENT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -37,16 +38,24 @@ public class AdminPageService {
         ParticipateInfoDto participateInfoDto = participateContestStateRepository
                 .participateContestCounts(contest.getId());
         List<Event> events = contest.getEvents();
-        long remain = 0;
-        long finish = 0;
-        TreeSet<String> building = new TreeSet<>();
-        HashSet<String> major = new HashSet<>();
+
+        if(events.isEmpty()){
+            throw new ApiException(EVENT_NOT_FOUND);
+        }
+
         events.sort((o1, o2) -> {
             if(o1.getStartTime().equals(o2.getStartTime())){
                 return o1.getEndTime().compareTo(o2.getEndTime());
             }
             return o1.getStartTime().compareTo(o2.getStartTime());
         });
+
+
+        long remain = 0;
+        long finish = 0;
+        TreeSet<String> building = new TreeSet<>();
+        HashSet<String> major = new HashSet<>();
+
 
         for (int i = 0; i < events.size(); i++) {
             building.add(events.get(i).getBuilding());

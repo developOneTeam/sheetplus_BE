@@ -61,8 +61,7 @@ public class QrcodeService {
 
         ParticipateContest participateContest = participateContestStateRepository
                 .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
-                        member.getId(), contest.getId())
-                .orElseThrow(() -> new ApiException(PARTICIPATE_NOT_FOUND));
+                        member.getId(), contest.getId()).orElse(null);
 
         if(participateContest == null){
             participateContest = ParticipateContest.builder()
@@ -77,7 +76,7 @@ public class QrcodeService {
             participateContestStateRepository.save(participateContest);
         }else{
             if(participateContest.getEventTypeSet().contains(event.getEventCategory())){
-               throw new RuntimeException("이미 참여한 행사입니다.");
+               throw new ApiException(EVENT_ALREADY_PARTICIPATE);
             }
             participateContest.addCounts();
             participateContest.getEventTypeSet().add(event.getEventCategory());
