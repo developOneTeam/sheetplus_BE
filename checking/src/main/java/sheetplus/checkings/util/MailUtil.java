@@ -1,4 +1,4 @@
-package sheetplus.checking.util;
+package sheetplus.checkings.util;
 
 
 import lombok.RequiredArgsConstructor;
@@ -38,9 +38,10 @@ public class MailUtil {
         return key.toString();
     }
 
-    public String setContextUtil(String code, String type){
+    public String setContextUtil(String email, String code, String type){
         Context context = new Context();
         context.setVariable("code", code);
+        context.setVariable("email", email);
         return templateEngine.process(type, context);
     }
 
