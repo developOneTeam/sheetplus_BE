@@ -44,4 +44,16 @@ public class ApiExceptionHandler {
                         HTTP_INPUT_NOT_READABLE.getErrorDescription()));
     }
 
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<Api<?>> illegalArgumentExceptionHandler(
+            IllegalArgumentException e
+    ){
+        log.info("{}", e.getMessage());
+
+        return ResponseEntity
+                .status(HTTP_INPUT_NOT_READABLE.getHttpStatusCode())
+                .body(Api.ERROR(HTTP_INPUT_NOT_READABLE.getHttpStatusCode(),
+                        HTTP_INPUT_NOT_READABLE.getErrorDescription()));
+    }
+
 }
