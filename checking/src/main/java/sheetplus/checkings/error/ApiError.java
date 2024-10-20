@@ -17,7 +17,8 @@ public enum ApiError implements ErrorCodeIfs {
     TEMPORARY_NOT_FOUND(404, "임시멤버정보를 찾을 수 없음"),
     TOKEN_NOT_VALID(403, "유효한 토큰이 아닙니다."),
     QR_NOT_VALID(403, "QR코드 인증 대상이 아닙니다."),
-    EVENT_NOT_PROGRESS(403, "현재 진행중인 행사가 아닙니다.");
+    EVENT_NOT_PROGRESS(403, "현재 진행중인 행사가 아닙니다."),
+    EVENT_ALREADY_PARTICIPATE(403, "이미 참여한 행사입니다.");
 
 
     private final Integer httpStatusCode;
