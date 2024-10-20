@@ -25,24 +25,24 @@ public class EntryRepositoryCustomImpl implements EntryRepositoryCustom{
                         queryFactory
                                 .select(entry.major.countDistinct())
                                 .from(entry)
-                                .fetchOne()
+                                .fetchFirst()
                 )
                 .preliminaryCounts(
                         queryFactory.select(entry.count())
                                 .from(entry)
                                 .where(entry.entryType.eq(EntryType.PRELIMINARY))
-                                .fetchOne()
+                                .fetchFirst()
                 )
                 .finalCounts(
                         queryFactory.select(entry.count())
                                 .from(entry)
                                 .where(entry.entryType.eq(EntryType.FINALS))
-                                .fetchOne()
+                                .fetchFirst()
                 )
                 .totalCounts(
                         queryFactory.select(entry.count())
                                 .from(entry)
-                                .fetchOne()
+                                .fetchFirst()
                 )
                 .build();
     }

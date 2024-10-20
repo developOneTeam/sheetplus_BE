@@ -7,6 +7,7 @@ import sheetplus.checkings.domain.dto.EventResponseDto;
 import sheetplus.checkings.domain.entity.Contest;
 import sheetplus.checkings.domain.entity.Event;
 import sheetplus.checkings.domain.entity.enums.EventCategory;
+import sheetplus.checkings.exception.ApiException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static sheetplus.checkings.domain.entity.QContest.contest;
 import static sheetplus.checkings.domain.entity.QEvent.event;
+import static sheetplus.checkings.error.ApiError.CONTEST_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +28,10 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
         Contest findContest = queryFactory.selectFrom(contest)
                 .where(contest.id.eq(contestId))
                 .fetchFirst();
+
+        if(findContest == null){
+            throw new ApiException(CONTEST_NOT_FOUND);
+        }
 
         List<Event> events = queryFactory.selectFrom(event)
                 .where(event.eventContest.id.eq(findContest.getId())
@@ -61,6 +67,10 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .where(contest.id.eq(contestId))
                 .fetchFirst();
 
+        if(findContest == null){
+            throw new ApiException(CONTEST_NOT_FOUND);
+        }
+
         List<Event> events = queryFactory.selectFrom(event)
                 .where(event.eventContest.id.eq(findContest.getId())
                         .and(event.startTime.after(LocalDateTime.now())
@@ -76,7 +86,9 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
         Contest findContest = queryFactory.selectFrom(contest)
                 .where(contest.id.eq(contestId))
                 .fetchFirst();
-
+        if(findContest == null){
+            throw new ApiException(CONTEST_NOT_FOUND);
+        }
 
 
         List<Event> events = new ArrayList<>();
@@ -85,7 +97,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
             events.add(queryFactory.selectFrom(event)
                     .where(event.eventContest.id.eq(findContest.getId())
                             .and(event.eventCategory.eq(category)))
-                    .fetchOne());
+                    .fetchFirst());
         }
 
         return getEventResponseDtos(events);
