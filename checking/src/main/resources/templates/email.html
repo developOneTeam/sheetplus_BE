@@ -5,10 +5,13 @@
 </head>
 <body>
     <div style="margin:100px">
-        <h1>아래 인증코드를 입력해주세요.</h1><br>
+        <h1>하단 링크를 클릭해주세요</h1><br>
         <div align="center" style="border:1px solid black;">
-            <h3 style="color:black">이메일 인증 코드입니다.</h3>
-            <div style="font-size:130%" th:text="${code}"></div>
+            <div style="font-size:130%">
+                <a th:href="'https://mail-test.schusheetp.pages.dev/signup?email=' + ${email} + '&code=' + ${code}">
+                    <p>https://mail-test.schusheetp.pages.dev/signup</p>
+                </a>
+            </div>
         </div>
     </div>
 </body>
