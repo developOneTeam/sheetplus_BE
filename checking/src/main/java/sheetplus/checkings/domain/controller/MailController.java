@@ -38,14 +38,10 @@ public class MailController {
     @PostMapping("/mail/auth/check")
     public Api<Object> checkMail(
             @RequestBody EmailCheckRequestDto emailCheckRequestDto){
+        emailService.verifyEmail(emailCheckRequestDto.getEmail()
+                , emailCheckRequestDto.getCode());
 
-        if(!emailService.verifyEmail(emailCheckRequestDto.getEmail()
-                , emailCheckRequestDto.getCode())){
 
-            return Api.NOT_VALID(403,"인증 실패");
-        }
-
-        emailService.deleteTemporaryMember(emailCheckRequestDto.getEmail());
         return Api.OK("인증 성공");
     }
 
