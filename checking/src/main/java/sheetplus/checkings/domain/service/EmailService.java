@@ -80,12 +80,6 @@ public class EmailService {
         temporaryMemberRepository.save(temporaryMember);
     }
 
-
-    @Transactional
-    public void deleteTemporaryMember(String email){
-        temporaryMemberRepository.deleteById(email);
-    }
-
     @Transactional
     public void verifyEmail(String checkEmail, String code) {
         TemporaryMember temporaryMember =
