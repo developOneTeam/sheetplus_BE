@@ -15,8 +15,7 @@ import sheetplus.checkings.util.MailUtil;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
 
-import static sheetplus.checkings.error.ApiError.TEMPORARY_NOT_FOUND;
-import static sheetplus.checkings.error.ApiError.TEMPORARY_NOT_VALID_CODE;
+import static sheetplus.checkings.error.ApiError.*;
 
 
 @Slf4j
@@ -101,16 +100,14 @@ public class EmailService {
 
     }
 
-    public boolean verifyEmailDomain(String email){
+    public void verifyEmailDomain(String email){
         String emailDomain = email.
                 substring(email
                         .lastIndexOf(SEPARATOR)+1);
 
         if(!emailDomain.equals(EMAIL_DOMAIN)){
-            return false;
+            throw new ApiException(UNIVERSITY_EMAIL_NOT_VALID);
         }
-
-        return true;
     }
 
 
