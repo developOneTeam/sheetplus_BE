@@ -92,10 +92,12 @@ public class AuthService {
     @Transactional
     public boolean memberTypeCheck(MemberType memberType){
         if(memberType.equals(MemberType.SUPER_ADMIN)){
-            throw new ApiException(SUPER_ADMIN_REGISTER_BLOCK);
+            // 로그인 기능 개발 전까지는 허용
+            //throw new ApiException(SUPER_ADMIN_REGISTER_BLOCK);
         }
 
-        if(memberType.equals(MemberType.ADMIN)){
+        if(memberType.equals(MemberType.ADMIN) ||
+        memberType.equals(MemberType.NOT_ACCEPT_ADMIN)){
             return false;
         }
         return true;
