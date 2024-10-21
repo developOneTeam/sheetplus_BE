@@ -9,12 +9,15 @@ import sheetplus.checkings.domain.dto.LoginDto;
 import sheetplus.checkings.domain.dto.MemberInfoDto;
 import sheetplus.checkings.domain.dto.TokenDto;
 import sheetplus.checkings.domain.entity.Member;
+import sheetplus.checkings.domain.entity.TemporaryMember;
+import sheetplus.checkings.domain.entity.enums.ValidCons;
 import sheetplus.checkings.domain.repository.MemberRepository;
+import sheetplus.checkings.domain.repository.TemporaryMemberRepository;
 import sheetplus.checkings.error.ErrorCodeIfs;
 import sheetplus.checkings.exception.ApiException;
 import sheetplus.checkings.util.JwtUtil;
 
-import static sheetplus.checkings.error.ApiError.MEMBER_NOT_FOUND;
+import static sheetplus.checkings.error.ApiError.*;
 
 @Service
 @Slf4j
@@ -24,6 +27,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final TokenService refreshTokenService;
+    private final TemporaryMemberRepository temporaryMemberRepository;
 
     // 최초 토큰 생성에 대해서 발급
     @Transactional
@@ -71,6 +75,16 @@ public class AuthService {
     @Transactional
     public TokenDto refreshTokens(String refreshToken){
         return refreshTokenService.refreshTokens(refreshToken);
+    }
+
+    @Transactional
+    public void emailAuthenticate(String email){
+        TemporaryMember temporaryMember = temporaryMemberRepository.findById(email)
+                .orElseThrow(() -> new ApiException(TEMPORARY_NOT_FOUND));
+
+        if(temporaryMember.getValidCons().equals(ValidCons.EMAIL_NOT_VALID)){
+            throw new ApiException(EMAIL_NOT_AUTHENTICATE);
+        }
     }
 
 }
