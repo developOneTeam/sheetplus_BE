@@ -10,6 +10,7 @@ import sheetplus.checkings.domain.dto.MemberInfoDto;
 import sheetplus.checkings.domain.dto.TokenDto;
 import sheetplus.checkings.domain.entity.Member;
 import sheetplus.checkings.domain.entity.TemporaryMember;
+import sheetplus.checkings.domain.entity.enums.MemberType;
 import sheetplus.checkings.domain.entity.enums.ValidCons;
 import sheetplus.checkings.domain.repository.MemberRepository;
 import sheetplus.checkings.domain.repository.TemporaryMemberRepository;
@@ -85,6 +86,25 @@ public class AuthService {
         if(temporaryMember.getValidCons().equals(ValidCons.EMAIL_NOT_VALID)){
             throw new ApiException(EMAIL_NOT_AUTHENTICATE);
         }
+        temporaryMemberRepository.deleteById(temporaryMember.getEmail());
     }
+
+    @Transactional
+    public boolean memberTypeCheck(MemberType memberType){
+        if(memberType.equals(MemberType.SUPER_ADMIN)){
+            // 로그인 기능 개발 전까지는 허용
+            //throw new ApiException(SUPER_ADMIN_REGISTER_BLOCK);
+        }
+
+        if(memberType.equals(MemberType.ADMIN) ||
+        memberType.equals(MemberType.NOT_ACCEPT_ADMIN)){
+            return false;
+        }
+        return true;
+    }
+
+
+
+
 
 }

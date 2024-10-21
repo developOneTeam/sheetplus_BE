@@ -19,6 +19,10 @@ public enum ApiError implements ErrorCodeIfs {
     UNIVERSITY_EMAIL_NOT_VALID(403, "학교 이메일이 아닙니다."),
     EMAIL_NOT_AUTHENTICATE(403, "인증된 이메일이 아닙니다."),
     TOKEN_NOT_VALID(403, "유효한 토큰이 아닙니다."),
+    SUPER_ADMIN_REGISTER_BLOCK(403, "SUPER_ADMIN 회원가입은 개발자에게 요청하세요"),
+    ADMIN_NOT_ACCEPT(403, "SUPER_ADMIN이 승인한 ADMIN이 아닙니다."),
+    ADMIN_EXISTS(403, "가입 등록한 ADMIN 계정이 존재합니다."),
+    ADMIN_NOT_FOUND(404, "ADMIN 정보를 찾을 수 없음"),
     QR_NOT_VALID(403, "QR코드 인증 대상이 아닙니다."),
     EVENT_NOT_PROGRESS(403, "현재 진행중인 행사가 아닙니다."),
     EVENT_ALREADY_PARTICIPATE(403, "이미 참여한 행사입니다.");

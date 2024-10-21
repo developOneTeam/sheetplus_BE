@@ -1,13 +1,12 @@
 package sheetplus.checkings.domain.dto;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import sheetplus.checkings.domain.entity.enums.MemberType;
 
 @Getter @Setter
-@NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
+@Builder
 public class MemberRequestDto {
 
     private String name;
