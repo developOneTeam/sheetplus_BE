@@ -21,6 +21,11 @@ public class MemberController {
     @PostMapping("public/register")
     public Api<TokenDto> createMember(
             @RequestBody MemberRequestDto memberRequestDto){
+
+        // 이메일 인증여부 확인하는 로직 추가 필요
+        authService.emailAuthenticate(memberRequestDto.getUniversityEmail());
+
+
         Member member = memberCRUDService.createMember(memberRequestDto);
         TokenDto tokenWithData = authService.memberLogin(LoginDto.builder()
                         .id(member.getId())

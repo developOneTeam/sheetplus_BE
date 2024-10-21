@@ -26,9 +26,7 @@ public class MailController {
     @PostMapping("/mail/auth")
     public Api<Object> sendMail(
             @RequestBody EmailRequestDto emailRequestDto){
-        if(!emailService.verifyEmailDomain(emailRequestDto.getReceiver())){
-            return Api.NOT_VALID(403,"학교 이메일로 요청해주세요");
-        }
+        emailService.verifyEmailDomain(emailRequestDto.getReceiver());
 
         emailService.createTemporaryMember(emailRequestDto.getReceiver(),
                 emailService.sendMail(emailRequestDto.getReceiver()));
@@ -38,14 +36,10 @@ public class MailController {
     @PostMapping("/mail/auth/check")
     public Api<Object> checkMail(
             @RequestBody EmailCheckRequestDto emailCheckRequestDto){
+        emailService.verifyEmail(emailCheckRequestDto.getEmail()
+                , emailCheckRequestDto.getCode());
 
-        if(!emailService.verifyEmail(emailCheckRequestDto.getEmail()
-                , emailCheckRequestDto.getCode())){
 
-            return Api.NOT_VALID(403,"인증 실패");
-        }
-
-        emailService.deleteTemporaryMember(emailCheckRequestDto.getEmail());
         return Api.OK("인증 성공");
     }
 

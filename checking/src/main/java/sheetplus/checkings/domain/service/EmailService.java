@@ -8,13 +8,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.entity.TemporaryMember;
+import sheetplus.checkings.domain.entity.enums.ValidCons;
 import sheetplus.checkings.domain.repository.TemporaryMemberRepository;
 import sheetplus.checkings.exception.ApiException;
 import sheetplus.checkings.util.MailUtil;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
 
-import static sheetplus.checkings.error.ApiError.TEMPORARY_NOT_FOUND;
+import static sheetplus.checkings.error.ApiError.*;
 
 
 @Slf4j
@@ -74,6 +75,7 @@ public class EmailService {
                 .builder()
                 .email(email)
                 .code(code)
+                .validCons(ValidCons.EMAIL_NOT_VALID)
                 .build();
         temporaryMemberRepository.save(temporaryMember);
     }
@@ -84,29 +86,29 @@ public class EmailService {
         temporaryMemberRepository.deleteById(email);
     }
 
-
-    public boolean verifyEmail(String checkEmail, String code) {
+    @Transactional
+    public void verifyEmail(String checkEmail, String code) {
         TemporaryMember temporaryMember =
                 temporaryMemberRepository.findById(checkEmail)
                         .orElseThrow(() -> new ApiException(TEMPORARY_NOT_FOUND));
 
         if(!temporaryMember.getCode().equals(code)){
-           throw new ApiException(TEMPORARY_NOT_FOUND);
+           throw new ApiException(TEMPORARY_NOT_VALID_CODE);
         }
 
-        return true;
+        temporaryMember.updateValidCOns(ValidCons.EMAIL_VALID);
+
     }
 
-    public boolean verifyEmailDomain(String email){
+    public void verifyEmailDomain(String email){
         String emailDomain = email.
                 substring(email
                         .lastIndexOf(SEPARATOR)+1);
 
         if(!emailDomain.equals(EMAIL_DOMAIN)){
-            return false;
+            throw new ApiException(UNIVERSITY_EMAIL_NOT_VALID);
         }
-
-        return true;
     }
+
 
 }
