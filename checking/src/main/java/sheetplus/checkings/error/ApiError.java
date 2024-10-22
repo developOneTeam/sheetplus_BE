@@ -23,6 +23,8 @@ public enum ApiError implements ErrorCodeIfs {
     ADMIN_NOT_ACCEPT(403, "SUPER_ADMIN이 승인한 ADMIN이 아닙니다."),
     ADMIN_EXISTS(403, "가입 등록한 ADMIN 계정이 존재합니다."),
     ADMIN_NOT_FOUND(404, "ADMIN 정보를 찾을 수 없음"),
+    MEMBER_TYPE_DISCREPANCY(403, "요청한 멤버의 타입과 회원가입한 멤버의 타입이 일치하지 않습니다."),
+    MEMBER_EMAIL_DISCREPANCY(403, "이메일이 일치하지 않습니다. 토큰 변조 위험이 있습니다."),
     QR_NOT_VALID(403, "QR코드 인증 대상이 아닙니다."),
     EVENT_NOT_PROGRESS(403, "현재 진행중인 행사가 아닙니다."),
     EVENT_ALREADY_PARTICIPATE(403, "이미 참여한 행사입니다.");
