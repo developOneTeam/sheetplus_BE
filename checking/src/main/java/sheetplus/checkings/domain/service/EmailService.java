@@ -7,13 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.domain.entity.Member;
 import sheetplus.checkings.domain.entity.TemporaryMember;
-import sheetplus.checkings.domain.entity.enums.ValidCons;
+import sheetplus.checkings.domain.repository.MemberRepository;
 import sheetplus.checkings.domain.repository.TemporaryMemberRepository;
 import sheetplus.checkings.exception.ApiException;
 import sheetplus.checkings.util.MailUtil;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
+
+import java.util.List;
 
 import static sheetplus.checkings.error.ApiError.*;
 
@@ -24,13 +27,16 @@ import static sheetplus.checkings.error.ApiError.*;
 public class EmailService {
 
     private final TemporaryMemberRepository temporaryMemberRepository;
+    private final MemberRepository memberRepository;
     private final SesClient sesClient;
     private final MailUtil mailUtil;
 
     @Value("${email.subject}")
     private String SUBJECT;
-    @Value("${email.mail-html}")
-    private String MAIL_HTML;
+    @Value("${email.mail-register-html}")
+    private String MAIL_REGISTER_HTML;
+    @Value("${email.mail-login-html}")
+    private String MAIL_LOGIN_HTML;
     @Value("${email.email-domain}")
     private String EMAIL_DOMAIN;
     @Value("${email.sender-email}")
@@ -40,7 +46,7 @@ public class EmailService {
 
     private final String SEPARATOR = "@";
 
-    public String sendMail(String toEmail) {
+    public String sendMail(String toEmail, boolean registerCheck) {
 
         String code = mailUtil.createCodeUtil();
 
@@ -57,7 +63,8 @@ public class EmailService {
                                 .html(Content.builder()
                                         .data(mailUtil
                                                 .setContextUtil(toEmail, code
-                                                        , MAIL_HTML))
+                                                        , registerCheck ? MAIL_LOGIN_HTML
+                                                                : MAIL_REGISTER_HTML))
                                         .charset(ENCODE_TYPE)
                                         .build())
                                 .build())
@@ -75,7 +82,6 @@ public class EmailService {
                 .builder()
                 .email(email)
                 .code(code)
-                .validCons(ValidCons.EMAIL_NOT_VALID)
                 .build();
         temporaryMemberRepository.save(temporaryMember);
     }
@@ -90,8 +96,6 @@ public class EmailService {
            throw new ApiException(TEMPORARY_NOT_VALID_CODE);
         }
 
-        temporaryMember.updateValidCOns(ValidCons.EMAIL_VALID);
-
     }
 
     public void verifyEmailDomain(String email){
@@ -104,5 +108,12 @@ public class EmailService {
         }
     }
 
+    @Transactional
+    public boolean registerCheck(String email){
+        Member members = memberRepository.findMemberByUniversityEmail(email)
+                .orElse(null);
+
+        return members != null;
+    }
 
 }
