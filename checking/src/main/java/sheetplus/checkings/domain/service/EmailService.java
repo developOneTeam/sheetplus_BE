@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.entity.Member;
 import sheetplus.checkings.domain.entity.TemporaryMember;
-import sheetplus.checkings.domain.entity.enums.ValidCons;
 import sheetplus.checkings.domain.repository.MemberRepository;
 import sheetplus.checkings.domain.repository.TemporaryMemberRepository;
 import sheetplus.checkings.exception.ApiException;
@@ -83,7 +82,6 @@ public class EmailService {
                 .builder()
                 .email(email)
                 .code(code)
-                .validCons(ValidCons.EMAIL_NOT_VALID)
                 .build();
         temporaryMemberRepository.save(temporaryMember);
     }
@@ -97,8 +95,6 @@ public class EmailService {
         if(!temporaryMember.getCode().equals(code)){
            throw new ApiException(TEMPORARY_NOT_VALID_CODE);
         }
-
-        temporaryMember.updateValidCOns(ValidCons.EMAIL_VALID);
 
     }
 
@@ -114,7 +110,7 @@ public class EmailService {
 
     @Transactional
     public boolean registerCheck(String email){
-        List<Member> members = memberRepository.findMemberByEmail(email);
+        List<Member> members = memberRepository.findMemberByUniversityEmail(email);
 
         return !members.isEmpty();
     }
