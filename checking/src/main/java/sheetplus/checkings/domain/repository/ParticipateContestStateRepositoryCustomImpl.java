@@ -48,15 +48,20 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
                 .build();
     }
 
+
+    /**
+     *
+     * Deprecated
+     * 사유: 증정 기능 비즈니스 정책상 사용 보류
+     *
+     */
     @Override
     public List<MemberInfoDto> participateMemberInfoRead(Long contestId) {
         List<Member> members = queryFactory
                 .select(participateContest.memberParticipateContestState)
                 .from(participateContest)
                 .where(participateContest.contestParticipateContestState.id.eq(contestId).and(
-                        participateContest.eventsCount.goe(5).or(
-                                participateContest.meritType.eq(MeritType.PRIZE_TARGET)
-                        )
+                        participateContest.eventsCount.goe(1)
                 ))
                 .fetch();
 
@@ -77,7 +82,9 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
         List<Member> members = queryFactory
                 .select(participateContest.memberParticipateContestState)
                 .from(participateContest)
-                .where(participateContest.contestParticipateContestState.id.eq(contestId))
+                .where(participateContest.contestParticipateContestState.id.eq(contestId).and(
+                        participateContest.eventsCount.goe(5)
+                ))
                 .fetch();
 
         return members.stream()
