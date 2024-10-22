@@ -110,9 +110,10 @@ public class EmailService {
 
     @Transactional
     public boolean registerCheck(String email){
-        List<Member> members = memberRepository.findMemberByUniversityEmail(email);
+        Member members = memberRepository.findMemberByUniversityEmail(email)
+                .orElse(null);
 
-        return !members.isEmpty();
+        return members != null;
     }
 
 }
