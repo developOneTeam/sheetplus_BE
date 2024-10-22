@@ -8,6 +8,7 @@ import sheetplus.checkings.domain.dto.MemberUpdateRequestDto;
 import sheetplus.checkings.domain.dto.TokenDto;
 import sheetplus.checkings.domain.entity.Member;
 import sheetplus.checkings.domain.service.AuthService;
+import sheetplus.checkings.domain.service.EmailService;
 import sheetplus.checkings.domain.service.MemberCRUDService;
 import sheetplus.checkings.domain.service.SuperAdminService;
 import sheetplus.checkings.response.Api;
@@ -19,12 +20,18 @@ public class MemberController {
     private final MemberCRUDService memberCRUDService;
     private final AuthService authService;
     private final SuperAdminService superAdminService;
+    private final EmailService emailService;
 
     @PostMapping("public/register")
     public Api<TokenDto> createMember(
             @RequestBody MemberRequestDto memberRequestDto){
 
+        emailService.verifyEmail(memberRequestDto.getUniversityEmail(),
+                memberRequestDto.getCode());
         authService.emailAuthenticate(memberRequestDto.getUniversityEmail());
+
+        // 멤버 존재여부 확인, 있으면 로그인 진행
+
 
         // 멤버 타입 체크 로직
         if(!authService.memberTypeCheck(memberRequestDto.getMemberType())){

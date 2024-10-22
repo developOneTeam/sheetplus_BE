@@ -14,5 +14,6 @@ public class MemberRequestDto {
     private String major;
     private String universityEmail;
     private MemberType memberType;
+    private String code;
 
 }
