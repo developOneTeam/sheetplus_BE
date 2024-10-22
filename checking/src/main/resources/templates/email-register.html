@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div style="margin:100px">
+        <h1>하단 링크를 클릭해주세요</h1><br>
+        <div align="center" style="border:1px solid black;">
+            <div style="font-size:130%">
+                <a th:href="'https://mail-test.schusheetp.pages.dev/signup?email=' + ${email} + '&code=' + ${code} + '&login=false'">
+                    https://mail-test.schusheetp.pages.dev/signup
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
