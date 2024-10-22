@@ -72,7 +72,7 @@ public class AuthService {
     @Transactional
     public boolean memberTypeCheck(MemberType memberType){
         if(memberType.equals(MemberType.SUPER_ADMIN)){
-            throw new ApiException(SUPER_ADMIN_REGISTER_BLOCK);
+//            throw new ApiException(SUPER_ADMIN_REGISTER_BLOCK);
         }
 
         if(memberType.equals(MemberType.ADMIN) ||
