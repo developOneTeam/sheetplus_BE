@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.dto.LoginDto;
 import sheetplus.checkings.domain.entity.Member;
 import sheetplus.checkings.domain.repository.MemberRepository;
+import sheetplus.checkings.exception.ApiException;
+
+import static sheetplus.checkings.error.ApiError.MEMBER_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Getter
@@ -24,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Member member = memberRepository.findById(Long.parseLong(id))
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 멤버가 없습니다."));
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
         LoginDto dto = LoginDto
                 .builder()
@@ -39,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     // 편의 메소드
     public LoginDto loadUserByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 멤버가 없습니다."));
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
         return LoginDto.builder()
                 .id(member.getId())

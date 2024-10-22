@@ -27,9 +27,8 @@ public class EventCRUDService {
 
     @Transactional
     public EventResponseDto createEvent(Long contestId, EventRequestDto eventRequestDto) {
-        // null에 대한 Exception은 이후 만들 계획
         Contest contest = contestRepository.findById(contestId)
-                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));;
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
 
         Event event = Event.builder()
                 .name(eventRequestDto.getName())
@@ -87,7 +86,12 @@ public class EventCRUDService {
 
     @Transactional
     public void deleteEvent(Long eventId) {
-        eventRepository.deleteById(eventId);
+        if(eventRepository.existsById(eventId)){
+            eventRepository.deleteById(eventId);
+        }else{
+            throw new ApiException(EVENT_NOT_FOUND);
+        }
+
     }
 
 

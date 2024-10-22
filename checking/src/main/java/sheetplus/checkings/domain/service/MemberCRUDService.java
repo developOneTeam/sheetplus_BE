@@ -58,8 +58,13 @@ public class MemberCRUDService {
     @Transactional
     public void deleteMember(String token){
         Long id = jwtUtil.getMemberId(token);
-        memberRepository.deleteById(id);
-        tokenService.deleteRefreshToken(id);
+        if(memberRepository.existsById(id)){
+            memberRepository.deleteById(id);
+            tokenService.deleteRefreshToken(id);
+        }else{
+            throw new ApiException(MEMBER_NOT_FOUND);
+        }
+
     }
 
 

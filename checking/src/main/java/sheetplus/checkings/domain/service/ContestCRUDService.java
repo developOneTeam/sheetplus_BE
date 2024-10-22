@@ -57,8 +57,11 @@ public class ContestCRUDService {
 
     @Transactional
     public void deleteContest(Long id) {
-        contestRepository.deleteById(id);
-
+        if(contestRepository.existsById(id)){
+            contestRepository.deleteById(id);
+        }else{
+            throw new ApiException(CONTEST_NOT_FOUND);
+        }
     }
 
 

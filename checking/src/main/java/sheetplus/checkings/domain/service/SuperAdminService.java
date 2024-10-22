@@ -87,7 +87,12 @@ public class SuperAdminService {
 
     @Transactional
     public void deleteAdmin(String email){
-        adminAcceptConsRepository.deleteById(email);
+        if(adminAcceptConsRepository.existsById(email)){
+            adminAcceptConsRepository.deleteById(email);
+        }else{
+            throw new ApiException(ADMIN_NOT_FOUND);
+        }
+
     }
 
 
