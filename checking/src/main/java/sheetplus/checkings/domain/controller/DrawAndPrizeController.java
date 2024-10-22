@@ -18,7 +18,14 @@ public class DrawAndPrizeController {
 
     private final PrizeAndDrawEventService prizeAndDrawEventService;
 
-    @PostMapping("private/admin/prize/target/refresh")
+
+    /**
+     *
+     * Deprecated
+     * 사유: 증정 기능 비즈니스 정책상 사용 보류
+     *
+     */
+    //@PostMapping("private/admin/prize/target/refresh")
     public void eventTargetRefresh(
             @RequestBody PrizeConditionRequestDto prizeConditionRequestDto) {
         prizeAndDrawEventService.participateStateRefresh(prizeConditionRequestDto.getCondition());

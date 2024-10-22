@@ -120,14 +120,21 @@ public class AdminPageService {
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         return participateContestStateRepository
-                .participateMemberInfoRead(contest.getId());
+                .drawMemberInfoRead(contest.getId());
     }
 
+
+    /**
+     *
+     * Deprecated
+     * 사유: 증정 기능 비즈니스 정책상 사용 보류
+     *
+     */
     public List<MemberInfoDto> readPrizeMemberList(Long contestId){
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         return participateContestStateRepository
-                .drawMemberInfoRead(contest.getId());
+                .participateMemberInfoRead(contest.getId());
     }
 
 
