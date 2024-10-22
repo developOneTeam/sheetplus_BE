@@ -9,9 +9,7 @@ import sheetplus.checkings.domain.dto.LoginDto;
 import sheetplus.checkings.domain.dto.MemberInfoDto;
 import sheetplus.checkings.domain.dto.TokenDto;
 import sheetplus.checkings.domain.entity.Member;
-import sheetplus.checkings.domain.entity.TemporaryMember;
 import sheetplus.checkings.domain.entity.enums.MemberType;
-import sheetplus.checkings.domain.entity.enums.ValidCons;
 import sheetplus.checkings.domain.repository.MemberRepository;
 import sheetplus.checkings.domain.repository.TemporaryMemberRepository;
 import sheetplus.checkings.error.ErrorCodeIfs;
@@ -76,17 +74,6 @@ public class AuthService {
     @Transactional
     public TokenDto refreshTokens(String refreshToken){
         return refreshTokenService.refreshTokens(refreshToken);
-    }
-
-    @Transactional
-    public void emailAuthenticate(String email){
-        TemporaryMember temporaryMember = temporaryMemberRepository.findById(email)
-                .orElseThrow(() -> new ApiException(TEMPORARY_NOT_FOUND));
-
-        if(temporaryMember.getValidCons().equals(ValidCons.EMAIL_NOT_VALID)){
-            throw new ApiException(EMAIL_NOT_AUTHENTICATE);
-        }
-        temporaryMemberRepository.deleteById(temporaryMember.getEmail());
     }
 
     @Transactional

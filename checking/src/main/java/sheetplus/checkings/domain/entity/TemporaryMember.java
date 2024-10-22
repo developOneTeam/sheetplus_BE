@@ -2,7 +2,6 @@ package sheetplus.checkings.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sheetplus.checkings.domain.entity.enums.ValidCons;
 
 @Entity(name = "temporary_member")
 @Getter
@@ -17,13 +16,5 @@ public class TemporaryMember {
 
     @Column(nullable = false)
     private String code;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ValidCons validCons;
-
-    public void updateValidCOns(ValidCons validCons){
-        this.validCons = validCons;
-    }
 
 }

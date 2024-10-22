@@ -28,7 +28,6 @@ public class MemberController {
 
         emailService.verifyEmail(memberRequestDto.getUniversityEmail(),
                 memberRequestDto.getCode());
-        authService.emailAuthenticate(memberRequestDto.getUniversityEmail());
 
         // 멤버 존재여부 확인, 있으면 로그인 진행
 
