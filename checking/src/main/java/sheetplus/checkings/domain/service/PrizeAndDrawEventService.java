@@ -77,7 +77,12 @@ public class PrizeAndDrawEventService {
 
     @Transactional
     public void deleteDraw(Long id){
-        drawRepository.deleteById(id);
+        if (drawRepository.existsById(id)) {
+            drawRepository.deleteById(id);
+        }else{
+            throw new ApiException(DRAW_NOT_FOUND);
+        }
+
     }
 
 

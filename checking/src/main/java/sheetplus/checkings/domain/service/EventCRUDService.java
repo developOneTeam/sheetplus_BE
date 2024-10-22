@@ -86,7 +86,12 @@ public class EventCRUDService {
 
     @Transactional
     public void deleteEvent(Long eventId) {
-        eventRepository.deleteById(eventId);
+        if(eventRepository.existsById(eventId)){
+            eventRepository.deleteById(eventId);
+        }else{
+            throw new ApiException(EVENT_NOT_FOUND);
+        }
+
     }
 
 

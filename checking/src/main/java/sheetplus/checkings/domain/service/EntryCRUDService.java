@@ -75,7 +75,11 @@ public class EntryCRUDService {
 
     @Transactional
     public void deleteEntry(Long id){
-        entryRepository.deleteById(id);
+        if(entryRepository.existsById(id)){
+            entryRepository.deleteById(id);
+        }else{
+            throw new ApiException(ENTRY_NOT_FOUND);
+        }
     }
 
 
