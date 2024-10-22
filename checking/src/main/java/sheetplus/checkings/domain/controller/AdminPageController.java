@@ -34,7 +34,13 @@ public class AdminPageController {
     }
 
 
-    @GetMapping("/{contest}/eventManage/prize/member/list")
+    /**
+     *
+     * Deprecated
+     * 사유: 증정 기능 비즈니스 정책상 사용 보류
+     *
+     */
+    //@GetMapping("/{contest}/eventManage/prize/member/list")
     public Api<List<MemberInfoDto>> readPrizeMemberList(
             @PathVariable("contest") Long contestId){
         return Api.READ(adminPageService.readPrizeMemberList(contestId));

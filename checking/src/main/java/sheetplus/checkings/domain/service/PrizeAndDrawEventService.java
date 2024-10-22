@@ -27,6 +27,13 @@ public class PrizeAndDrawEventService {
     private final MemberRepository memberRepository;
     private final ContestRepository contestRepository;
 
+
+    /**
+     *
+     * Deprecated
+     * 사유: 증정 기능 비즈니스 정책상 사용 보류
+     *
+     */
     @Transactional
     public void participateStateRefresh(int condition){
         participateContestStateRepository.targetUpdates(condition);
