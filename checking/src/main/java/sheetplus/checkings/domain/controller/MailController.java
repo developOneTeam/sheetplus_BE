@@ -27,7 +27,8 @@ public class MailController {
         emailService.verifyEmailDomain(emailRequestDto.getReceiver());
 
         emailService.createTemporaryMember(emailRequestDto.getReceiver(),
-                emailService.sendMail(emailRequestDto.getReceiver()));
+                emailService.sendMail(emailRequestDto.getReceiver(),
+                        emailService.registerCheck(emailRequestDto.getReceiver())));
         return Api.OK("전송 완료");
     }
 
