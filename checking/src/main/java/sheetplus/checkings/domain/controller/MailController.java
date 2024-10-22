@@ -12,9 +12,7 @@ import sheetplus.checkings.domain.service.EmailService;
 import sheetplus.checkings.response.Api;
 
 
-/**
- * ResponseEntity에 대한 공통 양식은 이후 개발 예정
- */
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -33,7 +31,12 @@ public class MailController {
         return Api.OK("전송 완료");
     }
 
-    @PostMapping("/mail/auth/check")
+    /**
+     * 
+     * DEPRECATED - 추후 삭제 예정
+     * 
+     */
+    //@PostMapping("/mail/auth/check")
     public Api<Object> checkMail(
             @RequestBody EmailCheckRequestDto emailCheckRequestDto){
         emailService.verifyEmail(emailCheckRequestDto.getEmail()
