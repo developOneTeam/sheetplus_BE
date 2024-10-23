@@ -8,7 +8,6 @@ import sheetplus.checkings.domain.dto.MemberInfoDto;
 import sheetplus.checkings.domain.dto.MemberRequestDto;
 import sheetplus.checkings.domain.dto.TokenDto;
 import sheetplus.checkings.domain.entity.AdminAcceptCons;
-import sheetplus.checkings.domain.entity.Member;
 import sheetplus.checkings.domain.entity.enums.AcceptCons;
 import sheetplus.checkings.domain.entity.enums.MemberType;
 import sheetplus.checkings.domain.repository.AdminAcceptConsRepository;
