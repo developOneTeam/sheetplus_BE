@@ -6,11 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.dto.MemberRequestDto;
 import sheetplus.checkings.domain.dto.MemberUpdateRequestDto;
 import sheetplus.checkings.domain.entity.Member;
+import sheetplus.checkings.domain.repository.AdminAcceptConsRepository;
 import sheetplus.checkings.domain.repository.MemberRepository;
 import sheetplus.checkings.exception.ApiException;
 import sheetplus.checkings.util.JwtUtil;
 
-import static sheetplus.checkings.error.ApiError.MEMBER_NOT_FOUND;
+import static sheetplus.checkings.error.ApiError.*;
 
 
 @Service
@@ -18,6 +19,7 @@ import static sheetplus.checkings.error.ApiError.MEMBER_NOT_FOUND;
 public class MemberCRUDService {
 
     private final MemberRepository memberRepository;
+    private final AdminAcceptConsRepository adminAcceptConsRepository;
     private final JwtUtil jwtUtil;
     private final TokenService tokenService;
 
@@ -30,6 +32,14 @@ public class MemberCRUDService {
                 .universityEmail(memberRequestDto.getUniversityEmail())
                 .memberType(memberRequestDto.getMemberType())
                 .build();
+
+        if(memberRepository.findMemberByUniversityEmail(member.getUniversityEmail()).isPresent()){
+            throw new ApiException(MEMBER_EXISTS);
+        }
+
+        if(adminAcceptConsRepository.findById(member.getUniversityEmail()).isPresent()){
+            throw new ApiException(ADMIN_EXISTS);
+        }
 
         memberRepository.save(member);
 
