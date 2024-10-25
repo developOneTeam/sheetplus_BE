@@ -39,10 +39,10 @@ public class Member {
     @Column(nullable = false)
     private MemberType memberType;
 
-    @OneToOne(mappedBy = "memberParticipateContestState")
+    @OneToOne(mappedBy = "memberParticipateContestState", cascade = CascadeType.REMOVE)
     private ParticipateContest memberParticipateContestStates;
 
-    @OneToOne(mappedBy = "drawMember")
+    @OneToOne(mappedBy = "drawMember", cascade = CascadeType.REMOVE)
     private Draw memberDraw;
 
 
