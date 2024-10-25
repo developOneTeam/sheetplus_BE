@@ -56,7 +56,6 @@ public class SuperAdminService {
 
         return TokenDto.builder()
                 .accessToken("")
-                .refreshToken("")
                 .memberInfo(MemberInfoDto.builder()
                         .email(newAdmin.getEmail())
                         .name(newAdmin.getName())
