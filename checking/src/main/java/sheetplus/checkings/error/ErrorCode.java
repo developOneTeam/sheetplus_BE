@@ -17,7 +17,8 @@ public enum ErrorCode implements ErrorCodeIfs{
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류"),
     FORBIDDEN_ERROR(HttpStatus.FORBIDDEN.value(), "권한 없음"),
     UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED.value(), "미인증 요청"),
-    HTTP_INPUT_NOT_READABLE(400, "잘못된 HTTP 입력 요청");
+    HTTP_INPUT_NOT_READABLE(400, "잘못된 HTTP 입력 요청"),
+    ROLE_FORBIDDEN_ERROR(403, "접근 권한이 없는 사용자입니다.");
 
     private final Integer httpStatusCode;   // 클라이언트에 보여줄 status code
     private final String errorDescription;  // 에러 설명

@@ -8,11 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sheetplus.checkings.domain.dto.LoginDto;
+import sheetplus.checkings.exception.JwtException;
 
 
 import java.security.Key;
 import java.time.ZonedDateTime;
 import java.util.Date;
+
+import static sheetplus.checkings.error.TokenError.*;
 
 @Slf4j
 @Component
@@ -62,20 +65,23 @@ public class JwtUtil {
         return parseClaims(token).get("memberId", Long.class);
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token){
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+            log.error("유효하지 않은 토큰 검증", e);
+            throw new JwtException(INVALID_TOKEN);
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            log.error("만료된 토큰 검증", e);
+            throw new JwtException(EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            log.info("지원하지 않는 토큰 검증", e);
+            throw new JwtException(UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            log.info("잘못된 토큰 양식 전달 검증.", e);
+            throw new JwtException(ILLEGAL_TOKEN);
         }
-        return false;
     }
 
     private Claims parseClaims(String accessToken){

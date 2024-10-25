@@ -1,87 +1,93 @@
 package sheetplus.checkings.config.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import sheetplus.checkings.config.security.CustomUserDetailsService;
-import sheetplus.checkings.error.ErrorCodeIfs;
-import sheetplus.checkings.error.TokenError;
 import sheetplus.checkings.exception.JwtException;
-import sheetplus.checkings.response.Api;
 import sheetplus.checkings.util.JwtUtil;
 
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import static sheetplus.checkings.error.TokenError.*;
 
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
-    private final ObjectMapper objectMapper;
+    private final List<String> AUTH_WHITELIST = Arrays.asList(
+            "swagger-ui", "api-docs", "swagger-ui-custom.html",
+            "swagger-ui.html", "public"
+    );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-        String authorizationHeader = request.getHeader("Authorization");
-        String accessToken = null;
+                                    FilterChain filterChain) throws ServletException, IOException, JwtException, AccessDeniedException {
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            accessToken = authorizationHeader.substring(7);
-        }
+        String requestUri = request.getRequestURI();
+        log.info("JwtAuthFilter request : {}" , requestUri);
 
-
-        if (accessToken != null) {
-            if (jwtUtil.validateToken(accessToken)) {
-                Long userId = jwtUtil.getMemberId(accessToken);
-                UserDetails userDetails = customUserDetailsService
-                        .loadUserByUsername(userId.toString());
-
-                if (userDetails != null) {
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(userDetails,
-                                    null, userDetails.getAuthorities());
-
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            }
-        }
-
-        log.info("JwtAuthFilter request : {}" , request.getRequestURI());
-
-        try {
+        if(AUTH_WHITELIST.contains(requestUri.split("/")[1])){
+            log.info("WHITELIST URI 접근, 내부로직 실행");
             filterChain.doFilter(request, response);
-        }catch (JwtException e) {
-            if (e.getErrorCodeIfs().getHttpStatusCode() == 2000) {
-                response(response, TokenError.INVALID_TOKEN);
-            } else if (e.getErrorCodeIfs().getHttpStatusCode() == 2001) {
-                response(response, TokenError.EXPIRED_TOKEN);
-            }else if (e.getErrorCodeIfs().getHttpStatusCode() == 2003) {
-                response(response, TokenError.AUTHORIZATION_TOKEN_NOT_FOUND);
-            } else if (e.getErrorCodeIfs().getHttpStatusCode() == 2004) {
-                response(response, TokenError.REFRESH_TOKEN_NOT_VALID);
-            } else {
-                response(response, TokenError.TOKEN_EXCEPTION);
+            return;
+        }
+
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")){
+            throw new JwtException(TOKEN_NOT_FOUND);
+        }
+
+        String accessToken = authorizationHeader.substring(7);
+
+        if (jwtUtil.validateToken(accessToken)) {
+            Long userId = jwtUtil.getMemberId(accessToken);
+            UserDetails userDetails = customUserDetailsService
+                    .loadUserByUsername(userId.toString());
+            if(userDetails == null){
+                throw new JwtException(INVALID_TOKEN);
             }
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            checkUserRole(requestUri, userDetails);
+        }
+        filterChain.doFilter(request, response);
+    }
+
+    private void checkUserRole(String requestUri, UserDetails userDetails) {
+        if (requestUri.startsWith("/private/student") &&
+                (!userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_STUDENT"))
+                && !userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                        && !userDetails.getAuthorities()
+                        .contains(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN")))){
+            throw new AccessDeniedException("STUDENT 이상의 권한 필요");
+
+        } else if (requestUri.startsWith("/private/admin") &&
+                (!userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                && !userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN")))) {
+            log.info("{}", userDetails.getAuthorities());
+            throw new AccessDeniedException("ADMIN 이상의 권한 필요");
+        } else if (requestUri.startsWith("/private/super/admin") &&
+                !userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"))) {
+
+            throw new AccessDeniedException("SUPER_ADMIN 권한 필요");
         }
     }
 
-    private void response(HttpServletResponse response, ErrorCodeIfs errorCodeIfs)
-            throws IOException {
-        Api apiResponse = Api.ERROR(errorCodeIfs);
-        String responseBody = objectMapper.writeValueAsString(apiResponse);
-
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(apiResponse.getResult().getResultCode());
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(responseBody);
-    }
 }

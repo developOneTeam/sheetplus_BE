@@ -16,9 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import org.springframework.web.cors.CorsConfiguration;
 import sheetplus.checkings.config.filter.JwtAuthFilter;
+import sheetplus.checkings.config.filter.JwtExceptionFilter;
 import sheetplus.checkings.config.security.CustomUserDetailsService;
-import sheetplus.checkings.handler.JwtAccessDeniedHandler;
-import sheetplus.checkings.handler.JwtAuthenticationEntryPoint;
 import sheetplus.checkings.util.JwtUtil;
 
 import java.util.List;
@@ -39,9 +38,6 @@ public class SecurityConfig {
     };
 
 
-    /**
-     * 개발 단계에서는 CORS 미적용, 이후 운영/배포 과정 중에 CORS 설정 추가할 예정
-     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -64,19 +60,15 @@ public class SecurityConfig {
 
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-        http.addFilterBefore(new JwtAuthFilter(customUserDetailsService,
-                jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
-
-        http.exceptionHandling(configurer -> {
-            configurer.accessDeniedHandler(new JwtAccessDeniedHandler(objectMapper));
-            configurer.authenticationEntryPoint(new JwtAuthenticationEntryPoint(objectMapper));
-        });
+        http.addFilterBefore(new JwtAuthFilter(customUserDetailsService, jwtUtil)
+                , UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtExceptionFilter(objectMapper), JwtAuthFilter.class);
 
         // 권한 규칙 작성
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(AUTH_WHITELIST).permitAll()
+                .requestMatchers(AUTH_WHITELIST).permitAll()
                 .requestMatchers("/private/student/**").hasAnyRole("STUDENT", "ADMIN", "SUPER_ADMIN")
-                .requestMatchers("private/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                .requestMatchers("/private/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
                 .requestMatchers("/private/super/admin/**").hasRole("SUPER_ADMIN")
                 .requestMatchers("/private/**").authenticated()
         );

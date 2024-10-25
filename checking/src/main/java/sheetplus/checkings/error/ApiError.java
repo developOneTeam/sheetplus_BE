@@ -28,7 +28,8 @@ public enum ApiError implements ErrorCodeIfs {
     MEMBER_EMAIL_DISCREPANCY(403, "이메일이 일치하지 않습니다. 토큰 변조 위험이 있습니다."),
     QR_NOT_VALID(403, "QR코드 인증 대상이 아닙니다."),
     EVENT_NOT_PROGRESS(403, "현재 진행중인 행사가 아닙니다."),
-    EVENT_ALREADY_PARTICIPATE(403, "이미 참여한 행사입니다.");
+    EVENT_ALREADY_PARTICIPATE(403, "이미 참여한 행사입니다."),
+    REFRESH_TOKEN_EXCEPTION(403, "유효하지 않은 토큰이거나 찾을 수 없습니다.");
 
 
     private final Integer httpStatusCode;
