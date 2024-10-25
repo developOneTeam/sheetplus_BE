@@ -7,15 +7,15 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import sheetplus.checkings.domain.dto.LoginDto;
-import sheetplus.checkings.exception.JwtException;
+import sheetplus.checkings.business.auth.dto.LoginDto;
+import sheetplus.checkings.exception.exceptionMethod.JwtException;
 
 
 import java.security.Key;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import static sheetplus.checkings.error.TokenError.*;
+import static sheetplus.checkings.exception.error.TokenError.*;
 
 @Slf4j
 @Component

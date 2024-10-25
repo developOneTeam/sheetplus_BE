@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import sheetplus.checkings.domain.dto.LoginDto;
+import sheetplus.checkings.business.auth.dto.LoginDto;
 
 import java.util.ArrayList;
 import java.util.Collection;

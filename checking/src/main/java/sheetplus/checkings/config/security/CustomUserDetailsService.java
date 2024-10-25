@@ -7,12 +7,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sheetplus.checkings.domain.dto.LoginDto;
-import sheetplus.checkings.domain.entity.Member;
-import sheetplus.checkings.domain.repository.MemberRepository;
-import sheetplus.checkings.exception.ApiException;
+import sheetplus.checkings.business.auth.dto.LoginDto;
+import sheetplus.checkings.domain.member.entity.Member;
+import sheetplus.checkings.domain.member.repository.MemberRepository;
+import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
-import static sheetplus.checkings.error.ApiError.MEMBER_NOT_FOUND;
+import static sheetplus.checkings.exception.error.ApiError.MEMBER_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Getter
