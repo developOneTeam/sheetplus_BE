@@ -11,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sheetplus.checkings.error.TokenError;
-import sheetplus.checkings.exception.ApiException;
-import sheetplus.checkings.exception.JwtException;
-import sheetplus.checkings.response.Api;
+import sheetplus.checkings.exception.error.TokenError;
+import sheetplus.checkings.exception.exceptionMethod.ApiException;
+import sheetplus.checkings.exception.exceptionMethod.JwtException;
+import sheetplus.checkings.util.response.Api;
 
 import java.io.IOException;
 

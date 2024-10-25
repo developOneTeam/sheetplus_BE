@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import sheetplus.checkings.config.security.CustomUserDetailsService;
-import sheetplus.checkings.exception.JwtException;
+import sheetplus.checkings.exception.exceptionMethod.JwtException;
 import sheetplus.checkings.util.JwtUtil;
 
 
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static sheetplus.checkings.error.TokenError.*;
+import static sheetplus.checkings.exception.error.TokenError.*;
 
 @RequiredArgsConstructor
 @Slf4j
