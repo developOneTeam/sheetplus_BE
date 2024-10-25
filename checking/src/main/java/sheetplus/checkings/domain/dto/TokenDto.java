@@ -8,7 +8,6 @@ import lombok.*;
 public class TokenDto {
 
     private String accessToken;
-    private String refreshToken;
     private MemberInfoDto memberInfo;
 
 }
