@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import sheetplus.checkings.error.ErrorCodeIfs;
 import sheetplus.checkings.exception.ApiException;
 import sheetplus.checkings.response.Api;
 
@@ -24,11 +23,10 @@ public class ApiExceptionHandler {
 
         log.error("{}", apiException.getErrorDescription());
 
-        ErrorCodeIfs errorCodeIfs = apiException.getErrorCodeIfs();
         return ResponseEntity
-                .status(errorCodeIfs.getHttpStatusCode())
+                .status(apiException.getErrorCodeIfs().getHttpStatusCode())
                 .body(
-                        Api.ERROR(errorCodeIfs.getHttpStatusCode(),
+                        Api.ERROR(apiException.getErrorCodeIfs().getHttpStatusCode(),
                                 apiException.getErrorDescription())
                 );
     }
