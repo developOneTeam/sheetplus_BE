@@ -8,6 +8,7 @@ import sheetplus.checkings.domain.dto.MemberInfoDto;
 import sheetplus.checkings.domain.dto.MemberRequestDto;
 import sheetplus.checkings.domain.dto.TokenDto;
 import sheetplus.checkings.domain.entity.AdminAcceptCons;
+import sheetplus.checkings.domain.entity.Member;
 import sheetplus.checkings.domain.entity.enums.AcceptCons;
 import sheetplus.checkings.domain.entity.enums.MemberType;
 import sheetplus.checkings.domain.repository.AdminAcceptConsRepository;
@@ -24,6 +25,7 @@ public class SuperAdminService {
 
     private final AdminAcceptConsRepository adminAcceptConsRepository;
     private final MemberRepository memberRepository;
+    private final TokenService tokenService;
 
 
     @Transactional
@@ -54,7 +56,6 @@ public class SuperAdminService {
 
         return TokenDto.builder()
                 .accessToken("")
-                .refreshToken("")
                 .memberInfo(MemberInfoDto.builder()
                         .email(newAdmin.getEmail())
                         .name(newAdmin.getName())
@@ -91,8 +92,13 @@ public class SuperAdminService {
     public void deleteAdmin(String email){
         if(adminAcceptConsRepository.existsById(email)){
             adminAcceptConsRepository.deleteById(email);
-            memberRepository.findMemberByUniversityEmail(email)
-                    .ifPresent(memberRepository::delete);
+            Member member = memberRepository.findMemberByUniversityEmail(email)
+                    .orElse(null);
+            if(member != null){
+                memberRepository.delete(member);
+                tokenService.deleteRefreshToken(member.getId());
+            }
+
         }else{
             throw new ApiException(ADMIN_NOT_FOUND);
         }

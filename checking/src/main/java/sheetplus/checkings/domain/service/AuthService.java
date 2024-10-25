@@ -1,6 +1,7 @@
 package sheetplus.checkings.domain.service;
 
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class AuthService {
 
     // 최초 토큰 생성에 대해서 발급
     @Transactional
-    public TokenDto memberLogin(LoginDto loginDto){
+    public TokenDto memberLogin(LoginDto loginDto, HttpServletResponse response){
         Member member = loginDto.getId() != null ? memberRepository.findById(loginDto.getId())
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND))
                 : memberRepository.findMemberByUniversityEmail(loginDto.getEmail())
@@ -47,12 +48,10 @@ public class AuthService {
         String accessToken = jwtUtil.createAccessToken(loginDto);
         String refreshToken = jwtUtil.createRefreshToken(loginDto);
 
-
-        refreshTokenService.saveRefreshToken(loginDto.getId(), refreshToken);
+        refreshTokenService.saveRefreshToken(loginDto.getId(), refreshToken, response);
 
         return TokenDto.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .memberInfo(MemberInfoDto.builder()
                         .id(member.getId())
                         .name(member.getName())
@@ -65,11 +64,11 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto refreshTokens(String refreshToken){
-        return refreshTokenService.refreshTokens(refreshToken);
+    public TokenDto refreshTokens(String refreshToken, HttpServletResponse response){
+        return refreshTokenService.refreshTokens(refreshToken, response);
     }
 
-    @Transactional
+
     public boolean memberTypeCheck(MemberType memberType){
         if(memberType.equals(MemberType.SUPER_ADMIN)){
 //            throw new ApiException(SUPER_ADMIN_REGISTER_BLOCK);

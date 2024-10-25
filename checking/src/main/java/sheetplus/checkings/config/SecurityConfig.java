@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,11 +14,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.springframework.web.cors.CorsConfiguration;
 import sheetplus.checkings.config.filter.JwtAuthFilter;
 import sheetplus.checkings.config.security.CustomUserDetailsService;
 import sheetplus.checkings.handler.JwtAccessDeniedHandler;
 import sheetplus.checkings.handler.JwtAuthenticationEntryPoint;
 import sheetplus.checkings.util.JwtUtil;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -44,7 +46,17 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(Customizer.withDefaults());
+        http.cors(custom -> custom.configurationSource(request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowCredentials(true);
+            config.setAllowedOrigins(List.of("https://mail-test.schusheetp.pages.dev"
+                    , "https://localhost:3000", "https://schusheetp.pages.dev", "http://localhost:3000",
+                    "http://schusheetp.pages.dev"));
+            config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PATCH", "OPTIONS"));
+            config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control", "Set-Cookie"));
+            config.setExposedHeaders(List.of("Set-Cookie", "Authorization"));
+            return config;
+        }));
 
         http.sessionManagement(sessionManagement
                 -> sessionManagement.sessionCreationPolicy(
