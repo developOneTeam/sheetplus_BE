@@ -1,18 +1,79 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><!--$-->
+<html dir="ltr" lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <style>
+        @font-face {
+            font-family: 'SUITE Variable';
+            font-style: normal;
+            font-weight: 400;
+            mso-font-alt: 'sans-serif';
+            src: url(https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.woff2) format('woff2');
+        }
+
+        * {
+            font-family: 'SUITE Variable', sans-serif;
+        }
+    </style>
+    <style>
+        @font-face {
+            font-family: 'SUITE Variable';
+            font-style: normal;
+            font-weight: 600;
+            mso-font-alt: 'sans-serif';
+            src: url(https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.woff2) format('woff2');
+        }
+
+        * {
+            font-family: 'SUITE Variable', sans-serif;
+        }
+    </style>
+    <style>
+        @font-face {
+            font-family: 'SUITE Variable';
+            font-style: normal;
+            font-weight: 900;
+            mso-font-alt: 'sans-serif';
+            src: url(https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.woff2) format('woff2');
+        }
+
+        * {
+            font-family: 'SUITE Variable', sans-serif;
+        }
+    </style>
 </head>
-<body>
-    <div style="margin:100px">
-        <h1>하단 링크를 클릭해주세요</h1><br>
-        <div align="center" style="border:1px solid black;">
-            <div style="font-size:130%">
-                <a th:href="'https://mail-test.schusheetp.pages.dev/signup?email=' + ${email} + '&code=' + ${code} + '&login=false'">
-                    https://mail-test.schusheetp.pages.dev/signup
-                </a>
-            </div>
-        </div>
-    </div>
+
+<body style="background-color:rgb(255,255,255);margin-top:auto;margin-bottom:auto;margin-left:auto;margin-right:auto;font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;;padding-left:0.5rem;padding-right:0.5rem">
+<table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="border-width:1px;border-style:solid;border-color:rgb(234,234,234);border-radius:0.25rem;margin-top:40px;margin-bottom:40px;margin-left:auto;margin-right:auto;padding:20px;max-width:465px">
+    <tbody>
+    <tr style="width:100%">
+        <td>
+            <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="margin-top:32px">
+                <tbody>
+                <tr>
+                    <td>
+                        <p style="margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;font-size:20px;text-align:center;color:rgb(38,83,156);line-height:24px;margin:16px 0"><strong>SCHU</strong> Sheet<sup>+</sup></p>
+                        <h1 style="color:rgb(0,0,0);font-size:24px;font-weight:600;text-align:center;padding:0px;margin-left:0px;margin-right:0px">회원가입</h1>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <p style="color:rgb(0,0,0);font-size:16px;line-height:24px;text-align:center;margin:16px 0">아래 링크에서 가입하실 수 있어요.</p>
+            <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="text-align:center;margin-top:32px;margin-bottom:32px">
+                <tbody>
+                <tr>
+                    <td><a th:href="'https://schusheetp.pages.dev/signup?email=' + ${email} + '&code=' + ${code}" style="background-color:rgb(38,83,156);border-radius:0.25rem;color:rgb(255,255,255);font-size:16px;font-weight:600;text-decoration-line:none;text-align:center;padding-left:1.25rem;padding-right:1.25rem;padding-top:0.75rem;padding-bottom:0.75rem;line-height:100%;text-decoration:none;display:inline-block;max-width:100%;mso-padding-alt:0px;padding:12px 20px 12px 20px" target="_blank"><span><!--[if mso]><i style="mso-font-width:500%;mso-text-raise:18" hidden>&#8202;&#8202;</i><![endif]--></span><span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:9px">회원가입으로 이동</span><span><!--[if mso]><i style="mso-font-width:500%" hidden>&#8202;&#8202;&#8203;</i><![endif]--></span></a></td>
+                </tr>
+                </tbody>
+            </table>
+            <hr style="border-width:1px;border-style:solid;border-color:rgb(234,234,234);margin-top:26px;margin-bottom:26px;margin-left:0px;margin-right:0px;width:100%;border:none;border-top:1px solid #eaeaea" />
+            <p style="color:rgb(102,102,102);font-size:12px;line-height:24px;margin:16px 0">SCHU Sheet+ 서비스에 메일 보내기를 요청하지 않았다면 이 이메일을 무시하세요.</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
-</html>
+
+</html><!--/$-->
