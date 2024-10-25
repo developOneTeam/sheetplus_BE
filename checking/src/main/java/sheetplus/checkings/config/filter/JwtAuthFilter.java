@@ -40,7 +40,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String requestUri = request.getRequestURI();
         log.info("JwtAuthFilter request : {}" , requestUri);
 
-        if(AUTH_WHITELIST.contains(requestUri.split("/")[1])){
+        if(AUTH_WHITELIST.contains(requestUri.split("/")[1]) ||
+                requestUri.equals("/v3/api-docs/swagger-config") ||
+                requestUri.equals("/v3/api-docs")){
             log.info("WHITELIST URI 접근, 내부로직 실행");
             filterChain.doFilter(request, response);
             return;
