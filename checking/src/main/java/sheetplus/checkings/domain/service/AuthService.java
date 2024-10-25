@@ -65,6 +65,10 @@ public class AuthService {
 
     @Transactional
     public TokenDto refreshTokens(String refreshToken, HttpServletResponse response){
+        if(refreshToken == null){
+            throw new ApiException(REFRESH_TOKEN_EXCEPTION);
+        }
+
         return refreshTokenService.refreshTokens(refreshToken, response);
     }
 
