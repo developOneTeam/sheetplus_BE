@@ -1,6 +1,8 @@
 package sheetplus.checkings.domain.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.dto.LoginDto;
 import sheetplus.checkings.domain.dto.MemberRequestDto;
@@ -15,6 +17,7 @@ import sheetplus.checkings.response.Api;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberCRUDService memberCRUDService;
@@ -24,7 +27,8 @@ public class MemberController {
 
     @PostMapping("public/register")
     public Api<TokenDto> createMember(
-            @RequestBody MemberRequestDto memberRequestDto){
+            @RequestBody MemberRequestDto memberRequestDto,
+            HttpServletResponse response){
 
         emailService.verifyEmail(memberRequestDto.getUniversityEmail(),
                 memberRequestDto.getCode());
@@ -40,7 +44,7 @@ public class MemberController {
                         .id(member.getId())
                         .email(member.getUniversityEmail())
                         .memberType(member.getMemberType())
-                .build());
+                .build(), response);
 
         return Api.CREATED(tokenWithData);
     }

@@ -1,11 +1,9 @@
 package sheetplus.checkings.domain.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.dto.LoginDto;
 import sheetplus.checkings.domain.dto.MemberLoginRequestDto;
 import sheetplus.checkings.domain.dto.TokenDto;
@@ -21,15 +19,20 @@ public class AuthController {
     private final EmailService emailService;
 
     @PostMapping("public/refresh")
-    public Api<TokenDto> refreshToken(@RequestHeader(value = "refresh-token"
-            , required = false) String refreshToken){
-        TokenDto tokenDto = authService.refreshTokens(refreshToken);
+    public Api<TokenDto> refreshToken(
+            @CookieValue(value = "refreshToken"
+            , required = false) String refreshToken,
+                                      HttpServletResponse response){
+        log.info("{}", refreshToken);
+
+        TokenDto tokenDto = authService.refreshTokens(refreshToken, response);
         return Api.OK(tokenDto);
     }
 
     @PostMapping("public/login")
     public Api<TokenDto> loginMember(
-            @RequestBody MemberLoginRequestDto memberLoginRequestDto){
+            @RequestBody MemberLoginRequestDto memberLoginRequestDto,
+            HttpServletResponse response){
 
         emailService.verifyEmail(memberLoginRequestDto.getEmail(),
                 memberLoginRequestDto.getCode());
@@ -38,7 +41,7 @@ public class AuthController {
                         .id(null)
                         .email(memberLoginRequestDto.getEmail())
                         .memberType(memberLoginRequestDto.getMemberType())
-                .build());
+                .build(), response);
         return Api.OK(tokenDto);
     }
 
