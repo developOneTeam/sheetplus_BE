@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,9 +40,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String requestUri = request.getRequestURI();
         log.info("JwtAuthFilter request : {}" , requestUri);
+        if(requestUri.equals("/")){
+            response.setContentType("application/json; charset=utf-8");
+            response.setStatus(HttpStatus.OK.value());
+            return;
+        }
 
-        if(requestUri.split("/").length > 1 &&
-                AUTH_WHITELIST.contains(requestUri.split("/")[1]) ||
+
+        if(AUTH_WHITELIST.contains(requestUri.split("/")[1]) ||
                 requestUri.equals("/v3/api-docs/swagger-config") ||
                 requestUri.equals("/v3/api-docs")){
             log.info("WHITELIST URI 접근, 내부로직 실행");
