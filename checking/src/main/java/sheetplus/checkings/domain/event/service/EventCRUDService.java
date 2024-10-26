@@ -77,7 +77,23 @@ public class EventCRUDService {
     public EventResponseDto updateEvent(Long eventId
             , EventRequestDto eventRequestDto) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new ApiException(EVENT_NOT_FOUND));;
+                .orElseThrow(() -> new ApiException(EVENT_NOT_FOUND));
+
+        Contest contest = event.getEventContest();
+
+        if(contest.getStartDate().isAfter(eventRequestDto.getEndTime()) ||
+                contest.getEndDate().isBefore(eventRequestDto.getStartTime()) ||
+                (contest.getStartDate().isAfter(eventRequestDto.getStartTime()) &&
+                        contest.getEndDate().isAfter(eventRequestDto.getEndTime())) ||
+                (contest.getStartDate().isBefore(eventRequestDto.getStartTime()) &&
+                        contest.getEndDate().isBefore(eventRequestDto.getEndTime()))) {
+            throw new ApiException(CONTEST_EVENT_START_AFTER_END);
+        }
+
+        if(eventRequestDto.getStartTime().isAfter(eventRequestDto.getEndTime())){
+            throw new ApiException(COMMON_START_AFTER_END);
+        }
+
 
         event.updateEvent(eventRequestDto);
 
