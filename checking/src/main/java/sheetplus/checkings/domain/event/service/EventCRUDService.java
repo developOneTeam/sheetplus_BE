@@ -13,8 +13,7 @@ import sheetplus.checkings.domain.event.repository.EventRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.util.CryptoUtil;
 
-import static sheetplus.checkings.exception.error.ApiError.CONTEST_NOT_FOUND;
-import static sheetplus.checkings.exception.error.ApiError.EVENT_NOT_FOUND;
+import static sheetplus.checkings.exception.error.ApiError.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +28,19 @@ public class EventCRUDService {
     public EventResponseDto createEvent(Long contestId, EventRequestDto eventRequestDto) {
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
+
+        if(contest.getStartDate().isAfter(eventRequestDto.getEndTime()) ||
+        contest.getEndDate().isBefore(eventRequestDto.getStartTime()) ||
+        (contest.getStartDate().isAfter(eventRequestDto.getStartTime()) &&
+                contest.getEndDate().isAfter(eventRequestDto.getEndTime())) ||
+                (contest.getStartDate().isBefore(eventRequestDto.getStartTime()) &&
+                        contest.getEndDate().isBefore(eventRequestDto.getEndTime()))) {
+            throw new ApiException(CONTEST_EVENT_START_AFTER_END);
+        }
+
+        if(eventRequestDto.getStartTime().isAfter(eventRequestDto.getEndTime())){
+            throw new ApiException(COMMON_START_AFTER_END);
+        }
 
         Event event = Event.builder()
                 .name(eventRequestDto.getName())
