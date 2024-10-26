@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static sheetplus.checkings.exception.error.ApiError.CONTEST_NOT_FOUND;
-import static sheetplus.checkings.exception.error.ApiError.EVENT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -44,43 +43,43 @@ public class AdminPageService {
                 .participateContestCounts(contest.getId());
         List<Event> events = contest.getEvents();
 
-        if(events.isEmpty()){
-            throw new ApiException(EVENT_NOT_FOUND);
-        }
-
-        events.sort((o1, o2) -> {
-            if(o1.getStartTime().equals(o2.getStartTime())){
-                return o1.getEndTime().compareTo(o2.getEndTime());
-            }
-            return o1.getStartTime().compareTo(o2.getStartTime());
-        });
-
 
         long remain = 0;
         long finish = 0;
         TreeSet<String> building = new TreeSet<>();
         HashSet<String> major = new HashSet<>();
 
+        if(!events.isEmpty()){
+            events.sort((o1, o2) -> {
+                if(o1.getStartTime().equals(o2.getStartTime())){
+                    return o1.getEndTime().compareTo(o2.getEndTime());
+                }
+                return o1.getStartTime().compareTo(o2.getStartTime());
+            });
 
-        for (int i = 0; i < events.size(); i++) {
-            building.add(events.get(i).getBuilding());
-            major.add(events.get(i).getMajor());
-            LocalDateTime nowTime = LocalDateTime.now();
 
-            // TODO 수정 필요.
-            if(events.get(i).getStartTime().getDayOfMonth()
-                    <= nowTime.getDayOfMonth()
-                    && events.get(i).getEndTime().getDayOfMonth()
-                    >= nowTime.getDayOfMonth()
-                    && (events.get(i).getStartTime().isAfter(nowTime)
-                            || events.get(i).getEndTime().isAfter(nowTime))){
-                remain++;
-            }else if(events.get(i).getEndTime().getDayOfMonth() < nowTime.getDayOfMonth() ||
-                    (events.get(i).getEndTime().getDayOfMonth() == nowTime.getDayOfMonth()
-            && events.get(i).getEndTime().isBefore(nowTime))){
-                finish++;
+            for (int i = 0; i < events.size(); i++) {
+                building.add(events.get(i).getBuilding());
+                major.add(events.get(i).getMajor());
+                LocalDateTime nowTime = LocalDateTime.now();
+
+                if(events.get(i).getStartTime().getDayOfMonth()
+                        <= nowTime.getDayOfMonth()
+                        && events.get(i).getEndTime().getDayOfMonth()
+                        >= nowTime.getDayOfMonth()
+                        && (events.get(i).getStartTime().isAfter(nowTime)
+                        || events.get(i).getEndTime().isAfter(nowTime))){
+                    remain++;
+                }else if(events.get(i).getEndTime().getDayOfMonth() < nowTime.getDayOfMonth() ||
+                        (events.get(i).getEndTime().getDayOfMonth() == nowTime.getDayOfMonth()
+                                && events.get(i).getEndTime().isBefore(nowTime))){
+                    finish++;
+                }
             }
         }
+
+
+
         EntryInfoResponseDto entryInfoResponseDto = entryRepository.entryInfoCounts();
         List<EntryResponseDto> entryList = entryRepository.getEntry();
 
@@ -96,7 +95,7 @@ public class AdminPageService {
                 .contestName(contest.getName())
                 .contestStart(contest.getStartDate())
                 .contestEnd(contest.getEndDate())
-                .locationName(building.getFirst())
+                .locationName(building.isEmpty() ? null : building.getFirst())
                 .locationCounts(String.valueOf(building.size()))
                 .remainEvents(String.valueOf(remain))
                 .finishEvents(String.valueOf(finish))
