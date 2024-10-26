@@ -38,13 +38,13 @@ public class StudentPageService {
     public StudentHomePageResponseDto readStudentHomePage(String token, Long contestId) {
         Member member = memberRepository.findById(jwtUtil.getMemberId(token))
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
-
-        if(member.getMemberParticipateContestStates() == null){
-            throw new ApiException(PARTICIPATE_NOT_FOUND);
+        Integer eventCounts = 0;
+        if(member.getMemberParticipateContestStates() != null){
+            eventCounts = member.getMemberParticipateContestStates()
+                    .getEventsCount();
         }
 
-        Integer eventCounts = member.getMemberParticipateContestStates()
-                .getEventsCount();
+
 
 
         return StudentHomePageResponseDto.builder()

@@ -11,6 +11,7 @@ import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
+import static sheetplus.checkings.exception.error.ApiError.COMMON_START_AFTER_END;
 import static sheetplus.checkings.exception.error.ApiError.CONTEST_NOT_FOUND;
 
 @Service
@@ -22,6 +23,11 @@ public class ContestCRUDService {
 
     @Transactional
     public ContestResponseDto createContest(ContestRequestDto contestRequestDto) {
+        if(contestRequestDto.getStartDateTime().isAfter(contestRequestDto.getEndDateTime())){
+            throw new ApiException(COMMON_START_AFTER_END);
+        }
+
+
         Contest contest = Contest.builder()
                 .name(contestRequestDto.getName())
                 .startDate(contestRequestDto.getStartDateTime())

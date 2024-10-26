@@ -29,7 +29,10 @@ public enum ApiError implements ErrorCodeIfs {
     QR_NOT_VALID(403, "QR코드 인증 대상이 아닙니다."),
     EVENT_NOT_PROGRESS(403, "현재 진행중인 행사가 아닙니다."),
     EVENT_ALREADY_PARTICIPATE(403, "이미 참여한 행사입니다."),
-    REFRESH_TOKEN_EXCEPTION(403, "유효하지 않은 토큰이거나 찾을 수 없습니다.");
+    REFRESH_TOKEN_EXCEPTION(403, "유효하지 않은 토큰이거나 찾을 수 없습니다."),
+    COMMON_START_AFTER_END(400, "시작시간이 종료시간보다 뒤에 있습니다."),
+    CONTEST_EVENT_START_AFTER_END(400, "이벤트 시간은 대회 시작/종료 기간 안에 포함되어야 합니다.")
+    ;
 
 
     private final Integer httpStatusCode;
