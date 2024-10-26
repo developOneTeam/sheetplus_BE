@@ -67,12 +67,17 @@ public class AdminPageService {
             major.add(events.get(i).getMajor());
             LocalDateTime nowTime = LocalDateTime.now();
 
+            // TODO 수정 필요.
             if(events.get(i).getStartTime().getDayOfMonth()
-                    == nowTime.getDayOfMonth() &&
-                    (events.get(i).getStartTime().isAfter(nowTime)
+                    <= nowTime.getDayOfMonth()
+                    && events.get(i).getEndTime().getDayOfMonth()
+                    >= nowTime.getDayOfMonth()
+                    && (events.get(i).getStartTime().isAfter(nowTime)
                             || events.get(i).getEndTime().isAfter(nowTime))){
                 remain++;
-            }else{
+            }else if(events.get(i).getEndTime().getDayOfMonth() < nowTime.getDayOfMonth() ||
+                    (events.get(i).getEndTime().getDayOfMonth() == nowTime.getDayOfMonth()
+            && events.get(i).getEndTime().isBefore(nowTime))){
                 finish++;
             }
         }
