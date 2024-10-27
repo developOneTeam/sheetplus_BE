@@ -12,7 +12,6 @@ import sheetplus.checkings.business.email.service.EmailService;
 import sheetplus.checkings.util.response.Api;
 
 
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -27,7 +26,7 @@ public class MailController {
         emailService.verifyEmailDomain(emailRequestDto.getReceiver());
 
         emailService.createTemporaryMember(emailRequestDto.getReceiver(),
-                emailService.sendMail(emailRequestDto.getReceiver(),
+                emailService.sendEmail(emailRequestDto.getReceiver(),
                         emailService.registerCheck(emailRequestDto.getReceiver())));
         return Api.OK("전송 완료");
     }
@@ -46,5 +45,6 @@ public class MailController {
 
         return Api.OK("인증 성공");
     }
+
 
 }

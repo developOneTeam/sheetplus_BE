@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.business.email.controller.MailgunClient;
+import sheetplus.checkings.business.email.dto.SendMailForm;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.temporarymember.entity.TemporaryMember;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
@@ -28,6 +30,7 @@ public class EmailService {
     private final MemberRepository memberRepository;
     private final SesClient sesClient;
     private final MailUtil mailUtil;
+    private final MailgunClient mailgunClient;
 
     @Value("${email.subject}")
     private String SUBJECT;
@@ -44,6 +47,13 @@ public class EmailService {
 
     private final String SEPARATOR = "@";
 
+
+    /**
+     *
+     *  Deprecated
+     *  사유: AWS SES 샌드박스 모드 해제 신청 반려
+     *
+     */
     public String sendMail(String toEmail, boolean registerCheck) {
 
         String code = mailUtil.createCodeUtil();
@@ -73,6 +83,24 @@ public class EmailService {
         sesClient.sendEmail(request);
         return code;
     }
+
+    public String sendEmail(String toEmail, boolean registerCheck) {
+        String code = mailUtil.createCodeUtil();
+
+        SendMailForm sendMailForm = SendMailForm.builder()
+                .subject(SUBJECT)
+                .from(SENDER_EMAIL)
+                .to(toEmail)
+                .html(mailUtil
+                        .setContextUtil(toEmail, code
+                                , registerCheck ? MAIL_LOGIN_HTML
+                                        : MAIL_REGISTER_HTML))
+                .build();
+
+        mailgunClient.sendEmail(sendMailForm);
+        return code;
+    }
+
 
     @Transactional
     public void createTemporaryMember(String email, String code){
