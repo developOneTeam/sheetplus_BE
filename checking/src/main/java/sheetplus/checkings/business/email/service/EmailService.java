@@ -15,8 +15,6 @@ import sheetplus.checkings.domain.member.repository.MemberRepository;
 import sheetplus.checkings.domain.temporarymember.repository.TemporaryMemberRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.util.MailUtil;
-import software.amazon.awssdk.services.ses.SesClient;
-import software.amazon.awssdk.services.ses.model.*;
 
 import static sheetplus.checkings.exception.error.ApiError.*;
 
@@ -28,7 +26,6 @@ public class EmailService {
 
     private final TemporaryMemberRepository temporaryMemberRepository;
     private final MemberRepository memberRepository;
-    private final SesClient sesClient;
     private final MailUtil mailUtil;
     private final MailgunClient mailgunClient;
 
@@ -46,43 +43,6 @@ public class EmailService {
     private String ENCODE_TYPE;
 
     private final String SEPARATOR = "@";
-
-
-    /**
-     *
-     *  Deprecated
-     *  사유: AWS SES 샌드박스 모드 해제 신청 반려
-     *
-     */
-    public String sendMail(String toEmail, boolean registerCheck) {
-
-        String code = mailUtil.createCodeUtil();
-
-        SendEmailRequest request = SendEmailRequest.builder()
-                .destination(Destination.builder()
-                        .toAddresses(toEmail)
-                        .build())
-                .message(Message.builder()
-                        .subject(Content.builder()
-                                .data(SUBJECT)
-                                .charset(ENCODE_TYPE)
-                                .build())
-                        .body(Body.builder()
-                                .html(Content.builder()
-                                        .data(mailUtil
-                                                .setContextUtil(toEmail, code
-                                                        , registerCheck ? MAIL_LOGIN_HTML
-                                                                : MAIL_REGISTER_HTML))
-                                        .charset(ENCODE_TYPE)
-                                        .build())
-                                .build())
-                        .build())
-                .source(SENDER_EMAIL)
-                .build();
-
-        sesClient.sendEmail(request);
-        return code;
-    }
 
     public String sendEmail(String toEmail, boolean registerCheck) {
         String code = mailUtil.createCodeUtil();
