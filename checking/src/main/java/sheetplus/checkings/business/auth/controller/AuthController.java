@@ -20,12 +20,11 @@ public class AuthController {
 
     @PostMapping("public/refresh")
     public Api<TokenDto> refreshToken(
-            @CookieValue(value = "refreshToken"
-            , required = false) String refreshToken,
-                                      HttpServletResponse response){
+            @RequestHeader(value = "refreshToken"
+                    , required = false) String refreshToken){
         log.info("{}", refreshToken);
 
-        TokenDto tokenDto = authService.refreshTokens(refreshToken, response);
+        TokenDto tokenDto = authService.refreshTokens(refreshToken);
         return Api.OK(tokenDto);
     }
 
@@ -41,7 +40,7 @@ public class AuthController {
                         .id(null)
                         .email(memberLoginRequestDto.getEmail())
                         .memberType(memberLoginRequestDto.getMemberType())
-                .build(), response);
+                .build());
         return Api.OK(tokenDto);
     }
 

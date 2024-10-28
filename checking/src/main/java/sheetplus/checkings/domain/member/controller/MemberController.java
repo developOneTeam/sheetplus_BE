@@ -27,8 +27,7 @@ public class MemberController {
 
     @PostMapping("public/register")
     public Api<TokenDto> createMember(
-            @RequestBody MemberRequestDto memberRequestDto,
-            HttpServletResponse response){
+            @RequestBody MemberRequestDto memberRequestDto){
 
         emailService.verifyEmail(memberRequestDto.getUniversityEmail(),
                 memberRequestDto.getCode());
@@ -44,7 +43,7 @@ public class MemberController {
                         .id(member.getId())
                         .email(member.getUniversityEmail())
                         .memberType(member.getMemberType())
-                .build(), response);
+                .build());
 
         return Api.CREATED(tokenWithData);
     }

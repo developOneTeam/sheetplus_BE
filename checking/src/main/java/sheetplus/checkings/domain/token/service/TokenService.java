@@ -38,7 +38,7 @@ public class TokenService {
      * 리프래시 토큰 갱신 로직
      */
     @Transactional
-    public TokenDto refreshTokens(String refreshToken, HttpServletResponse response) {
+    public TokenDto refreshTokens(String refreshToken) {
         Long memberId = jwtUtil.getMemberId(refreshToken);
         Token findToken = refreshTokenRepository.findById(memberId)
                 .orElseThrow(() -> new ApiException(TOKEN_NOT_VALID));
@@ -65,11 +65,10 @@ public class TokenService {
                         .build());
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
-        ResponseCookie refreshCookie = addCookie(newRefreshToken);
-        response.addHeader("Set-Cookie", refreshCookie.toString());
 
         return TokenDto.builder()
                 .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
                 .memberInfo(MemberInfoResponseDto.builder()
                         .id(member.getId())
                         .name(member.getName())
@@ -86,7 +85,7 @@ public class TokenService {
      * Refresh token 최초 발행
      */
     @Transactional
-    public void saveRefreshToken(Long memberId, String token, HttpServletResponse response) {
+    public void saveRefreshToken(Long memberId, String token) {
         refreshTokenRepository.findById(memberId)
                 .ifPresent(refreshTokenRepository::delete);
 
@@ -94,9 +93,6 @@ public class TokenService {
                 .id(memberId)
                 .refreshToken(token)
                 .build());
-
-        ResponseCookie refreshCookie = addCookie(token);
-        response.addHeader("Set-Cookie", refreshCookie.toString());
     }
 
     @Transactional
@@ -105,7 +101,12 @@ public class TokenService {
                 .ifPresent(refreshTokenRepository::delete);
     }
 
-
+    /**
+     *
+     * Deprecated
+     * 사유: 프론트엔드 요청으로 인한 로직 변경
+     *
+     */
     private ResponseCookie addCookie(String token) {
 
         return ResponseCookie.from("refreshToken", token)
