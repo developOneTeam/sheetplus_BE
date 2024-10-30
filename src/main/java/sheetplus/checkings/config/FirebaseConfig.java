@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @Configuration
-@Slf4j
 public class FirebaseConfig {
 
     @Value("${firebase.config.path}")
@@ -23,7 +22,6 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void initialize() throws IOException {
-        log.info("config path check: {}",firebaseConfigPath);
         FileInputStream serviceAccount = new FileInputStream(firebaseConfigPath);
 
         FirebaseOptions options = FirebaseOptions.builder()
