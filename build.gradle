@@ -36,6 +36,9 @@ dependencyManagement {
 	}
 }
 
+tasks.named("jar") {
+	enabled = false
+}
 
 
 dependencies {
