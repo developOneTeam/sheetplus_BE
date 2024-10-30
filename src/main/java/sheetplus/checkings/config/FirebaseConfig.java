@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 @Configuration
 public class FirebaseConfig {
@@ -20,10 +22,10 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void initialize() throws IOException {
-        ClassPathResource serviceAccount = new ClassPathResource(firebaseConfigPath);
+        FileInputStream fileInputStream = new FileInputStream(firebaseConfigPath);
 
         FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount.getInputStream()))
+                .setCredentials(GoogleCredentials.fromStream(fileInputStream))
                 .build();
 
         if (FirebaseApp.getApps().isEmpty()) {
