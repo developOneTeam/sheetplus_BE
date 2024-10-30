@@ -29,6 +29,8 @@ out/
 src/main/generated
 /db
 Dockerfile
+.gitignore
+src/main/resources/config/
 
 ### NetBeans ###
 /nbproject/private/
