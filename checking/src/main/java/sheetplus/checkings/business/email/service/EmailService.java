@@ -16,6 +16,8 @@ import sheetplus.checkings.domain.temporarymember.repository.TemporaryMemberRepo
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.util.MailUtil;
 
+import java.util.List;
+
 import static sheetplus.checkings.exception.error.ApiError.*;
 
 
@@ -35,12 +37,10 @@ public class EmailService {
     private String MAIL_REGISTER_HTML;
     @Value("${email.mail-login-html}")
     private String MAIL_LOGIN_HTML;
-    @Value("${email.email-domain}")
-    private String EMAIL_DOMAIN;
+    @Value("${email.email-domain.list}")
+    private List<String> EMAIL_DOMAIN;
     @Value("${email.sender-email}")
     private String SENDER_EMAIL;
-    @Value("${email.encode-type}")
-    private String ENCODE_TYPE;
 
     private final String SEPARATOR = "@";
 
@@ -89,7 +89,7 @@ public class EmailService {
                 substring(email
                         .lastIndexOf(SEPARATOR)+1);
 
-        if(!emailDomain.equals(EMAIL_DOMAIN)){
+        if(!EMAIL_DOMAIN.contains(emailDomain)){
             throw new ApiException(UNIVERSITY_EMAIL_NOT_VALID);
         }
     }
