@@ -9,6 +9,7 @@ import sheetplus.checkings.domain.member.dto.response.MemberInfoResponseDto;
 public class TokenDto {
 
     private String accessToken;
+    private String refreshToken;
     private MemberInfoResponseDto memberInfo;
 
 }

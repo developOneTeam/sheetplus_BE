@@ -50,6 +50,10 @@ public class ContestCRUDService {
         Contest contest = contestRepository.findById(id)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));;
 
+        if(contestRequestDto.getStartDateTime().isAfter(contestRequestDto.getEndDateTime())){
+            throw new ApiException(COMMON_START_AFTER_END);
+        }
+
         contest.updateContest(contestRequestDto);
 
         return ContestResponseDto.builder()

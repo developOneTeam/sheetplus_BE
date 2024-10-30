@@ -1,6 +1,5 @@
 package sheetplus.checkings.business.auth.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -20,19 +19,17 @@ public class AuthController {
 
     @PostMapping("public/refresh")
     public Api<TokenDto> refreshToken(
-            @CookieValue(value = "refreshToken"
-            , required = false) String refreshToken,
-                                      HttpServletResponse response){
+            @RequestHeader(value = "refreshToken"
+                    , required = false) String refreshToken){
         log.info("{}", refreshToken);
 
-        TokenDto tokenDto = authService.refreshTokens(refreshToken, response);
+        TokenDto tokenDto = authService.refreshTokens(refreshToken);
         return Api.OK(tokenDto);
     }
 
     @PostMapping("public/login")
     public Api<TokenDto> loginMember(
-            @RequestBody MemberLoginRequestDto memberLoginRequestDto,
-            HttpServletResponse response){
+            @RequestBody MemberLoginRequestDto memberLoginRequestDto){
 
         emailService.verifyEmail(memberLoginRequestDto.getEmail(),
                 memberLoginRequestDto.getCode());
@@ -41,7 +38,7 @@ public class AuthController {
                         .id(null)
                         .email(memberLoginRequestDto.getEmail())
                         .memberType(memberLoginRequestDto.getMemberType())
-                .build(), response);
+                .build());
         return Api.OK(tokenDto);
     }
 

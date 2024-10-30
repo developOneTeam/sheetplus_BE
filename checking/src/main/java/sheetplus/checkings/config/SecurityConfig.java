@@ -2,6 +2,7 @@ package sheetplus.checkings.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,8 @@ public class SecurityConfig {
             "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/public/**"
     };
 
+    @Value("${security.cors-urls.list}")
+    private List<String> corUrls;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,9 +48,7 @@ public class SecurityConfig {
         http.cors(custom -> custom.configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowCredentials(true);
-            config.setAllowedOrigins(List.of("https://mail-test.schusheetp.pages.dev"
-                    , "https://localhost:3000", "https://schusheetp.pages.dev", "http://localhost:3000",
-                    "http://schusheetp.pages.dev"));
+            config.setAllowedOrigins(corUrls);
             config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PATCH", "OPTIONS"));
             config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control", "Set-Cookie"));
             config.setExposedHeaders(List.of("Set-Cookie", "Authorization"));

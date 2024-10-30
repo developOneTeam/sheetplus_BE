@@ -7,14 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.business.email.controller.MailgunClient;
+import sheetplus.checkings.business.email.dto.SendMailForm;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.temporarymember.entity.TemporaryMember;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
 import sheetplus.checkings.domain.temporarymember.repository.TemporaryMemberRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.util.MailUtil;
-import software.amazon.awssdk.services.ses.SesClient;
-import software.amazon.awssdk.services.ses.model.*;
+
+import java.util.List;
 
 import static sheetplus.checkings.exception.error.ApiError.*;
 
@@ -26,8 +28,8 @@ public class EmailService {
 
     private final TemporaryMemberRepository temporaryMemberRepository;
     private final MemberRepository memberRepository;
-    private final SesClient sesClient;
     private final MailUtil mailUtil;
+    private final MailgunClient mailgunClient;
 
     @Value("${email.subject}")
     private String SUBJECT;
@@ -35,44 +37,30 @@ public class EmailService {
     private String MAIL_REGISTER_HTML;
     @Value("${email.mail-login-html}")
     private String MAIL_LOGIN_HTML;
-    @Value("${email.email-domain}")
-    private String EMAIL_DOMAIN;
+    @Value("${email.email-domain.list}")
+    private List<String> EMAIL_DOMAIN;
     @Value("${email.sender-email}")
     private String SENDER_EMAIL;
-    @Value("${email.encode-type}")
-    private String ENCODE_TYPE;
 
     private final String SEPARATOR = "@";
 
-    public String sendMail(String toEmail, boolean registerCheck) {
-
+    public String sendEmail(String toEmail, boolean registerCheck) {
         String code = mailUtil.createCodeUtil();
 
-        SendEmailRequest request = SendEmailRequest.builder()
-                .destination(Destination.builder()
-                        .toAddresses(toEmail)
-                        .build())
-                .message(Message.builder()
-                        .subject(Content.builder()
-                                .data(SUBJECT)
-                                .charset(ENCODE_TYPE)
-                                .build())
-                        .body(Body.builder()
-                                .html(Content.builder()
-                                        .data(mailUtil
-                                                .setContextUtil(toEmail, code
-                                                        , registerCheck ? MAIL_LOGIN_HTML
-                                                                : MAIL_REGISTER_HTML))
-                                        .charset(ENCODE_TYPE)
-                                        .build())
-                                .build())
-                        .build())
-                .source(SENDER_EMAIL)
+        SendMailForm sendMailForm = SendMailForm.builder()
+                .subject(SUBJECT)
+                .from(SENDER_EMAIL)
+                .to(toEmail)
+                .html(mailUtil
+                        .setContextUtil(toEmail, code
+                                , registerCheck ? MAIL_LOGIN_HTML
+                                        : MAIL_REGISTER_HTML))
                 .build();
 
-        sesClient.sendEmail(request);
+        mailgunClient.sendEmail(sendMailForm);
         return code;
     }
+
 
     @Transactional
     public void createTemporaryMember(String email, String code){
@@ -101,7 +89,7 @@ public class EmailService {
                 substring(email
                         .lastIndexOf(SEPARATOR)+1);
 
-        if(!emailDomain.equals(EMAIL_DOMAIN)){
+        if(!EMAIL_DOMAIN.contains(emailDomain)){
             throw new ApiException(UNIVERSITY_EMAIL_NOT_VALID);
         }
     }

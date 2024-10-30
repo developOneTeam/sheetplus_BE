@@ -29,7 +29,7 @@ public class AuthService {
 
     // 최초 토큰 생성에 대해서 발급
     @Transactional
-    public TokenDto memberLogin(LoginDto loginDto, HttpServletResponse response){
+    public TokenDto memberLogin(LoginDto loginDto){
         Member member = loginDto.getId() != null ? memberRepository.findById(loginDto.getId())
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND))
                 : memberRepository.findMemberByUniversityEmail(loginDto.getEmail())
@@ -49,10 +49,11 @@ public class AuthService {
         String accessToken = jwtUtil.createAccessToken(loginDto);
         String refreshToken = jwtUtil.createRefreshToken(loginDto);
 
-        refreshTokenService.saveRefreshToken(loginDto.getId(), refreshToken, response);
+        refreshTokenService.saveRefreshToken(loginDto.getId(), refreshToken);
 
         return TokenDto.builder()
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .memberInfo(MemberInfoResponseDto.builder()
                         .id(member.getId())
                         .name(member.getName())
@@ -65,12 +66,12 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto refreshTokens(String refreshToken, HttpServletResponse response){
+    public TokenDto refreshTokens(String refreshToken){
         if(refreshToken == null){
             throw new ApiException(REFRESH_TOKEN_EXCEPTION);
         }
 
-        return refreshTokenService.refreshTokens(refreshToken, response);
+        return refreshTokenService.refreshTokens(refreshToken);
     }
 
 
