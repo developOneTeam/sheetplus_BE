@@ -10,7 +10,7 @@
 - 보안과 안정적인 데이터 관리 환경 구성
 
 ## 백엔드 배포 아키텍처
-![백엔드배포아키텍처](https://github.com/user-attachments/assets/bfdf8480-fdec-4157-aa81-499fda82af6b)
+![백엔드배포아키텍처](https://github.com/user-attachments/assets/c521ad83-9620-411f-9b7d-f8ccc72aa40d)
 
 ## 백엔드 서버 아키텍처
 ![백엔드아키텍처](https://github.com/user-attachments/assets/8d3fe22f-0357-478c-8181-4130e73adeed)
