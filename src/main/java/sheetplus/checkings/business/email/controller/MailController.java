@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sheetplus.checkings.business.email.dto.EmailCheckRequestDto;
 import sheetplus.checkings.business.email.dto.EmailRequestDto;
 import sheetplus.checkings.business.email.service.EmailService;
 import sheetplus.checkings.util.response.Api;
@@ -31,20 +30,6 @@ public class MailController {
         return Api.OK("전송 완료");
     }
 
-    /**
-     * 
-     * DEPRECATED - 추후 삭제 예정
-     * 
-     */
-    //@PostMapping("/mail/auth/check")
-    public Api<Object> checkMail(
-            @RequestBody EmailCheckRequestDto emailCheckRequestDto){
-        emailService.verifyEmail(emailCheckRequestDto.getEmail()
-                , emailCheckRequestDto.getCode());
-
-
-        return Api.OK("인증 성공");
-    }
 
 
 }
