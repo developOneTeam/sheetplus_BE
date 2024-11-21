@@ -23,13 +23,14 @@ public class MailController {
     public Api<Object> sendMail(
             @RequestBody EmailRequestDto emailRequestDto){
         emailService.verifyEmailDomain(emailRequestDto.getReceiver());
+        String code = emailService.createCode();
+
+        emailService.sendEmail(emailRequestDto.getReceiver(),
+                emailService.registerCheck(emailRequestDto.getReceiver()), code);
 
         emailService.createTemporaryMember(emailRequestDto.getReceiver(),
-                emailService.sendEmail(emailRequestDto.getReceiver(),
-                        emailService.registerCheck(emailRequestDto.getReceiver())));
+                code);
         return Api.OK("전송 완료");
     }
-
-
 
 }
