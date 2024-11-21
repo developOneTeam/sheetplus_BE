@@ -5,6 +5,7 @@ package sheetplus.checkings.business.email.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.email.controller.MailgunClient;
@@ -44,8 +45,8 @@ public class EmailService {
 
     private final String SEPARATOR = "@";
 
-    public String sendEmail(String toEmail, boolean registerCheck) {
-        String code = mailUtil.createCodeUtil();
+    @Async("emailSendExecutor")
+    public void sendEmail(String toEmail, boolean registerCheck, String code) {
 
         SendMailForm sendMailForm = SendMailForm.builder()
                 .subject(SUBJECT)
@@ -58,7 +59,6 @@ public class EmailService {
                 .build();
 
         mailgunClient.sendEmail(sendMailForm);
-        return code;
     }
 
 
@@ -100,6 +100,10 @@ public class EmailService {
                 .orElse(null);
 
         return members != null;
+    }
+
+    public String createCode(){
+        return mailUtil.createCodeUtil();
     }
 
 }
