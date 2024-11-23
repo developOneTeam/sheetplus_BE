@@ -1,7 +1,7 @@
 package sheetplus.checkings.config;
 
-import feign.auth.BasicAuthRequestInterceptor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.mailgun.api.v3.MailgunMessagesApi;
+import com.mailgun.client.MailgunClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +12,11 @@ public class MailgunConfig {
     @Value("${mailgun.key}")
     private String key;
 
-    @Qualifier(value = "mailgun")
+
     @Bean
-    public BasicAuthRequestInterceptor basicAuthRequestInterceptor(){
-        return new BasicAuthRequestInterceptor("api", key);
+    public MailgunMessagesApi mailgunMessagesApi(){
+        return MailgunClient.config(key)
+                .createApi(MailgunMessagesApi.class);
     }
 
 }
