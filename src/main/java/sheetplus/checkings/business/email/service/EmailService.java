@@ -2,14 +2,15 @@ package sheetplus.checkings.business.email.service;
 
 
 
+import com.mailgun.model.message.Message;
+import com.mailgun.model.message.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sheetplus.checkings.business.email.controller.MailgunClient;
-import sheetplus.checkings.business.email.dto.SendMailForm;
+import sheetplus.checkings.config.MailgunConfig;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.temporarymember.entity.TemporaryMember;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
@@ -30,7 +31,7 @@ public class EmailService {
     private final TemporaryMemberRepository temporaryMemberRepository;
     private final MemberRepository memberRepository;
     private final MailUtil mailUtil;
-    private final MailgunClient mailgunClient;
+    private final MailgunConfig mailgunClient;
 
     @Value("${email.subject}")
     private String SUBJECT;
@@ -39,16 +40,17 @@ public class EmailService {
     @Value("${email.mail-login-html}")
     private String MAIL_LOGIN_HTML;
     @Value("${email.email-domain.list}")
-    private List<String> EMAIL_DOMAIN;
+    private List<String> VALIDATE_EMAIL_DOMAINS;
     @Value("${email.sender-email}")
     private String SENDER_EMAIL;
+    @Value("${mailgun.domain}")
+    private String EMAIL_DOMAIN;
 
     private final String SEPARATOR = "@";
 
     @Async("emailSendExecutor")
     public void sendEmail(String toEmail, boolean registerCheck, String code) {
-
-        SendMailForm sendMailForm = SendMailForm.builder()
+        Message message = Message.builder()
                 .subject(SUBJECT)
                 .from(SENDER_EMAIL)
                 .to(toEmail)
@@ -57,8 +59,9 @@ public class EmailService {
                                 , registerCheck ? MAIL_LOGIN_HTML
                                         : MAIL_REGISTER_HTML))
                 .build();
-
-        mailgunClient.sendEmail(sendMailForm);
+        MessageResponse messageResponse = mailgunClient.mailgunMessagesApi()
+                .sendMessage(EMAIL_DOMAIN,message);
+        log.info("Mailgun Message Response: {}", messageResponse);
     }
 
 
@@ -89,7 +92,7 @@ public class EmailService {
                 substring(email
                         .lastIndexOf(SEPARATOR)+1);
 
-        if(!EMAIL_DOMAIN.contains(emailDomain)){
+        if(!VALIDATE_EMAIL_DOMAINS.contains(emailDomain)){
             throw new ApiException(UNIVERSITY_EMAIL_NOT_VALID);
         }
     }
