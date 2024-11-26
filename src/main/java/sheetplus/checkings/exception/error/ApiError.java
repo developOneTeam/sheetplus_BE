@@ -17,6 +17,8 @@ public enum ApiError implements ErrorCodeIfs {
     TEMPORARY_NOT_FOUND(404, "임시멤버정보를 찾을 수 없음"),
     TEMPORARY_NOT_VALID_CODE(403, "인증된 인증코드가 아닙니다."),
     UNIVERSITY_EMAIL_NOT_VALID(403, "학교 이메일이 아닙니다."),
+    EMAIL_LENGTH_TOO_LONG(404, "이메일 ID 길이가 초과되었습니다. 확인해주세요"),
+    EMAIL_NOT_FORMAT(404, "이메일 형식이 일치하지 않습니다. 확인해주세요"),
     EMAIL_NOT_AUTHENTICATE(403, "인증된 이메일이 아닙니다."),
     TOKEN_NOT_VALID(403, "유효한 토큰이 아닙니다."),
     SUPER_ADMIN_REGISTER_BLOCK(403, "SUPER_ADMIN 회원가입은 개발자에게 요청하세요"),
