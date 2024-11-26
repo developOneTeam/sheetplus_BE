@@ -91,10 +91,19 @@ public class EmailService {
         String emailDomain = email.
                 substring(email
                         .lastIndexOf(SEPARATOR)+1);
+        String emailId = email.substring(0, email.lastIndexOf(SEPARATOR));
 
         if(!VALIDATE_EMAIL_DOMAINS.contains(emailDomain)){
             throw new ApiException(UNIVERSITY_EMAIL_NOT_VALID);
         }
+        if(emailId.length() >= 65){
+            throw new ApiException(EMAIL_LENGTH_TOO_LONG);
+        }
+        if(!emailId.matches("^[a-zA-Z0-9]+$")){
+            throw new ApiException(EMAIL_NOT_FORMAT);
+        }
+
+
     }
 
     @Transactional
