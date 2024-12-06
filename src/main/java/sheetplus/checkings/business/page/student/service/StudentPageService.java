@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.business.page.student.dto.ActivitiesResponseDto;
 import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
-import sheetplus.checkings.business.page.student.dto.StudentPageActivitiesResponseDto;
 import sheetplus.checkings.business.page.student.dto.StudentHomePageResponseDto;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.participatecontest.entity.ParticipateContest;
@@ -63,7 +63,7 @@ public class StudentPageService {
     }
 
     @Transactional(readOnly = true)
-    public StudentPageActivitiesResponseDto readStudentActivitiesPage(
+    public ActivitiesResponseDto readStudentActivitiesPage(
             String token, Long contestId){
         ParticipateContest participateContest = participateContestStateRepository
                 .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
@@ -73,7 +73,7 @@ public class StudentPageService {
         List<EventCategory> events = new ArrayList<>(participateContest.getEventTypeSet());
 
 
-        return StudentPageActivitiesResponseDto
+        return ActivitiesResponseDto
                 .builder()
                 .eventCounts(participateContest.getEventsCount().toString())
                 .events(contestRepository.findParticipateEvents(contestId, events))

@@ -16,7 +16,7 @@
 ![백엔드아키텍처](https://github.com/user-attachments/assets/8d3fe22f-0357-478c-8181-4130e73adeed)
 
 ## DB ERD
-![출첵앱ERD](https://github.com/user-attachments/assets/f1173332-5447-4fb4-a24c-fd4c25fabf48)
+![즐겨찾기추가ERD](https://github.com/user-attachments/assets/e325d0fa-6129-4955-bedf-69f62345b722)
 
 ## 주요기능
 ### 요약
