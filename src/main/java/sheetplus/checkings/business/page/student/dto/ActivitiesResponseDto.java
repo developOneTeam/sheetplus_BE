@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class StudentPageActivitiesResponseDto {
+public class ActivitiesResponseDto {
 
-    private ActivitiesResponseDto activitiesResponseDto;
-    private List<FavoriteResponseDto> favorites;
+    private String eventCounts;
+    private List<EventResponseDto> events;
 
 }
