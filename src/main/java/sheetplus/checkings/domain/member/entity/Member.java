@@ -2,10 +2,14 @@ package sheetplus.checkings.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sheetplus.checkings.domain.favorite.entity.Favorite;
 import sheetplus.checkings.domain.member.dto.request.MemberUpdateRequestDto;
 import sheetplus.checkings.domain.draw.entity.Draw;
 import sheetplus.checkings.domain.participatecontest.entity.ParticipateContest;
 import sheetplus.checkings.domain.enums.MemberType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -44,6 +48,10 @@ public class Member {
 
     @OneToOne(mappedBy = "drawMember", cascade = CascadeType.REMOVE)
     private Draw memberDraw;
+
+    @OneToMany(mappedBy = "favoriteMember", orphanRemoval = true)
+    @Builder.Default
+    private List<Favorite> favorites = new ArrayList<>();
 
 
     public void memberInfoUpdate(MemberUpdateRequestDto memberUpdateRequestDto){
