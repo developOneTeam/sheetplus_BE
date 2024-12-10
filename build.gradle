@@ -56,7 +56,7 @@ dependencies {
 
 
 	// Firebase Admin SDK
-	implementation 'com.google.firebase:firebase-admin:7.1.0'
+	implementation 'com.google.firebase:firebase-admin:9.4.2'
 
 
 	//Querydsl 추가
