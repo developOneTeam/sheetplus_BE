@@ -43,12 +43,13 @@ public class FavoriteController {
     }
 
 
-    @DeleteMapping("favorite/{favorite}/delete")
+    @DeleteMapping("favorite/{favorite}/delete/{deviceToken}")
     public Api<String> deleteFavorite(
             @RequestHeader(value = "Authorization", required = false) String token,
-            @PathVariable(name = "favorite") Long id
+            @PathVariable(name = "favorite") Long id,
+            @PathVariable(name = "deviceToken") String deviceToken
     ){
-        favoriteCRUDService.deleteFavorites(id, token.replace("Bearer ", ""));
+        favoriteCRUDService.deleteFavorites(id, token.replace("Bearer ", ""), deviceToken);
         return Api.DELETE("삭제 완료");
     }
 
