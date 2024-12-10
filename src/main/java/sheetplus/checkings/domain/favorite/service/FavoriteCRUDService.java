@@ -1,10 +1,14 @@
 package sheetplus.checkings.domain.favorite.service;
 
 
+import com.google.api.core.ApiFuture;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.TopicManagementResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.config.AsyncConfig;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.event.entity.Event;
@@ -20,7 +24,9 @@ import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.util.JwtUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static sheetplus.checkings.exception.error.ApiError.*;
 
@@ -34,9 +40,10 @@ public class FavoriteCRUDService {
     private final ContestRepository contestRepository;
     private final EventRepository eventRepository;
     private final JwtUtil jwtUtil;
+    private final AsyncConfig asyncConfig;
 
     @Transactional
-    public FavoriteCreateResponseDto createFavorite(String token, FavoriteRequestDto favoriteRequestDto) {
+    public FavoriteCreateResponseDto createFavorite(String token, FavoriteRequestDto favoriteRequestDto){
         Member member = memberRepository
                 .findById(jwtUtil.getMemberId(token))
                 .orElseThrow(()-> new ApiException(MEMBER_NOT_FOUND));
@@ -47,13 +54,35 @@ public class FavoriteCRUDService {
                 .findById(favoriteRequestDto.getEventId())
                 .orElseThrow(() -> new ApiException(EVENT_NOT_FOUND));
 
+        if(!favoriteRepository.findByFavoriteMember_IdAndFavoriteContest_IdAndFavoriteEvent_Id(
+                member.getId(), contest.getId(), event.getId()
+        ).isEmpty()){
+            throw new ApiException(FAVORITE_EXISTS);
+        }
+
         Favorite favorite = Favorite.builder()
                 .favoriteMember(member)
                 .favoriteContest(contest)
                 .favoriteEvent(event)
                 .build();
-
+        favorite.setMemberFavorite(member);
         favoriteRepository.save(favorite);
+        ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
+                .getInstance()
+                .subscribeToTopicAsync(Collections.singletonList(favoriteRequestDto.getDeviceToken())
+                        ,(event.getId().toString()+contest.getId().toString()));
+        // FCM 구독 등록 로직
+        apiFuture.addListener(() ->{
+            try{
+                TopicManagementResponse response = apiFuture.get();
+                log.info("토픽 구독 성공: {}", response.getSuccessCount());
+                log.error("토픽 구독 에러발생: {}", response.getErrors());
+            } catch (ExecutionException | InterruptedException e) {
+                log.error("토픽 구독 관련 예외 발생: {}", e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }, asyncConfig.getSubscribeFcmExecutor());
+
 
         return FavoriteCreateResponseDto.builder()
                 .favoriteId(favorite.getId())
@@ -89,13 +118,30 @@ public class FavoriteCRUDService {
 
 
     @Transactional
-    public void deleteFavorites(Long favoriteId, String token){
+    public void deleteFavorites(Long favoriteId, String token, String deviceToken){
         Member member = memberRepository.findById(jwtUtil.getMemberId(token))
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
         Favorite favorite = favoriteRepository.findById(favoriteId)
                 .orElseThrow(() -> new ApiException(FAVORITE_NOT_FOUND));
 
         if(favorite.getFavoriteMember().getId().equals(member.getId())){
+            ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
+                    .getInstance()
+                    .unsubscribeFromTopicAsync(Collections.singletonList(deviceToken)
+                            ,(favorite.getFavoriteEvent().getId().toString()
+                                    +favorite.getFavoriteContest().getId().toString()));
+            // 토픽 구독취소
+            apiFuture.addListener(()->{
+                try{
+                    TopicManagementResponse response = apiFuture.get();
+                    log.error("토픽 구독취소 에러발생: {}", response.getErrors());
+                }catch (ExecutionException | InterruptedException e) {
+                    log.error("토픽 구독취소 관련 예외 발생: {}", e.getMessage());
+                    throw new RuntimeException(e);
+                }
+            }, asyncConfig.getSubscribeFcmExecutor());
+
+
             favoriteRepository.deleteById(favoriteId);
         }
     }
