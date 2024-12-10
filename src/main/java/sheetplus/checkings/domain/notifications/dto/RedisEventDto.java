@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor @Builder
 public class RedisEventDto {
 
+    private String eventId;
+    private String contestId;
     private LocalDateTime startTime;
     private String eventName;
     private String contestName;
