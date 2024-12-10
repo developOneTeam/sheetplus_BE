@@ -8,11 +8,10 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import sheetplus.checkings.config.manager.CustomThreadManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 @Configuration
 public class FirebaseConfig {
@@ -26,6 +25,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(fileInputStream))
+                .setThreadManager(new CustomThreadManager())
                 .build();
 
         if (FirebaseApp.getApps().isEmpty()) {
