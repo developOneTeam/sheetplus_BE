@@ -12,5 +12,6 @@ public class FavoriteRequestDto {
 
     private Long contestId;
     private Long eventId;
+    private String deviceToken;
 
 }
