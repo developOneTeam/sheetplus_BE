@@ -2,6 +2,7 @@ package sheetplus.checkings.domain.notifications.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.Cursor;
@@ -32,6 +33,7 @@ public class EventSchedulerService {
 
     private final EventRedisRepository eventRedisRepository;
     private final EventRepository eventRepository;
+    @Qualifier("taskScheduler")
     private final TaskScheduler taskScheduler;
     private final RedisConnectionFactory redisConnectionFactory;
     private final NotificationService notificationService;
@@ -55,7 +57,7 @@ public class EventSchedulerService {
      * 실제 구현에서는 ContestRepository를 통해 가져옵니다.
      */
     private List<Long> getAllContestIds() {
-        return List.of(1L);
+        return List.of(2L);
     }
 
 
@@ -148,6 +150,8 @@ public class EventSchedulerService {
      */
     private RedisEventDto convertToDto(Notifications entity) {
         return RedisEventDto.builder()
+                .eventId(entity.getId().toString())
+                .contestId(entity.getContestId().toString())
                 .startTime(entity.getStartTime())
                 .eventName(entity.getEventName())
                 .contestName(entity.getContestName())
