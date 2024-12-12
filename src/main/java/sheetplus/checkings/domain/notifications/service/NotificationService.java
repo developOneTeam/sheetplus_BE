@@ -1,14 +1,11 @@
 package sheetplus.checkings.domain.notifications.service;
 
-import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import sheetplus.checkings.config.AsyncConfig;
 import sheetplus.checkings.domain.notifications.dto.RedisEventDto;
 
-import java.util.concurrent.ExecutionException;
 
 
 @Service
@@ -17,7 +14,6 @@ import java.util.concurrent.ExecutionException;
 public class NotificationService {
 
     private final FirebaseMessaging fcm;
-    private final AsyncConfig notificationFcm;
 
     /**
      * @param event 이벤트 정보
@@ -39,18 +35,16 @@ public class NotificationService {
                                 .setBody(body)
                                 .build()
                 )
-                .setTopic(event.getEventId() + event.getContestId())
+                .setTopic(event.getEventId() + "-" + event.getContestId())
                 .build();
 
-        ApiFuture<String> apiFuture = fcm.sendAsync(message);
-        apiFuture.addListener(() ->{
-            try {
-                String response = apiFuture.get();
-                log.info("메세지 발송 성공: {}", response);
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }, notificationFcm.getNotificationFcmExecutor());
+
+        try {
+            String response = fcm.send(message);
+            log.info("메세지 발송 성공: {}", response);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
 
 
     }
