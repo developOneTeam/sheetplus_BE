@@ -70,13 +70,12 @@ public class FavoriteCRUDService {
         ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
                 .getInstance()
                 .subscribeToTopicAsync(Collections.singletonList(favoriteRequestDto.getDeviceToken())
-                        ,(event.getId().toString()+contest.getId().toString()));
+                        ,(event.getId().toString()+ "-" + contest.getId().toString()));
         // FCM 구독 등록 로직
         apiFuture.addListener(() ->{
             try{
                 TopicManagementResponse response = apiFuture.get();
                 log.info("토픽 구독 성공: {}", response.getSuccessCount());
-                log.error("토픽 구독 에러발생: {}", response.getErrors());
             } catch (ExecutionException | InterruptedException e) {
                 log.error("토픽 구독 관련 예외 발생: {}", e.getMessage());
                 throw new RuntimeException(e);
@@ -129,12 +128,13 @@ public class FavoriteCRUDService {
                     .getInstance()
                     .unsubscribeFromTopicAsync(Collections.singletonList(deviceToken)
                             ,(favorite.getFavoriteEvent().getId().toString()
-                                    +favorite.getFavoriteContest().getId().toString()));
+                                    + "-" + favorite.getFavoriteContest().getId().toString()));
+
             // 토픽 구독취소
             apiFuture.addListener(()->{
                 try{
                     TopicManagementResponse response = apiFuture.get();
-                    log.error("토픽 구독취소 에러발생: {}", response.getErrors());
+                    log.info("토픽 구독취소 성공: {}", response.getSuccessCount());
                 }catch (ExecutionException | InterruptedException e) {
                     log.error("토픽 구독취소 관련 예외 발생: {}", e.getMessage());
                     throw new RuntimeException(e);
