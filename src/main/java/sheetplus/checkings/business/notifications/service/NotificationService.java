@@ -7,10 +7,7 @@ import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
-import sheetplus.checkings.domain.enums.SendingStatus;
 import sheetplus.checkings.domain.enums.SendingType;
-import sheetplus.checkings.domain.eventSending.entity.EventSending;
-import sheetplus.checkings.domain.eventSending.repository.EventSendingRepository;
 
 
 @Service
@@ -19,7 +16,8 @@ import sheetplus.checkings.domain.eventSending.repository.EventSendingRepository
 public class NotificationService implements Job {
 
     private final FirebaseMessaging fcm;
-    private final EventSendingRepository eventSendingRepository;
+    private final EventSchedulerService eventSchedulerService;
+
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext){
@@ -48,12 +46,12 @@ public class NotificationService implements Job {
             String response = fcm.send(message);
             log.info("메세지 발송 성공: {}", response);
             if(title.equals("이벤트 시작 10분 전 알림")){
-                sendStatusChange((Long) jobDetail.getJobDataMap().get("eventId"),
+                eventSchedulerService.sendStatusChange((Long) jobDetail.getJobDataMap().get("eventId"),
                         SendingType.EVENT_BEFORE_10MINUTES);
             }
 
             if(title.equals("이벤트 시작 알림")){
-                sendStatusChange((Long) jobDetail.getJobDataMap().get("eventId"),
+                eventSchedulerService.sendStatusChange((Long) jobDetail.getJobDataMap().get("eventId"),
                         SendingType.EVENT_START_NOW);
             }
 
@@ -61,14 +59,5 @@ public class NotificationService implements Job {
             throw new RuntimeException(e);
         }
     }
-
-    private void sendStatusChange(Long eventId, SendingType type) {
-        EventSending eventSending = eventSendingRepository
-                .findByEventSendingEvent_IdAndSendingType(eventId, type);
-        eventSending.changeStatus(SendingStatus.SENDING);
-        eventSendingRepository.saveAndFlush(eventSending);
-    }
-
-
 
 }
