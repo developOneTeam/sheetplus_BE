@@ -67,7 +67,7 @@ public class Event {
     @JoinColumn(name = "contest_id")
     private Contest eventContest;
 
-    @OneToMany(mappedBy = "eventSendingEvent")
+    @OneToMany(mappedBy = "eventSendingEvent", cascade = CascadeType.REMOVE)
     private List<EventSending> eventSending = new ArrayList<>();
 
 
