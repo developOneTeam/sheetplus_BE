@@ -12,4 +12,5 @@ public interface EventSendingRepository extends JpaRepository<EventSending, Long
     List<EventSending> findByEventSendingEvent_Id(Long eventId);
     EventSending findByEventSendingEvent_IdAndSendingType(Long eventId, SendingType sendingType);
     List<EventSending> findBySendingStatusNot(SendingStatus sendingStatus);
+    void deleteByEventSendingEvent_Id(Long eventId);
 }
