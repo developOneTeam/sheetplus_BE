@@ -4,14 +4,14 @@ package sheetplus.checkings.config;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import sheetplus.checkings.business.notifications.service.EventSchedulerService;
+import sheetplus.checkings.business.notifications.QuartzSchedulerComponent;
 
 @Configuration
 public class SchedulerConfig{
 
     @Bean
     public JobDetail eventScheduleJob() {
-        return JobBuilder.newJob(EventSchedulerService.class)
+        return JobBuilder.newJob(QuartzSchedulerComponent.class)
                 .withIdentity("eventNotification", "dailyEventNotification")
                 .storeDurably()
                 .build();
@@ -22,7 +22,7 @@ public class SchedulerConfig{
         return TriggerBuilder.newTrigger()
                 .forJob(eventScheduleJob())
                 .withIdentity("eventNotificationTrigger", "dailyEventNotificationTrigger")
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(23, 41))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(0, 30))
                 .startNow()
                 .build();
     }
