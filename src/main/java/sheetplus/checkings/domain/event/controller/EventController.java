@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.event.dto.request.EventRequestDto;
 import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
 import sheetplus.checkings.domain.event.service.EventCRUDService;
+import sheetplus.checkings.business.notifications.service.EventSchedulerService;
 import sheetplus.checkings.util.response.Api;
 
 @RestController
@@ -16,6 +17,7 @@ import sheetplus.checkings.util.response.Api;
 public class EventController {
 
     private final EventCRUDService eventCRUDService;
+    private final EventSchedulerService eventSchedulerService;
 
     @PostMapping("admin/contest/{contest}/event/create")
     public Api<EventResponseDto> createEvent(
@@ -23,7 +25,7 @@ public class EventController {
             @RequestBody EventRequestDto eventRequest) {
         EventResponseDto eventResponseDto
                 = eventCRUDService.createEvent(id, eventRequest);
-
+        eventSchedulerService.scheduleNewEvent(eventResponseDto);
 
         return Api.CREATED(eventResponseDto);
     }
@@ -34,6 +36,7 @@ public class EventController {
             @RequestBody EventRequestDto eventRequestDto){
         EventResponseDto eventResponseDto
                 = eventCRUDService.updateEvent(id, eventRequestDto);
+        eventSchedulerService.scheduleUpdateEvent(eventResponseDto);
 
         return Api.UPDATED(eventResponseDto);
     }
@@ -44,6 +47,7 @@ public class EventController {
             @PathVariable(name = "event") Long id
     ){
         eventCRUDService.deleteEvent(id);
+        eventSchedulerService.scheduleDeleteEvent(id);
 
         return Api.DELETE("삭제 완료");
     }
