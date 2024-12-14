@@ -8,9 +8,12 @@ import sheetplus.checkings.domain.event.dto.request.EventRequestDto;
 import sheetplus.checkings.domain.enums.ContestCons;
 import sheetplus.checkings.domain.enums.EventCategory;
 import sheetplus.checkings.domain.enums.EventType;
+import sheetplus.checkings.domain.eventSending.entity.EventSending;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -63,6 +66,9 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contest_id")
     private Contest eventContest;
+
+    @OneToMany(mappedBy = "eventSendingEvent")
+    private List<EventSending> eventSending = new ArrayList<>();
 
 
     public void setContestEvent(Contest contest){
