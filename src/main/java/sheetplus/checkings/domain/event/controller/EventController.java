@@ -46,8 +46,8 @@ public class EventController {
     public Api<String> deleteEvent(
             @PathVariable(name = "event") Long id
     ){
-        eventCRUDService.deleteEvent(id);
         eventSchedulerService.scheduleDeleteEvent(id);
+        eventCRUDService.deleteEvent(id);
 
         return Api.DELETE("삭제 완료");
     }
