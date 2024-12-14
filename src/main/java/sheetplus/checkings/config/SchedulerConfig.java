@@ -1,20 +1,29 @@
 package sheetplus.checkings.config;
 
 
+import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.scheduling.TaskScheduler;
+import sheetplus.checkings.business.notifications.service.EventSchedulerService;
 
 @Configuration
-public class SchedulerConfig {
+public class SchedulerConfig{
 
     @Bean
-    public TaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(10);
-        scheduler.setThreadNamePrefix("Event-Start-notification-scheduler");
-        scheduler.initialize();
-        return scheduler;
+    public JobDetail eventScheduleJob() {
+        return JobBuilder.newJob(EventSchedulerService.class)
+                .withIdentity("eventNotification", "dailyEventNotification")
+                .storeDurably()
+                .build();
+    }
+
+    @Bean
+    public Trigger eventScheduleTrigger() {
+        return TriggerBuilder.newTrigger()
+                .forJob(eventScheduleJob())
+                .withIdentity("eventNotificationTrigger", "dailyEventNotificationTrigger")
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(23, 41))
+                .startNow()
+                .build();
     }
 }
