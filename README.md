@@ -21,7 +21,7 @@
 
 ## 주요기능
 ### 요약
-![백엔드주요기능](https://github.com/user-attachments/assets/01e3e104-3de0-4e42-baf9-cbc2563309ff)
+![백엔드주요기능](https://github.com/user-attachments/assets/ee88091c-8743-4a62-8848-5e3ec5e0048d)
 
 ### 시퀀스 다이어그램
 백엔드 서버 주요 기능들의 시퀀스 다이어그램입니다.
