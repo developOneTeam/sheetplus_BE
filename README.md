@@ -16,7 +16,8 @@
 ![백엔드아키텍처](https://github.com/user-attachments/assets/8d3fe22f-0357-478c-8181-4130e73adeed)
 
 ## DB ERD
-![즐겨찾기추가ERD](https://github.com/user-attachments/assets/e325d0fa-6129-4955-bedf-69f62345b722)
+![eventSending 추가 erd](https://github.com/user-attachments/assets/c8be2fd7-7ec8-4d73-8d65-816a6cc6aa26)
+
 
 ## 주요기능
 ### 요약
@@ -48,9 +49,9 @@
 
 ## 기술 스택
 | **Java 21** | **MySQL** | **Docker** | **Mailgun** |
-| --- | --- | --- | --- |
+| --- | --- | --- | ---|
 | **Spring boot 3** | **Redis** | **AWS (EC2, RDS)** | **Firebase Cloud Message** |
-| **Spring Data JPA** | **Git** | **Jenkins** |  |
+| **Spring Data JPA** | **Git** | **Jenkins** | **Apache JMeter** |
 | **QueyDSL** | **Swagger** |  |  |
 | **Spring Security** |  |  |  |
 
