@@ -54,7 +54,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'com.mailgun:mailgun-java:1.1.3'
 	implementation 'org.springframework.boot:spring-boot-starter-quartz'
-
+	implementation 'org.springframework.retry:spring-retry:2.0.11'
 
 	// Firebase Admin SDK
 	implementation 'com.google.firebase:firebase-admin:9.4.2'
