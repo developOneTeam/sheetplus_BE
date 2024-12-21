@@ -6,6 +6,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.TopicManagementResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.config.AsyncConfig;
@@ -67,6 +69,28 @@ public class FavoriteCRUDService {
                 .build();
         favorite.setMemberFavorite(member);
         favoriteRepository.save(favorite);
+        subscribeTopics(favoriteRequestDto, event, contest);
+
+
+        return FavoriteCreateResponseDto.builder()
+                .favoriteId(favorite.getId())
+                .studentId(member.getStudentId())
+                .contestName(contest.getName())
+                .eventName(event.getName())
+                .build();
+    }
+
+    @Retryable(
+            retryFor = {ExecutionException.class, InterruptedException.class},
+            maxAttempts = 5,
+            backoff = @Backoff(
+                    random = true,
+                    delay = 10000,
+                    multiplier = 3,
+                    maxDelay = 600000
+            )
+    )
+    public void subscribeTopics(FavoriteRequestDto favoriteRequestDto, Event event, Contest contest) {
         ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
                 .getInstance()
                 .subscribeToTopicAsync(Collections.singletonList(favoriteRequestDto.getDeviceToken())
@@ -78,17 +102,9 @@ public class FavoriteCRUDService {
                 log.info("토픽 구독 성공: {}", response.getSuccessCount());
             } catch (ExecutionException | InterruptedException e) {
                 log.error("토픽 구독 관련 예외 발생: {}", e.getMessage());
-                throw new RuntimeException(e);
+                throw new RuntimeException();
             }
         }, asyncConfig.getSubscribeFcmExecutor());
-
-
-        return FavoriteCreateResponseDto.builder()
-                .favoriteId(favorite.getId())
-                .studentId(member.getStudentId())
-                .contestName(contest.getName())
-                .eventName(event.getName())
-                .build();
     }
 
     @Transactional(readOnly = true)
@@ -124,26 +140,39 @@ public class FavoriteCRUDService {
                 .orElseThrow(() -> new ApiException(FAVORITE_NOT_FOUND));
 
         if(favorite.getFavoriteMember().getId().equals(member.getId())){
-            ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
-                    .getInstance()
-                    .unsubscribeFromTopicAsync(Collections.singletonList(deviceToken)
-                            ,(favorite.getFavoriteEvent().getId().toString()
-                                    + "-" + favorite.getFavoriteContest().getId().toString()));
-
-            // 토픽 구독취소
-            apiFuture.addListener(()->{
-                try{
-                    TopicManagementResponse response = apiFuture.get();
-                    log.info("토픽 구독취소 성공: {}", response.getSuccessCount());
-                }catch (ExecutionException | InterruptedException e) {
-                    log.error("토픽 구독취소 관련 예외 발생: {}", e.getMessage());
-                    throw new RuntimeException(e);
-                }
-            }, asyncConfig.getSubscribeFcmExecutor());
-
+            unSubscribeTopics(deviceToken, favorite);
 
             favoriteRepository.deleteById(favoriteId);
         }
+    }
+
+    @Retryable(
+            retryFor = {ExecutionException.class, InterruptedException.class},
+            maxAttempts = 5,
+            backoff = @Backoff(
+                    random = true,
+                    delay = 10000,
+                    multiplier = 3,
+                    maxDelay = 600000
+            )
+    )
+    private void unSubscribeTopics(String deviceToken, Favorite favorite) {
+        ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
+                .getInstance()
+                .unsubscribeFromTopicAsync(Collections.singletonList(deviceToken)
+                        ,(favorite.getFavoriteEvent().getId().toString()
+                                + "-" + favorite.getFavoriteContest().getId().toString()));
+
+        // 토픽 구독취소
+        apiFuture.addListener(()->{
+            try{
+                TopicManagementResponse response = apiFuture.get();
+                log.info("토픽 구독취소 성공: {}", response.getSuccessCount());
+            }catch (ExecutionException | InterruptedException e) {
+                log.error("토픽 구독취소 관련 예외 발생: {}", e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }, asyncConfig.getSubscribeFcmExecutor());
     }
 
 }

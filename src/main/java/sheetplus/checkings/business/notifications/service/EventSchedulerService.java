@@ -240,6 +240,11 @@ public class EventSchedulerService {
                     .startAt(Date.from(notificationTimeBefore
                             .atZone(ZoneId.systemDefault())
                             .toInstant()))
+                    .withSchedule(
+                            SimpleScheduleBuilder
+                                    .simpleSchedule()
+                                    .withMisfireHandlingInstructionFireNow()
+                    )
                     .build();
 
             // 3번 작업 시작 시점 알림
@@ -257,6 +262,11 @@ public class EventSchedulerService {
                     .startAt(Date.from(startTime
                             .atZone(ZoneId.systemDefault())
                             .toInstant()))
+                    .withSchedule(
+                            SimpleScheduleBuilder
+                                    .simpleSchedule()
+                                    .withMisfireHandlingInstructionFireNow()
+                    )
                     .build();
 
             // 4번 작업

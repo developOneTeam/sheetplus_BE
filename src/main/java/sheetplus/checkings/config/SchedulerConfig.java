@@ -22,7 +22,8 @@ public class SchedulerConfig{
         return TriggerBuilder.newTrigger()
                 .forJob(eventScheduleJob())
                 .withIdentity("eventNotificationTrigger", "dailyEventNotificationTrigger")
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(0, 30))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(0, 30)
+                        .withMisfireHandlingInstructionFireAndProceed())
                 .startNow()
                 .build();
     }
