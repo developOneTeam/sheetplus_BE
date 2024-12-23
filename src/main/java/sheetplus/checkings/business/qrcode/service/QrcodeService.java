@@ -74,38 +74,24 @@ public class QrcodeService {
 
         // 5번 로직
         if(!contest.getCons().equals(ContestCons.EVENT_PROGRESS)
-        || !event.getEventCondition().equals(ContestCons.EVENT_PROGRESS)){
+            || !event.getEventCondition().equals(ContestCons.EVENT_PROGRESS)){
             throw new ApiException(EVENT_NOT_PROGRESS);
         }
 
         // 6번 로직
         ParticipateContest participateContest = participateContestStateRepository
                 .findByMemberParticipateContestState_IdAndContestParticipateContestState_Id(
-                        member.getId(), contest.getId()).orElse(null);
+                        member.getId(), contest.getId())
+                .orElseGet(() -> createNewParticipateContest(contest, member, event)); // 7번 로직
 
-        // 7번 로직
-        if(participateContest == null){
-            participateContest = ParticipateContest.builder()
-                    .eventsCount(1)
-                    .meritType(MeritType.PRIZE_NON_TARGET)
-                    .receiveCons(ReceiveCons.PRIZE_NOT_RECEIVED)
-                    .build();
-            participateContest.setContestParticipateContestStates(contest);
-            participateContest.setMemberParticipateContestStates(member);
-            participateContest.getEventTypeSet().add(event.getEventCategory());
-
-            participateContestStateRepository.save(participateContest);
-        }else{
-
+        if(participateContest != null){
             // 8번 로직
             if(participateContest.getEventTypeSet().contains(event.getEventCategory())){
-               throw new ApiException(EVENT_ALREADY_PARTICIPATE);
+                throw new ApiException(EVENT_ALREADY_PARTICIPATE);
             }
 
             // 9번 로직
-            participateContest.addCounts();
-            participateContest.getEventTypeSet().add(event.getEventCategory());
-
+            updateParticipateContest(participateContest, event);
         }
 
         return QrcodeResponseDto.builder()
@@ -113,6 +99,27 @@ public class QrcodeService {
                 .studentId(member.getStudentId())
                 .eventName(event.getName())
                 .build();
+    }
+
+    // 9번 로직
+    private static void updateParticipateContest(ParticipateContest participateContest, Event event) {
+        participateContest.addCounts();
+        participateContest.getEventTypeSet().add(event.getEventCategory());
+    }
+
+    // 7번 로직
+    private ParticipateContest createNewParticipateContest(Contest contest, Member member, Event event) {
+        ParticipateContest participateContest = ParticipateContest.builder()
+                .eventsCount(1)
+                .meritType(MeritType.PRIZE_NON_TARGET)
+                .receiveCons(ReceiveCons.PRIZE_NOT_RECEIVED)
+                .build();
+        participateContest.setContestParticipateContestStates(contest);
+        participateContest.setMemberParticipateContestStates(member);
+        participateContest.getEventTypeSet().add(event.getEventCategory());
+        participateContestStateRepository.save(participateContest);
+
+        return null;
     }
 
 
