@@ -56,7 +56,6 @@ public class QrcodeService {
     public QrcodeResponseDto createParticipation(String token, QrcodeRequestDto qrcodeRequestDto){
         // 1번 로직
         Long id = cryptoUtil.decrypt(qrcodeRequestDto.getSecureCode());
-        log.info("복호화된 qr코드 pk {}", id);
 
         // 2번 로직
         Member member = memberRepository.findById(jwtUtil.getMemberId(token))
@@ -105,6 +104,10 @@ public class QrcodeService {
     private static void updateParticipateContest(ParticipateContest participateContest, Event event) {
         participateContest.addCounts();
         participateContest.getEventTypeSet().add(event.getEventCategory());
+        log.info("이벤트 참여정보 갱신 - 참여자 = {}, 참여 이벤트 = {}, 전체 이벤트 참여횟수 = {}, 참여 이벤트 유형 = {}",
+                participateContest.getMemberParticipateContestState().getName(),
+                event.getName(), participateContest.getEventsCount(),
+                participateContest.getEventTypeSet());
     }
 
     // 7번 로직
@@ -119,6 +122,8 @@ public class QrcodeService {
         participateContest.getEventTypeSet().add(event.getEventCategory());
         participateContestStateRepository.save(participateContest);
 
+        log.info("이벤트 참여정보 생성 - 참여자 = {}, 참여 이벤트 = {}, 참여 이벤트 유형 = {}", member.getName(),
+                event.getName(), event.getEventType());
         return null;
     }
 
