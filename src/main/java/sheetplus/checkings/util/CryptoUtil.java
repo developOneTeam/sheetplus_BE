@@ -13,6 +13,8 @@ import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -49,6 +51,11 @@ public class CryptoUtil {
             log.error("Decryption failed: ", e);
         }
         return null;
+    }
+
+    public LocalDateTime decryptExpireTime(String expireTime){
+        return LocalDateTime
+                .ofEpochSecond(decrypt(expireTime) / 1000, 0, ZoneOffset.UTC);
     }
 
 
