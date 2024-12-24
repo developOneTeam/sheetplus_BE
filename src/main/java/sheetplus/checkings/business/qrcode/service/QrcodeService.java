@@ -5,16 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.business.qrcode.dto.QrcodeCreateResponseDto;
 import sheetplus.checkings.business.qrcode.dto.QrcodeRequestDto;
 import sheetplus.checkings.business.qrcode.dto.QrcodeResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
+import sheetplus.checkings.domain.enums.*;
 import sheetplus.checkings.domain.event.entity.Event;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.participatecontest.entity.ParticipateContest;
-import sheetplus.checkings.domain.enums.ContestCons;
-import sheetplus.checkings.domain.enums.EventType;
-import sheetplus.checkings.domain.enums.MeritType;
-import sheetplus.checkings.domain.enums.ReceiveCons;
 import sheetplus.checkings.domain.event.repository.EventRepository;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
 import sheetplus.checkings.domain.participatecontest.repository.ParticipateContestStateRepository;
@@ -135,6 +133,44 @@ public class QrcodeService {
         log.info("이벤트 참여정보 생성 - 참여자 = {}, 참여 이벤트 = {}, 참여 이벤트 유형 = {}", member.getName(),
                 event.getName(), event.getEventType());
         return null;
+    }
+
+
+    /**
+     * 1. 요청한 사용자 ROLE 검증 - ADMIN, SUPER_ADMIN 아니면 예외발생
+     * 2. Event 조회 - 없으면 예외 발생
+     * 3. Event PK 암호화
+     * 4. 4번과 만료시간 암호화 키 전달
+     *
+     * @param token - member token
+     * @param secureId - Event PK
+     * @return QrcodeCreateResponseDto - 암호화 Event PK/만료시간 암호화 키
+     */
+    @Transactional
+    public QrcodeCreateResponseDto createQrcode(String token, String secureId){
+
+        // 1번 로직
+        Member member = memberRepository.findById(jwtUtil.getMemberId(token))
+                .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
+        if(!member.getMemberType().equals(MemberType.ADMIN)
+            && !member.getMemberType().equals(MemberType.SUPER_ADMIN)){
+            throw new ApiException(ROLE_ACCESS_DENIED);
+        }
+
+        // 2번 로직
+        Event event = eventRepository.findById(cryptoUtil.decrypt(secureId))
+                .orElseThrow(() -> new ApiException(EVENT_NOT_FOUND));
+
+        // 3번 로직
+        String secureEventId = cryptoUtil.encrypt(event.getId());
+        String secretKey = cryptoUtil.getSECRET_KEY();
+
+
+        // 4번 로직
+        return QrcodeCreateResponseDto.builder()
+                .secureId(secureEventId)
+                .secretKey(secretKey)
+                .build();
     }
 
 }
