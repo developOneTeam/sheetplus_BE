@@ -59,7 +59,7 @@ public class EventCRUDService {
         Long id = eventRepository.save(event).getId();
 
         return EventResponseDto.builder()
-                .secureId(cryptoUtil.encrypt(id))
+                .id(id)
                 .name(event.getName())
                 .startTime(event.getStartTime())
                 .endTime(event.getEndTime())
@@ -98,7 +98,7 @@ public class EventCRUDService {
         event.updateEvent(eventRequestDto);
 
         return EventResponseDto.builder()
-                .secureId(cryptoUtil.encrypt(event.getId()))
+                .id(event.getId())
                 .name(event.getName())
                 .startTime(event.getStartTime())
                 .endTime(event.getEndTime())

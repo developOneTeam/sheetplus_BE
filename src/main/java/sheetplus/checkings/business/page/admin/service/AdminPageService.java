@@ -107,7 +107,7 @@ public class AdminPageService {
                 .eventCounts(String.valueOf(events.size()))
                 .allEvents(events.stream()
                         .map(p -> EventResponseDto.builder()
-                                .secureId(p.getId().toString())
+                                .id(p.getId())
                                 .name(p.getName())
                                 .startTime(p.getStartTime())
                                 .endTime(p.getEndTime())

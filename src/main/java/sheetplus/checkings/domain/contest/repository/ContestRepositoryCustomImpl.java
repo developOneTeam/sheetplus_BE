@@ -46,7 +46,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
     private List<EventResponseDto> getEventResponseDtos(List<Event> events) {
         return events.stream()
                 .map(p -> EventResponseDto.builder()
-                        .secureId(p.getId().toString())
+                        .id(p.getId())
                         .name(p.getName())
                         .major(p.getMajor())
                         .eventTypeMessage(p.getEventType().getMessage())

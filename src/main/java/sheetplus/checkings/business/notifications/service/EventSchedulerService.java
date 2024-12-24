@@ -81,7 +81,7 @@ public class EventSchedulerService {
         }
 
         // 2번 로직
-        Long eventId = cryptoUtil.decrypt(eventResponseDto.getSecureId());
+        Long eventId = eventResponseDto.getId();
         List<EventSending> eventSends = eventSendingRepository
                 .findByEventSendingEvent_Id(eventId);
 
@@ -109,7 +109,7 @@ public class EventSchedulerService {
      */
     @Transactional
     public void scheduleUpdateEvent(EventResponseDto eventResponseDto){
-        Long eventId = cryptoUtil.decrypt(eventResponseDto.getSecureId());
+        Long eventId = eventResponseDto.getId();
         Event event = eventRepository.findById(eventId).orElseThrow
                 (() -> new ApiException(EVENT_NOT_FOUND));
         // 1번 로직
