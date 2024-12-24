@@ -1,6 +1,7 @@
 package sheetplus.checkings.util;
 
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,8 @@ import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -23,6 +26,7 @@ public class CryptoUtil {
     @Value("${crypto.algorithm}")
     private String ALGORITHM;
 
+    @Getter
     @Value("${crypto.secret-key}")
     private String SECRET_KEY;
 
@@ -49,6 +53,11 @@ public class CryptoUtil {
             log.error("Decryption failed: ", e);
         }
         return null;
+    }
+
+    public LocalDateTime decryptExpireTime(String expireTime){
+        return LocalDateTime
+                .ofEpochSecond(decrypt(expireTime) / 1000, 0, ZoneOffset.UTC);
     }
 
 

@@ -9,5 +9,6 @@ import lombok.*;
 public class QrcodeRequestDto {
 
     private String secureCode;
+    private String secureExpireTime;
 
 }

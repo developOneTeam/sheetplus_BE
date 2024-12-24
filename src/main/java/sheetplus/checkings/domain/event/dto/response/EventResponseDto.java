@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class EventResponseDto {
 
-    private String secureId;
+    private Long id;
     private String name;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime startTime;
