@@ -98,7 +98,7 @@ public class QrcodeService {
             }
 
             // 10번 로직
-            updateParticipateContest(participateContest, event);
+            updateParticipateContest(participateContest, event, member);
         }
 
         return QrcodeResponseDto.builder()
@@ -109,11 +109,11 @@ public class QrcodeService {
     }
 
     // 10번 로직
-    private static void updateParticipateContest(ParticipateContest participateContest, Event event) {
+    private static void updateParticipateContest(ParticipateContest participateContest, Event event, Member member) {
         participateContest.addCounts();
         participateContest.getEventTypeSet().add(event.getEventCategory());
         log.info("이벤트 참여정보 갱신 - 참여자 = {}, 참여 이벤트 = {}, 전체 이벤트 참여횟수 = {}, 참여 이벤트 유형 = {}",
-                participateContest.getMemberParticipateContestState().getName(),
+                member.getName(),
                 event.getName(), participateContest.getEventsCount(),
                 participateContest.getEventTypeSet());
     }
