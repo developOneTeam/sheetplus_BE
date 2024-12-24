@@ -29,14 +29,14 @@ public class QrController {
         return Api.OK(qrcodeResponseDto);
     }
 
-    @GetMapping("/admin/qrcode/create/{secureId}")
+    @GetMapping("/admin/qrcode/create/{eventId}")
     public Api<QrcodeCreateResponseDto> createQrcode(
             @RequestHeader(value = "Authorization", required = false) String token,
-            @PathVariable(name = "secureId") String secureId){
+            @PathVariable(name = "eventId") Long id){
 
         QrcodeCreateResponseDto qrcodeCreateResponseDto
                 = qrcodeService.createQrcode(
-                        token.replace("Bearer","").trim(), secureId);
+                        token.replace("Bearer","").trim(), id);
 
         return Api.OK(qrcodeCreateResponseDto);
     }

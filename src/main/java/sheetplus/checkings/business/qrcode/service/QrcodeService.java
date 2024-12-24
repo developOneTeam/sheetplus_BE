@@ -138,16 +138,16 @@ public class QrcodeService {
 
     /**
      * 1. 요청한 사용자 ROLE 검증 - ADMIN, SUPER_ADMIN 아니면 예외발생
-     * 2. Event 조회 - 없으면 예외 발생
+     * 2. Event PK 복호화 및 조회 - 없으면 예외 발생
      * 3. Event PK 암호화
      * 4. 4번과 만료시간 암호화 키 전달
      *
      * @param token - member token
-     * @param secureId - Event PK
+     * @param id - Event PK
      * @return QrcodeCreateResponseDto - 암호화 Event PK/만료시간 암호화 키
      */
     @Transactional
-    public QrcodeCreateResponseDto createQrcode(String token, String secureId){
+    public QrcodeCreateResponseDto createQrcode(String token, Long id){
 
         // 1번 로직
         Member member = memberRepository.findById(jwtUtil.getMemberId(token))
@@ -158,17 +158,18 @@ public class QrcodeService {
         }
 
         // 2번 로직
-        Event event = eventRepository.findById(cryptoUtil.decrypt(secureId))
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ApiException(EVENT_NOT_FOUND));
+        log.info("event 조회: {}", event.getName());
 
         // 3번 로직
-        String secureEventId = cryptoUtil.encrypt(event.getId());
+        String secureId = cryptoUtil.encrypt(id);
         String secretKey = cryptoUtil.getSECRET_KEY();
 
 
         // 4번 로직
         return QrcodeCreateResponseDto.builder()
-                .secureId(secureEventId)
+                .secureId(secureId)
                 .secretKey(secretKey)
                 .build();
     }
