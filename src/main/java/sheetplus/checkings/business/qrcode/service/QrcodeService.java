@@ -61,7 +61,8 @@ public class QrcodeService {
         // 2번 로직
         LocalDateTime expireTime = cryptoUtil
                 .decryptExpireTime(qrcodeRequestDto.getSecureExpireTime());
-        if(LocalDateTime.now().plusSeconds(17).isAfter(expireTime)){
+        if(LocalDateTime.now().isBefore(expireTime.plusSeconds(3))
+        && LocalDateTime.now().isAfter(expireTime.minusMinutes(16))){
             throw new ApiException(EXPIRED_QR_CODES);
         }
 
