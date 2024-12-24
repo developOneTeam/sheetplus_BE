@@ -36,7 +36,8 @@ public enum ApiError implements ErrorCodeIfs {
     CONTEST_EVENT_START_AFTER_END(400, "이벤트 시간은 대회 시작/종료 기간 안에 포함되어야 합니다."),
     FAVORITE_NOT_FOUND(404, "즐겨찾기정보를 찾을 수 없음"),
     FAVORITE_EXISTS(403, "이미 등록된 즐겨찾기 이벤트입니다."),
-    EXPIRED_QR_CODES(403, "이미 만료된 QR코드 요청입니다.")
+    EXPIRED_QR_CODES(403, "이미 만료된 QR코드 요청입니다."),
+    ROLE_ACCESS_DENIED(403, "접근 권한이 없는 사용자입니다.")
     ;
 
 
