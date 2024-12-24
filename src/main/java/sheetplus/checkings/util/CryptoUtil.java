@@ -1,6 +1,7 @@
 package sheetplus.checkings.util;
 
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class CryptoUtil {
     @Value("${crypto.algorithm}")
     private String ALGORITHM;
 
+    @Getter
     @Value("${crypto.secret-key}")
     private String SECRET_KEY;
 
