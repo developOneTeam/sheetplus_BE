@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import sheetplus.checkings.exception.error.ErrorResponse;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
-import sheetplus.checkings.util.response.Api;
 
-import static sheetplus.checkings.exception.error.ErrorCode.HTTP_INPUT_NOT_READABLE;
+import static sheetplus.checkings.exception.error.ApiError.HTTP_INPUT_NOT_READABLE;
 
 @RestControllerAdvice
 @Slf4j
@@ -17,7 +17,7 @@ import static sheetplus.checkings.exception.error.ErrorCode.HTTP_INPUT_NOT_READA
 public class ApiExceptionHandler {
 
     @ExceptionHandler(value = ApiException.class)
-    public ResponseEntity<Api<Object>> apiExceptionHandler(
+    public ResponseEntity<ErrorResponse> apiExceptionHandler(
             ApiException apiException
     ){
 
@@ -26,31 +26,31 @@ public class ApiExceptionHandler {
         return ResponseEntity
                 .status(apiException.getErrorCodeIfs().getHttpStatusCode())
                 .body(
-                        Api.ERROR(apiException.getErrorCodeIfs().getHttpStatusCode(),
+                        ErrorResponse.ERROR(apiException.getErrorCodeIfs().getHttpStatusCode(),
                                 apiException.getErrorDescription())
                 );
     }
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
-    public ResponseEntity<Api<?>> httpMessageNotReadableExceptionHandler(
+    public ResponseEntity<ErrorResponse> httpMessageNotReadableExceptionHandler(
             HttpMessageNotReadableException e
     ){
 
         return ResponseEntity
                 .status(HTTP_INPUT_NOT_READABLE.getHttpStatusCode())
-                .body(Api.ERROR(HTTP_INPUT_NOT_READABLE.getHttpStatusCode(),
+                .body(ErrorResponse.ERROR(HTTP_INPUT_NOT_READABLE.getHttpStatusCode(),
                         HTTP_INPUT_NOT_READABLE.getErrorDescription()));
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<Api<?>> illegalArgumentExceptionHandler(
+    public ResponseEntity<ErrorResponse> illegalArgumentExceptionHandler(
             IllegalArgumentException e
     ){
         log.info("{}", e.getMessage());
 
         return ResponseEntity
                 .status(HTTP_INPUT_NOT_READABLE.getHttpStatusCode())
-                .body(Api.ERROR(HTTP_INPUT_NOT_READABLE.getHttpStatusCode(),
+                .body(ErrorResponse.ERROR(HTTP_INPUT_NOT_READABLE.getHttpStatusCode(),
                         HTTP_INPUT_NOT_READABLE.getErrorDescription()));
     }
 
