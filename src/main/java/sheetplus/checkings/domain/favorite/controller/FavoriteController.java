@@ -9,7 +9,6 @@ import sheetplus.checkings.domain.favorite.dto.response.FavoriteCreateResponseDt
 import sheetplus.checkings.domain.favorite.dto.response.FavoriteResponseDto;
 import sheetplus.checkings.domain.favorite.service.FavoriteCRUDService;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,7 +28,7 @@ public class FavoriteController {
                 favoriteCRUDService.createFavorite(token.replace("Bearer ", "")
                 ,favoriteRequestDto);
 
-        return ResponseEntity.created(URI.create(""))
+        return ResponseEntity.accepted()
                 .body(favoriteCreateResponseDto);
     }
 
@@ -52,7 +51,7 @@ public class FavoriteController {
             @PathVariable(name = "deviceToken") String deviceToken
     ){
         favoriteCRUDService.deleteFavorites(id, token.replace("Bearer ", ""), deviceToken);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.accepted().build();
     }
 
 
