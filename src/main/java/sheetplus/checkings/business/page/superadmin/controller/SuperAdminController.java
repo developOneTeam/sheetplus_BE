@@ -1,6 +1,7 @@
 package sheetplus.checkings.business.page.superadmin.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.adminacceptcons.dto.request.AdminAcceptAndCreateRequestDto;
 import sheetplus.checkings.domain.adminacceptcons.dto.response.AdminAcceptListResponseDto;
@@ -8,17 +9,16 @@ import sheetplus.checkings.domain.adminacceptcons.entity.AdminAcceptCons;
 import sheetplus.checkings.domain.member.dto.request.MemberRequestDto;
 import sheetplus.checkings.domain.member.dto.response.MemberInfoResponseDto;
 import sheetplus.checkings.domain.member.entity.Member;
-import sheetplus.checkings.domain.enums.MemberType;
 import sheetplus.checkings.business.auth.service.AuthService;
 import sheetplus.checkings.domain.member.service.MemberCRUDService;
 import sheetplus.checkings.business.page.superadmin.service.SuperAdminService;
-import sheetplus.checkings.util.response.Api;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("private/super/admin/")
+@RequestMapping("private/super-admin/")
 public class SuperAdminController {
 
     private final SuperAdminService superAdminService;
@@ -26,12 +26,12 @@ public class SuperAdminController {
     private final AuthService authService;
 
 
-    @GetMapping("acceptable/admin/read")
-    public Api<List<AdminAcceptListResponseDto>> readAdminList(){
+    @GetMapping("admins")
+    public ResponseEntity<List<AdminAcceptListResponseDto>> readAdminList(){
 
         List<AdminAcceptCons> admins = superAdminService.readAdmins();
 
-        return Api.READ(
+        return ResponseEntity.ok(
                 admins.stream()
                         .map(p -> AdminAcceptListResponseDto.builder()
                                 .email(p.getEmail())
@@ -44,31 +44,31 @@ public class SuperAdminController {
         );
     }
 
-    @PostMapping("acceptable/admin/create")
-    public Api<MemberInfoResponseDto> updateAndCreateAdmin(
+    @PostMapping("admins")
+    public ResponseEntity<MemberInfoResponseDto> updateAndCreateAdmin(
             @RequestBody AdminAcceptAndCreateRequestDto adminAcceptAndCreateRequestDto){
         MemberRequestDto memberRequestDto
                 = superAdminService.updateAdminCons(adminAcceptAndCreateRequestDto.getEmail());
 
         Member member = memberCRUDService.createMember(memberRequestDto);
-        return Api.CREATED(
-                MemberInfoResponseDto.builder()
+        return ResponseEntity.created(URI.create(""))
+                .body(MemberInfoResponseDto.builder()
                         .id(member.getId())
-                        .name(member.getName())
+                        .email(member.getUniversityEmail())
+                        .memberType(member.getMemberType())
                         .major(member.getMajor())
                         .studentId(member.getStudentId())
-                        .email(member.getUniversityEmail())
-                        .memberType(MemberType.ADMIN)
+                        .name(member.getName())
                         .build());
     }
 
 
-    @DeleteMapping("acceptable/admin/{admin}/delete")
-    public Api<String> deleteAdmin(
+    @DeleteMapping("admins/{admin}")
+    public ResponseEntity<String> deleteAdmin(
             @PathVariable("admin") String email){
         superAdminService.deleteAdmin(email);
 
-        return Api.DELETE("삭제완료");
+        return ResponseEntity.noContent().build();
     }
 
 }
