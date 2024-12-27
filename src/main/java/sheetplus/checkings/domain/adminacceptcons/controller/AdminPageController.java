@@ -3,11 +3,11 @@ package sheetplus.checkings.domain.adminacceptcons.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.page.admin.dto.AdminHomeResponseDto;
 import sheetplus.checkings.domain.member.dto.response.MemberInfoResponseDto;
 import sheetplus.checkings.business.page.admin.service.AdminPageService;
-import sheetplus.checkings.util.response.Api;
 
 import java.util.List;
 
@@ -20,17 +20,17 @@ public class AdminPageController {
     private final AdminPageService adminPageService;
 
     @GetMapping("/contests/{contest}/home")
-    public Api<AdminHomeResponseDto> readAdminHome(
+    public ResponseEntity<AdminHomeResponseDto> readAdminHome(
             @PathVariable(name = "contest") Long contestId){
         AdminHomeResponseDto adminHomeResponseDto =
                 adminPageService.adminHomeRead(contestId);
-        return Api.READ(adminHomeResponseDto);
+        return ResponseEntity.ok(adminHomeResponseDto);
     }
 
     @GetMapping("/contests/{contest}/draw/members")
-    public Api<List<MemberInfoResponseDto>> readDrawMemberList(
+    public ResponseEntity<List<MemberInfoResponseDto>> readDrawMemberList(
             @PathVariable("contest") Long contestId){
-        return Api.READ(adminPageService.readDrawMemberList(contestId));
+        return ResponseEntity.ok(adminPageService.readDrawMemberList(contestId));
     }
 
 
@@ -41,9 +41,9 @@ public class AdminPageController {
      *
      */
     //@GetMapping("/{contest}/eventManage/prize/member/list")
-    public Api<List<MemberInfoResponseDto>> readPrizeMemberList(
+    public ResponseEntity<List<MemberInfoResponseDto>> readPrizeMemberList(
             @PathVariable("contest") Long contestId){
-        return Api.READ(adminPageService.readPrizeMemberList(contestId));
+        return ResponseEntity.ok(adminPageService.readPrizeMemberList(contestId));
     }
 
 }

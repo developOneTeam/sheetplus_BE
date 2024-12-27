@@ -2,6 +2,7 @@ package sheetplus.checkings.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.auth.dto.LoginDto;
 import sheetplus.checkings.domain.member.dto.request.MemberRequestDto;
@@ -12,7 +13,8 @@ import sheetplus.checkings.business.auth.service.AuthService;
 import sheetplus.checkings.business.email.service.EmailService;
 import sheetplus.checkings.domain.member.service.MemberCRUDService;
 import sheetplus.checkings.business.page.superadmin.service.SuperAdminService;
-import sheetplus.checkings.util.response.Api;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class MemberController {
     private final EmailService emailService;
 
     @PostMapping("public/member")
-    public Api<TokenDto> createMember(
+    public ResponseEntity<TokenDto> createMember(
             @RequestBody MemberRequestDto memberRequestDto){
 
         emailService.verifyEmail(memberRequestDto.getUniversityEmail(),
@@ -33,7 +35,8 @@ public class MemberController {
 
         // 멤버 타입 체크 로직
         if(!authService.memberTypeCheck(memberRequestDto.getMemberType())){
-            return Api.CREATED(superAdminService.createAdmin(memberRequestDto));
+            return ResponseEntity.created(URI.create(""))
+                    .body(superAdminService.createAdmin(memberRequestDto));
         }
 
 
@@ -44,13 +47,14 @@ public class MemberController {
                         .memberType(member.getMemberType())
                 .build());
 
-        return Api.CREATED(tokenWithData);
+        return ResponseEntity.created(URI.create(""))
+                .body(tokenWithData);
     }
 
 
 
     @PatchMapping("private/member")
-    public Api<MemberUpdateRequestDto> updateMember(
+    public ResponseEntity<MemberUpdateRequestDto> updateMember(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody MemberUpdateRequestDto memberUpdateRequestDto
     ){
@@ -59,15 +63,15 @@ public class MemberController {
                 = memberCRUDService.updateMember(memberUpdateRequestDto,
                 token.replace("Bearer ", ""));
 
-        return Api.UPDATED(updatedMember);
+        return ResponseEntity.ok(updatedMember);
     }
 
 
     @DeleteMapping("private/member")
-    public Api<String> deleteMember(
+    public ResponseEntity<String> deleteMember(
             @RequestHeader(value = "Authorization", required = false) String token){
         memberCRUDService.deleteMember(token.replace("Bearer ", ""));
-        return Api.DELETE("삭제 완료");
+        return ResponseEntity.noContent().build();
     }
 
 }

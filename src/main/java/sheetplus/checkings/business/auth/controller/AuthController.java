@@ -2,13 +2,13 @@ package sheetplus.checkings.business.auth.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.auth.dto.LoginDto;
 import sheetplus.checkings.domain.member.dto.request.MemberLoginRequestDto;
 import sheetplus.checkings.domain.token.dto.TokenDto;
 import sheetplus.checkings.business.auth.service.AuthService;
 import sheetplus.checkings.business.email.service.EmailService;
-import sheetplus.checkings.util.response.Api;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,17 +19,17 @@ public class AuthController {
     private final EmailService emailService;
 
     @PostMapping("/token/refresh")
-    public Api<TokenDto> refreshToken(
+    public ResponseEntity<TokenDto> refreshToken(
             @RequestHeader(value = "refreshToken"
                     , required = false) String refreshToken){
         log.info("{}", refreshToken);
 
         TokenDto tokenDto = authService.refreshTokens(refreshToken);
-        return Api.OK(tokenDto);
+        return ResponseEntity.ok(tokenDto);
     }
 
     @PostMapping("/login")
-    public Api<TokenDto> loginMember(
+    public ResponseEntity<TokenDto> loginMember(
             @RequestBody MemberLoginRequestDto memberLoginRequestDto){
 
         emailService.verifyEmail(memberLoginRequestDto.getEmail(),
@@ -40,7 +40,7 @@ public class AuthController {
                         .email(memberLoginRequestDto.getEmail())
                         .memberType(memberLoginRequestDto.getMemberType())
                 .build());
-        return Api.OK(tokenDto);
+        return ResponseEntity.ok(tokenDto);
     }
 
 }
