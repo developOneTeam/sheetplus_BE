@@ -1,7 +1,10 @@
 package sheetplus.checkings.exception.error;
 
+import org.springframework.http.HttpStatus;
+
 public interface ErrorCodeIfs {
 
-    Integer getHttpStatusCode();
+    HttpStatus getHttpStatusCode();
     String getErrorDescription();
+
 }
