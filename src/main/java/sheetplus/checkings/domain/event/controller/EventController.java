@@ -13,13 +13,13 @@ import sheetplus.checkings.util.response.Api;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("private/")
+@RequestMapping("private/admin")
 public class EventController {
 
     private final EventCRUDService eventCRUDService;
     private final EventSchedulerService eventSchedulerService;
 
-    @PostMapping("admin/contest/{contest}/event/create")
+    @PostMapping("/contests/{contest}/event")
     public Api<EventResponseDto> createEvent(
             @PathVariable(name = "contest") Long id,
             @RequestBody EventRequestDto eventRequest) {
@@ -30,7 +30,7 @@ public class EventController {
         return Api.CREATED(eventResponseDto);
     }
 
-    @PatchMapping("admin/event/{event}/update")
+    @PatchMapping("/events/{event}")
     public Api<EventResponseDto> updateEvent(
             @PathVariable(name = "event") Long id,
             @RequestBody EventRequestDto eventRequestDto){
@@ -42,7 +42,7 @@ public class EventController {
     }
 
 
-    @DeleteMapping("admin/event/{event}/delete")
+    @DeleteMapping("/events/{event}")
     public Api<String> deleteEvent(
             @PathVariable(name = "event") Long id
     ){

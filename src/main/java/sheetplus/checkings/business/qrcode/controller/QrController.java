@@ -17,7 +17,7 @@ public class QrController {
 
     private final QrcodeService qrcodeService;
 
-    @PostMapping("/student/qrcode/check")
+    @PostMapping("/student/qrcode")
     public Api<QrcodeResponseDto> qrcodeCheck(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody QrcodeRequestDto qrcodeRequestDto){
@@ -29,7 +29,7 @@ public class QrController {
         return Api.OK(qrcodeResponseDto);
     }
 
-    @GetMapping("/admin/qrcode/create/{eventId}")
+    @GetMapping("/admin/events/{eventId}/qrcode")
     public Api<QrcodeCreateResponseDto> createQrcode(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable(name = "eventId") Long id){

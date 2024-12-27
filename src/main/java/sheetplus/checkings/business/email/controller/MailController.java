@@ -14,12 +14,12 @@ import sheetplus.checkings.util.response.Api;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/public")
+@RequestMapping("public")
 public class MailController {
 
     private final EmailService emailService;
 
-    @PostMapping("/mail/auth")
+    @PostMapping("/auth/mails")
     public Api<Object> sendMail(
             @RequestBody EmailRequestDto emailRequestDto){
         emailService.verifyEmailDomain(emailRequestDto.getReceiver());

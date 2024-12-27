@@ -13,6 +13,7 @@ import sheetplus.checkings.util.response.Api;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("private/admin")
 @Slf4j
 public class DrawController {
 
@@ -33,14 +34,14 @@ public class DrawController {
 
     }
 
-    @PostMapping("private/admin/draw/create")
+    @PostMapping("/draw")
     public Api<DrawEventResponseDto> createDraw(
             @RequestBody DrawEventRequestDto drawEventRequestDto
     ){
         return Api.CREATED(drawEventService.createDrawMember(drawEventRequestDto));
     }
 
-    @PatchMapping("private/admin/draw/receive/update")
+    @PatchMapping("/draw")
     public Api<DrawUpdateResponseDto> updateDrawEventReceiveCondition(
             @RequestBody DrawUpdateRequestDto drawUpdateRequestDto
             ){
@@ -48,7 +49,7 @@ public class DrawController {
         return Api.UPDATED(drawEventService.updateDrawReceived(drawUpdateRequestDto));
     }
     
-    @DeleteMapping("private/admin/draw/{draw}/delete")
+    @DeleteMapping("/draw/{draw}")
     public Api<String> deleteDrawEventReceiveCondition(
             @PathVariable(name = "draw") Long id
     ){

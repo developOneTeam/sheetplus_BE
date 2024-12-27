@@ -19,7 +19,7 @@ public class AdminPageController {
 
     private final AdminPageService adminPageService;
 
-    @GetMapping("/{contest}/home")
+    @GetMapping("/contests/{contest}/home")
     public Api<AdminHomeResponseDto> readAdminHome(
             @PathVariable(name = "contest") Long contestId){
         AdminHomeResponseDto adminHomeResponseDto =
@@ -27,7 +27,7 @@ public class AdminPageController {
         return Api.READ(adminHomeResponseDto);
     }
 
-    @GetMapping("/{contest}/eventManage/draw/member/list")
+    @GetMapping("/contests/{contest}/draw/members")
     public Api<List<MemberInfoResponseDto>> readDrawMemberList(
             @PathVariable("contest") Long contestId){
         return Api.READ(adminPageService.readDrawMemberList(contestId));

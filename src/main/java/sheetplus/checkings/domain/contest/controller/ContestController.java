@@ -12,19 +12,19 @@ import sheetplus.checkings.util.response.Api;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("private/")
+@RequestMapping("private/admin")
 public class ContestController {
 
     private final ContestCRUDService contestCRUDService;
 
-    @PostMapping("admin/contest/create")
+    @PostMapping("/contests")
     public Api<ContestResponseDto> createContest(
             @RequestBody ContestRequestDto contestRequestDto) {
 
         return Api.CREATED(contestCRUDService.createContest(contestRequestDto));
     }
 
-    @PatchMapping("admin/contest/{contest}/update")
+    @PatchMapping("/contests/{contest}")
     public Api<ContestResponseDto> updateContest(
             @PathVariable("contest") Long contestId,
             @RequestBody ContestRequestDto contestRequestDto
@@ -33,7 +33,7 @@ public class ContestController {
                                 .updateContest(contestId, contestRequestDto));
     }
 
-    @DeleteMapping("admin/contest/{contest}/delete")
+    @DeleteMapping("/contests/{contest}")
     public Api<String> deleteContest(
             @PathVariable("contest") Long contestId
     ){

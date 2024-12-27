@@ -12,12 +12,13 @@ import sheetplus.checkings.util.response.Api;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("public/auth")
 @Slf4j
 public class AuthController {
     public final AuthService authService;
     private final EmailService emailService;
 
-    @PostMapping("public/refresh")
+    @PostMapping("/token/refresh")
     public Api<TokenDto> refreshToken(
             @RequestHeader(value = "refreshToken"
                     , required = false) String refreshToken){
@@ -27,7 +28,7 @@ public class AuthController {
         return Api.OK(tokenDto);
     }
 
-    @PostMapping("public/login")
+    @PostMapping("/login")
     public Api<TokenDto> loginMember(
             @RequestBody MemberLoginRequestDto memberLoginRequestDto){
 

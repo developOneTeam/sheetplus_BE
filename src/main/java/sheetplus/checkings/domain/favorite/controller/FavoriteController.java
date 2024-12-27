@@ -14,12 +14,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("private/")
+@RequestMapping("private/student")
 public class FavoriteController {
 
     private final FavoriteCRUDService favoriteCRUDService;
 
-    @PostMapping("favorite/create")
+    @PostMapping("/favorite")
     public Api<FavoriteCreateResponseDto> createFavorite(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody FavoriteRequestDto favoriteRequestDto) {
@@ -32,7 +32,7 @@ public class FavoriteController {
     }
 
 
-    @GetMapping("{contest}/event/favorites")
+    @GetMapping("/contests/{contest}/favorites")
     public Api<List<FavoriteResponseDto>> getFavorites(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable(name = "contest") Long contestId){
@@ -43,7 +43,7 @@ public class FavoriteController {
     }
 
 
-    @DeleteMapping("favorite/{favorite}/delete/{deviceToken}")
+    @DeleteMapping("/favorites/{favorite}/devices/{deviceToken}")
     public Api<String> deleteFavorite(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable(name = "favorite") Long id,

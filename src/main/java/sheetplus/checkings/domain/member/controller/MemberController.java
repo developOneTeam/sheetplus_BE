@@ -1,6 +1,5 @@
 package sheetplus.checkings.domain.member.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class MemberController {
     private final SuperAdminService superAdminService;
     private final EmailService emailService;
 
-    @PostMapping("public/register")
+    @PostMapping("public/member")
     public Api<TokenDto> createMember(
             @RequestBody MemberRequestDto memberRequestDto){
 
@@ -50,7 +49,7 @@ public class MemberController {
 
 
 
-    @PatchMapping("private/update")
+    @PatchMapping("private/member")
     public Api<MemberUpdateRequestDto> updateMember(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody MemberUpdateRequestDto memberUpdateRequestDto
@@ -64,7 +63,7 @@ public class MemberController {
     }
 
 
-    @DeleteMapping("private/delete")
+    @DeleteMapping("private/member")
     public Api<String> deleteMember(
             @RequestHeader(value = "Authorization", required = false) String token){
         memberCRUDService.deleteMember(token.replace("Bearer ", ""));
