@@ -1,6 +1,9 @@
 package sheetplus.checkings.domain.entry.dto.response;
 
 import lombok.*;
+import org.springframework.hateoas.Link;
+
+import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
@@ -16,5 +19,6 @@ public class EntryResponseDto {
     private String professorName;
     private String leaderName;
     private String entryType;
+    private List<Link> link;
 
 }

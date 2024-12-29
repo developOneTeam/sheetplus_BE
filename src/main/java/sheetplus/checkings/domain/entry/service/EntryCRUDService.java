@@ -2,8 +2,11 @@ package sheetplus.checkings.domain.entry.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.domain.adminacceptcons.controller.AdminPageController;
+import sheetplus.checkings.domain.entry.controller.EntryController;
 import sheetplus.checkings.domain.entry.dto.request.EntryRequestDto;
 import sheetplus.checkings.domain.entry.dto.response.EntryResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
@@ -12,6 +15,11 @@ import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.entry.repository.EntryRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static sheetplus.checkings.exception.error.ApiError.CONTEST_NOT_FOUND;
 import static sheetplus.checkings.exception.error.ApiError.ENTRY_NOT_FOUND;
 
@@ -39,10 +47,20 @@ public class EntryCRUDService {
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         entry.setContestEntry(contest);
-        Long id = entryRepository.save(entry).getId();
+        Long entryId = entryRepository.save(entry).getId();
+        List<Link> lists = new ArrayList<>();
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHome(contestId)).withRel("관리자 Home 페이지"));
+        lists.add(linkTo(methodOn(EntryController.class)
+                .updateEntry(entryId, EntryRequestDto.builder().build()))
+                .withRel("작품 UPDATE"));
+        lists.add(linkTo(methodOn(EntryController.class)
+                .deleteEntry(entryId))
+                .withRel("작품 DELETE"));
+
 
         return EntryResponseDto.builder()
-                .id(id)
+                .id(entryId)
                 .name(entry.getName())
                 .location(entry.getLocation())
                 .building(entry.getBuilding())
@@ -51,6 +69,7 @@ public class EntryCRUDService {
                 .leaderName(entry.getLeaderName())
                 .major(entry.getMajor())
                 .entryType(entry.getEntryType().getMessage())
+                .link(lists)
                 .build();
     }
 
@@ -59,6 +78,18 @@ public class EntryCRUDService {
         Entry entry = entryRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ENTRY_NOT_FOUND));;
         entry.updateEntry(entryRequestDto);
+        Long contestId = entry.getEntryContest().getId();
+
+        List<Link> lists = new ArrayList<>();
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHome(contestId))
+                .withRel("관리자 Home 페이지"));
+        lists.add(linkTo(methodOn(EntryController.class)
+                .createEntry(contestId, EntryRequestDto.builder().build()))
+                .withRel("작품 CREATE"));
+        lists.add(linkTo(methodOn(EntryController.class)
+                .deleteEntry(contestId))
+                .withRel("작품 DELETE"));
 
 
         return EntryResponseDto.builder()
@@ -71,6 +102,7 @@ public class EntryCRUDService {
                 .professorName(entry.getProfessorName())
                 .leaderName(entry.getLeaderName())
                 .entryType(entry.getEntryType().getMessage())
+                .link(lists)
                 .build();
     }
 
