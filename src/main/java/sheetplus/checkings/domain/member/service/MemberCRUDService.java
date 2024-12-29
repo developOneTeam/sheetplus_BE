@@ -8,6 +8,7 @@ import sheetplus.checkings.domain.member.dto.request.MemberUpdateRequestDto;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.adminacceptcons.repository.AdminAcceptConsRepository;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
+import sheetplus.checkings.domain.temporarymember.repository.TemporaryMemberRepository;
 import sheetplus.checkings.domain.token.service.TokenService;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.util.JwtUtil;
@@ -21,6 +22,7 @@ public class MemberCRUDService {
 
     private final MemberRepository memberRepository;
     private final AdminAcceptConsRepository adminAcceptConsRepository;
+    private final TemporaryMemberRepository temporaryMemberRepository;
     private final JwtUtil jwtUtil;
     private final TokenService tokenService;
 
@@ -43,6 +45,7 @@ public class MemberCRUDService {
         }
 
         memberRepository.save(member);
+        temporaryMemberRepository.deleteById(member.getUniversityEmail());
 
         return member;
     }
@@ -52,10 +55,6 @@ public class MemberCRUDService {
         Member member = memberRepository.findById(jwtUtil.getMemberId(token))
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
-        if(member == null){
-            // 예외처리
-            return null;
-        }
         member.memberInfoUpdate(memberUpdateRequestDto);
 
         return MemberUpdateRequestDto.builder()
