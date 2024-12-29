@@ -6,15 +6,18 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.TopicManagementResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.Link;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.business.page.student.controller.StudentPageController;
 import sheetplus.checkings.config.AsyncConfig;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.event.entity.Event;
 import sheetplus.checkings.domain.event.repository.EventRepository;
+import sheetplus.checkings.domain.favorite.controller.FavoriteController;
 import sheetplus.checkings.domain.favorite.dto.request.FavoriteRequestDto;
 import sheetplus.checkings.domain.favorite.dto.response.FavoriteCreateResponseDto;
 import sheetplus.checkings.domain.favorite.dto.response.FavoriteResponseDto;
@@ -30,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static sheetplus.checkings.exception.error.ApiError.*;
 
 @Service
@@ -71,12 +76,22 @@ public class FavoriteCRUDService {
         favoriteRepository.save(favorite);
         subscribeTopics(favoriteRequestDto, event, contest);
 
+        List<Link> chainListLink = new ArrayList<>();
+        chainListLink.add(linkTo(methodOn(FavoriteController.class)
+                .getFavorites(token, contest.getId())).withRel("즐겨찾기 조회"));
+        chainListLink.add(linkTo(methodOn(StudentPageController.class)
+                .readStudentActivities(token,contest.getId())).withRel("학생 활동 페이지"));
+        chainListLink.add(linkTo(methodOn(FavoriteController.class)
+                .deleteFavorite(token, contest.getId(), "deviceToken"))
+                .withRel("즐겨찾기 삭제"));
+
 
         return FavoriteCreateResponseDto.builder()
                 .favoriteId(favorite.getId())
                 .studentId(member.getStudentId())
                 .contestName(contest.getName())
                 .eventName(event.getName())
+                .links(chainListLink)
                 .build();
     }
 
