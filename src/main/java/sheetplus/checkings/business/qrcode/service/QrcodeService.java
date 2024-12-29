@@ -3,8 +3,10 @@ package sheetplus.checkings.business.qrcode.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.business.page.student.controller.StudentPageController;
 import sheetplus.checkings.business.qrcode.dto.QrcodeCreateResponseDto;
 import sheetplus.checkings.business.qrcode.dto.QrcodeRequestDto;
 import sheetplus.checkings.business.qrcode.dto.QrcodeResponseDto;
@@ -21,7 +23,11 @@ import sheetplus.checkings.util.CryptoUtil;
 import sheetplus.checkings.util.JwtUtil;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static sheetplus.checkings.exception.error.ApiError.*;
 
 @RequiredArgsConstructor
@@ -101,11 +107,19 @@ public class QrcodeService {
             // 10번 로직
             updateParticipateContest(participateContest, event, member);
         }
+        List<Link> links = new ArrayList<>();
+        links.add(linkTo(methodOn(StudentPageController.class)
+                .readStudentHome(token, contest.getId()))
+                .withRel("학생 Home 페이지"));
+        links.add(linkTo(methodOn(StudentPageController.class)
+                .readStudentActivities(token, contest.getId()))
+                .withRel("학생 활동 페이지"));
 
         return QrcodeResponseDto.builder()
                 .studentName(member.getName())
                 .studentId(member.getStudentId())
                 .eventName(event.getName())
+                .link(links)
                 .build();
     }
 
