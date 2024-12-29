@@ -23,7 +23,6 @@ public class SuperAdminController {
 
     private final SuperAdminService superAdminService;
     private final MemberCRUDService memberCRUDService;
-    private final AuthService authService;
 
 
     @GetMapping("admins")
