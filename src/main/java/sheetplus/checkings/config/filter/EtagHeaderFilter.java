@@ -35,6 +35,8 @@ public class EtagHeaderFilter {
 
                 if (request.getMethod().equalsIgnoreCase("GET")) {
                     response.setHeader("Cache-Control", "private");
+                    response.setHeader("Cache-Control", "max-age=3600");
+                    response.setHeader("Cache-Control", "must-revalidate");
                 }
             }
         });
