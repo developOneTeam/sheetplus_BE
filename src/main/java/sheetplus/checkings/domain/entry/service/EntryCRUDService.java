@@ -67,6 +67,7 @@ public class EntryCRUDService {
                 .location(entry.getLocation())
                 .building(entry.getBuilding())
                 .teamNumber(entry.getTeamNumber())
+                .major(entry.getMajor())
                 .professorName(entry.getProfessorName())
                 .leaderName(entry.getLeaderName())
                 .entryType(entry.getEntryType().getMessage())

@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .requestMatchers(AUTH_WHITELIST).permitAll()
                 .requestMatchers("/private/student/**").hasAnyRole("STUDENT", "ADMIN", "SUPER_ADMIN")
                 .requestMatchers("/private/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
-                .requestMatchers("/private/super/admin/**").hasRole("SUPER_ADMIN")
+                .requestMatchers("/private/super-admin/**").hasRole("SUPER_ADMIN")
                 .requestMatchers("/private/**").authenticated()
         );
 

@@ -11,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.filter.OncePerRequestFilter;
+import sheetplus.checkings.exception.error.ErrorResponse;
 import sheetplus.checkings.exception.error.TokenError;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.exception.exceptionMethod.JwtException;
-import sheetplus.checkings.util.response.Api;
 
 import java.io.IOException;
 
@@ -34,15 +34,20 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }catch (JwtException e) {
             log.info("JWT 예외 발생");
-            if (e.getErrorCodeIfs().getHttpStatusCode() == 2000) {
+            if (e.getErrorCodeIfs().getErrorDescription()
+                    .equals(TokenError.INVALID_TOKEN.getErrorDescription())) {
                 response(response, TokenError.INVALID_TOKEN);
-            } else if (e.getErrorCodeIfs().getHttpStatusCode() == 2001) {
+            } else if (e.getErrorCodeIfs().getErrorDescription()
+                    .equals(TokenError.EXPIRED_TOKEN.getErrorDescription())) {
                 response(response, TokenError.EXPIRED_TOKEN);
-            } else if(e.getErrorCodeIfs().getHttpStatusCode() == 2002){
+            } else if(e.getErrorCodeIfs().getErrorDescription()
+                    .equals(TokenError.TOKEN_NOT_FOUND.getErrorDescription())) {
                 response(response, TokenError.TOKEN_NOT_FOUND);
-            } else if (e.getErrorCodeIfs().getHttpStatusCode() == 2003) {
+            } else if (e.getErrorCodeIfs().getErrorDescription()
+                    .equals(TokenError.UNSUPPORTED_TOKEN.getErrorDescription())) {
                 response(response, TokenError.UNSUPPORTED_TOKEN);
-            } else if (e.getErrorCodeIfs().getHttpStatusCode() == 2004) {
+            } else if (e.getErrorCodeIfs().getErrorDescription()
+                    .equals(TokenError.ILLEGAL_TOKEN.getErrorDescription())) {
                 response(response, TokenError.ILLEGAL_TOKEN);
             } else {
                 response(response, TokenError.TOKEN_EXCEPTION);
@@ -60,19 +65,19 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     private void response(HttpServletResponse response, TokenError error) throws IOException {
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(error.getHttpStatusCode());
+        response.setStatus(error.getHttpStatusCode().value());
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(Api.ERROR(error
-                .getHttpStatusCode(), error.getErrorDescription())));
+        response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.ERROR(error.getHttpStatusCode()
+                , error.getErrorDescription())));
 
     }
 
     private void response(HttpServletResponse response, ApiException error) throws IOException {
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(error.getErrorCodeIfs().getHttpStatusCode());
+        response.setStatus(error.getErrorCodeIfs().getHttpStatusCode().value());
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(Api.ERROR(error
+        response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.ERROR(error
                 .getErrorCodeIfs().getHttpStatusCode(), error.getErrorDescription())));
 
     }
@@ -82,8 +87,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(Api.ERROR(
-                HttpStatus.FORBIDDEN.value(), error.getMessage())));
+        response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.ERROR(
+                HttpStatus.FORBIDDEN, error.getMessage())));
 
     }
 

@@ -2,6 +2,7 @@ package sheetplus.checkings.business.page.student.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.page.student.dto.ActivitiesResponseDto;
 import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
@@ -10,7 +11,6 @@ import sheetplus.checkings.business.page.student.dto.StudentPageActivitiesRespon
 import sheetplus.checkings.business.page.student.service.StudentPageService;
 import sheetplus.checkings.domain.favorite.dto.response.FavoriteResponseDto;
 import sheetplus.checkings.domain.favorite.service.FavoriteCRUDService;
-import sheetplus.checkings.util.response.Api;
 
 import java.util.List;
 
@@ -24,24 +24,24 @@ public class StudentPageController {
 
 
     @GetMapping("private/student/{contest}/home")
-    public Api<StudentHomePageResponseDto> readStudentHome(
+    public ResponseEntity<StudentHomePageResponseDto> readStudentHome(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable("contest") Long contestId){
 
         token = token.replace("Bearer ", "");
 
-        return Api.READ(studentPageService.readStudentHomePage(token, contestId));
+        return ResponseEntity.ok(studentPageService.readStudentHomePage(token, contestId));
     }
 
     @GetMapping("public/{contest}/schedule")
-    public Api<List<EventResponseDto>> readStudentSchedule(
+    public ResponseEntity<List<EventResponseDto>> readStudentSchedule(
             @PathVariable("contest") Long contestId){
 
-        return Api.READ(studentPageService.readStudentSchedulePage(contestId));
+        return ResponseEntity.ok(studentPageService.readStudentSchedulePage(contestId));
     }
 
     @GetMapping("private/student/{contest}/activities")
-    public Api<StudentPageActivitiesResponseDto> readStudentActivities(
+    public ResponseEntity<StudentPageActivitiesResponseDto> readStudentActivities(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable("contest") Long contestId){
 
@@ -52,7 +52,7 @@ public class StudentPageController {
                 = favoriteCRUDService.getFavorites(token, contestId);
 
 
-        return Api.READ(StudentPageActivitiesResponseDto
+        return ResponseEntity.ok(StudentPageActivitiesResponseDto
                 .builder()
                 .activitiesResponseDto(activitiesResponseDto)
                 .favorites(favoriteResponseDto)

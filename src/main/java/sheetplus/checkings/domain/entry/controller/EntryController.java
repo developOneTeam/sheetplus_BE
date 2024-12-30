@@ -2,42 +2,46 @@ package sheetplus.checkings.domain.entry.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.entry.dto.request.EntryRequestDto;
 import sheetplus.checkings.domain.entry.dto.response.EntryResponseDto;
 import sheetplus.checkings.domain.entry.service.EntryCRUDService;
-import sheetplus.checkings.util.response.Api;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("private/admin")
 @Slf4j
 public class EntryController {
 
     private final EntryCRUDService entryCRUDService;
 
-    @PostMapping("private/admin/contest/{contest}/entry/create")
-    public Api<EntryResponseDto> createEntry(
+    @PostMapping("/contests/{contest}/entry")
+    public ResponseEntity<EntryResponseDto> createEntry(
             @PathVariable(name = "contest") Long contestId,
             @RequestBody EntryRequestDto entryRequestDto) {
 
-        return Api.CREATED(entryCRUDService.createEntry(contestId, entryRequestDto));
+        return ResponseEntity.created(URI.create(""))
+                .body(entryCRUDService.createEntry(contestId, entryRequestDto));
     }
 
 
-    @PatchMapping("private/admin/entry/{entry}/update")
-    public Api<EntryResponseDto> updateEntry(
+    @PatchMapping("/entries/{entry}")
+    public ResponseEntity<EntryResponseDto> updateEntry(
             @PathVariable(name = "entry") Long entryId,
             @RequestBody EntryRequestDto entryRequestDto
     ){
-        return Api.UPDATED(entryCRUDService.updateEntry(entryId, entryRequestDto));
+        return ResponseEntity.ok(entryCRUDService.updateEntry(entryId, entryRequestDto));
     }
 
-    @DeleteMapping("private/admin/entry/{entry}/delete")
-    public Api<String> deleteEntry(
+    @DeleteMapping("/entries/{entry}")
+    public ResponseEntity<String> deleteEntry(
             @PathVariable(name = "entry") Long entryId
     ){
         entryCRUDService.deleteEntry(entryId);
-        return Api.DELETE("삭제 완료");
+        return ResponseEntity.noContent().build();
     }
 
 }

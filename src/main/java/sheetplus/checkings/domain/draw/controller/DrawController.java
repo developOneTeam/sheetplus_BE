@@ -2,6 +2,7 @@ package sheetplus.checkings.domain.draw.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.draw.dto.request.DrawEventRequestDto;
 import sheetplus.checkings.domain.draw.dto.response.DrawEventResponseDto;
@@ -9,10 +10,12 @@ import sheetplus.checkings.domain.draw.dto.request.DrawUpdateRequestDto;
 import sheetplus.checkings.domain.draw.dto.response.DrawUpdateResponseDto;
 import sheetplus.checkings.domain.draw.service.DrawEventService;
 import sheetplus.checkings.deprecated.prize.PrizeConditionRequestDto;
-import sheetplus.checkings.util.response.Api;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("private/admin")
 @Slf4j
 public class DrawController {
 
@@ -33,27 +36,28 @@ public class DrawController {
 
     }
 
-    @PostMapping("private/admin/draw/create")
-    public Api<DrawEventResponseDto> createDraw(
+    @PostMapping("/draw")
+    public ResponseEntity<DrawEventResponseDto> createDraw(
             @RequestBody DrawEventRequestDto drawEventRequestDto
     ){
-        return Api.CREATED(drawEventService.createDrawMember(drawEventRequestDto));
+        return ResponseEntity.created(URI.create(""))
+                .body(drawEventService.createDrawMember(drawEventRequestDto));
     }
 
-    @PatchMapping("private/admin/draw/receive/update")
-    public Api<DrawUpdateResponseDto> updateDrawEventReceiveCondition(
+    @PatchMapping("/draw")
+    public ResponseEntity<DrawUpdateResponseDto> updateDrawEventReceiveCondition(
             @RequestBody DrawUpdateRequestDto drawUpdateRequestDto
             ){
         
-        return Api.UPDATED(drawEventService.updateDrawReceived(drawUpdateRequestDto));
+        return ResponseEntity.ok(drawEventService.updateDrawReceived(drawUpdateRequestDto));
     }
     
-    @DeleteMapping("private/admin/draw/{draw}/delete")
-    public Api<String> deleteDrawEventReceiveCondition(
+    @DeleteMapping("/draw/{draw}")
+    public ResponseEntity<String> deleteDrawEventReceiveCondition(
             @PathVariable(name = "draw") Long id
     ){
         drawEventService.deleteDraw(id);
-        return Api.DELETE("삭제 완료");
+        return ResponseEntity.noContent().build();
     }
 
 

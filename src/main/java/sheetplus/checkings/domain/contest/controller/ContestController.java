@@ -3,43 +3,46 @@ package sheetplus.checkings.domain.contest.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.contest.dto.request.ContestRequestDto;
 import sheetplus.checkings.domain.contest.dto.response.ContestResponseDto;
 import sheetplus.checkings.domain.contest.service.ContestCRUDService;
-import sheetplus.checkings.util.response.Api;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("private/")
+@RequestMapping("private/admin")
 public class ContestController {
 
     private final ContestCRUDService contestCRUDService;
 
-    @PostMapping("admin/contest/create")
-    public Api<ContestResponseDto> createContest(
+    @PostMapping("/contests")
+    public ResponseEntity<ContestResponseDto> createContest(
             @RequestBody ContestRequestDto contestRequestDto) {
 
-        return Api.CREATED(contestCRUDService.createContest(contestRequestDto));
+        return ResponseEntity.created(URI.create(""))
+                .body(contestCRUDService.createContest(contestRequestDto));
     }
 
-    @PatchMapping("admin/contest/{contest}/update")
-    public Api<ContestResponseDto> updateContest(
+    @PatchMapping("/contests/{contest}")
+    public ResponseEntity<ContestResponseDto> updateContest(
             @PathVariable("contest") Long contestId,
             @RequestBody ContestRequestDto contestRequestDto
     ){
-        return Api.UPDATED(contestCRUDService
+        return ResponseEntity.ok(contestCRUDService
                                 .updateContest(contestId, contestRequestDto));
     }
 
-    @DeleteMapping("admin/contest/{contest}/delete")
-    public Api<String> deleteContest(
+    @DeleteMapping("/contests/{contest}")
+    public ResponseEntity<Void> deleteContest(
             @PathVariable("contest") Long contestId
     ){
         contestCRUDService.deleteContest(contestId);
 
-        return Api.DELETE("삭제완료");
+        return ResponseEntity.noContent().build();
     }
 
 
