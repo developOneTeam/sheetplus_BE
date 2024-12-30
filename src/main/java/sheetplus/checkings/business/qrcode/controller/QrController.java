@@ -39,7 +39,9 @@ public class QrController {
                 = qrcodeService.createQrcode(
                         token.replace("Bearer","").trim(), id);
 
-        return ResponseEntity.ok(qrcodeCreateResponseDto);
+        return ResponseEntity.ok()
+                .header("Cache-Control", "no-store")
+                .body(qrcodeCreateResponseDto);
     }
 
 }
