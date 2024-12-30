@@ -1,4 +1,4 @@
-package sheetplus.checkings.domain.adminacceptcons.controller;
+package sheetplus.checkings.business.page.admin.controller;
 
 
 import lombok.RequiredArgsConstructor;

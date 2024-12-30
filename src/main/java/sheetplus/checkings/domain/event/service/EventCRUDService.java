@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sheetplus.checkings.domain.adminacceptcons.controller.AdminPageController;
+import sheetplus.checkings.business.page.admin.controller.AdminPageController;
 import sheetplus.checkings.domain.event.controller.EventController;
 import sheetplus.checkings.domain.event.dto.request.EventRequestDto;
 import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
