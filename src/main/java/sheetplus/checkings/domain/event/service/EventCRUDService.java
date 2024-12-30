@@ -2,8 +2,11 @@ package sheetplus.checkings.domain.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sheetplus.checkings.business.page.admin.controller.AdminPageController;
+import sheetplus.checkings.domain.event.controller.EventController;
 import sheetplus.checkings.domain.event.dto.request.EventRequestDto;
 import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
@@ -13,6 +16,11 @@ import sheetplus.checkings.domain.event.repository.EventRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.util.CryptoUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static sheetplus.checkings.exception.error.ApiError.*;
 
 @Service
@@ -56,10 +64,21 @@ public class EventCRUDService {
                 .build();
         event.setContestEvent(contest);
 
-        Long id = eventRepository.save(event).getId();
+        Long eventId = eventRepository.save(event).getId();
+
+        List<Link> lists = new ArrayList<>();
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHome(contestId))
+                .withRel("관리자 페이지 Home"));
+        lists.add(linkTo(methodOn(EventController.class)
+                .updateEvent(eventId, EventRequestDto.builder().build()))
+                .withRel("이벤트 UPDATE"));
+        lists.add(linkTo(methodOn(EventController.class)
+                .deleteEvent(eventId))
+                .withRel("이벤트 DELETE"));
 
         return EventResponseDto.builder()
-                .id(id)
+                .id(eventId)
                 .name(event.getName())
                 .startTime(event.getStartTime())
                 .endTime(event.getEndTime())
@@ -70,6 +89,7 @@ public class EventCRUDService {
                 .categoryMessage(event.getEventCategory().getMessage())
                 .eventTypeMessage(event.getEventType().getMessage())
                 .conditionMessage(event.getEventCondition().getMessage())
+                .link(lists)
                 .build();
     }
 
@@ -97,6 +117,17 @@ public class EventCRUDService {
 
         event.updateEvent(eventRequestDto);
 
+        List<Link> lists = new ArrayList<>();
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHome(contest.getId()))
+                .withRel("관리자 페이지 Home"));
+        lists.add(linkTo(methodOn(EventController.class)
+                .createEvent(contest.getId(), EventRequestDto.builder().build()))
+                .withRel("이벤트 CREATE"));
+        lists.add(linkTo(methodOn(EventController.class)
+                .deleteEvent(eventId))
+                .withRel("이벤트 DELETE"));
+
         return EventResponseDto.builder()
                 .id(event.getId())
                 .name(event.getName())
@@ -109,6 +140,7 @@ public class EventCRUDService {
                 .categoryMessage(event.getEventCategory().getMessage())
                 .eventTypeMessage(event.getEventType().getMessage())
                 .conditionMessage(event.getEventCondition().getMessage())
+                .link(lists)
                 .build();
     }
 

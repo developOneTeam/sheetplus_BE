@@ -1,6 +1,9 @@
 package sheetplus.checkings.domain.favorite.dto.response;
 
 import lombok.*;
+import org.springframework.hateoas.Link;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,5 +16,6 @@ public class FavoriteCreateResponseDto {
     private String studentId;
     private String contestName;
     private String eventName;
+    private List<Link> links;
 
 }

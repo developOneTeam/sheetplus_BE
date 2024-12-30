@@ -3,8 +3,10 @@ package sheetplus.checkings.domain.event.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.hateoas.Link;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
@@ -24,5 +26,6 @@ public class EventResponseDto {
     private String conditionMessage;
     private String eventTypeMessage;
     private String categoryMessage;
+    private List<Link> link;
 
 }
