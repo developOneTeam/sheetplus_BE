@@ -19,7 +19,7 @@ public class ContestController {
 
     private final ContestCRUDService contestCRUDService;
 
-    @PostMapping("/contests")
+    @PostMapping("/contests/v1")
     public ResponseEntity<ContestResponseDto> createContest(
             @RequestBody ContestRequestDto contestRequestDto) {
 
@@ -27,7 +27,7 @@ public class ContestController {
                 .body(contestCRUDService.createContest(contestRequestDto));
     }
 
-    @PatchMapping("/contests/{contest}")
+    @PatchMapping("/contests/{contest}/v1")
     public ResponseEntity<ContestResponseDto> updateContest(
             @PathVariable("contest") Long contestId,
             @RequestBody ContestRequestDto contestRequestDto
@@ -36,7 +36,7 @@ public class ContestController {
                                 .updateContest(contestId, contestRequestDto));
     }
 
-    @DeleteMapping("/contests/{contest}")
+    @DeleteMapping("/contests/{contest}/v1")
     public ResponseEntity<Void> deleteContest(
             @PathVariable("contest") Long contestId
     ){

@@ -26,7 +26,7 @@ public class MemberController {
     private final SuperAdminService superAdminService;
     private final EmailService emailService;
 
-    @PostMapping("public/member")
+    @PostMapping("public/member/v1")
     public ResponseEntity<TokenDto> createMember(
             @RequestBody MemberRequestDto memberRequestDto){
 
@@ -53,7 +53,7 @@ public class MemberController {
 
 
 
-    @PatchMapping("private/member")
+    @PatchMapping("private/member/v1")
     public ResponseEntity<MemberUpdateRequestDto> updateMember(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody MemberUpdateRequestDto memberUpdateRequestDto
@@ -67,7 +67,7 @@ public class MemberController {
     }
 
 
-    @DeleteMapping("private/member")
+    @DeleteMapping("private/member/v1")
     public ResponseEntity<String> deleteMember(
             @RequestHeader(value = "Authorization", required = false) String token){
         memberCRUDService.deleteMember(token.replace("Bearer ", ""));

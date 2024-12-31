@@ -18,7 +18,7 @@ public class AuthController {
     public final AuthService authService;
     private final EmailService emailService;
 
-    @PostMapping("/token/refresh")
+    @PostMapping("/token/refresh/v1")
     public ResponseEntity<TokenDto> refreshToken(
             @RequestHeader(value = "refreshToken"
                     , required = false) String refreshToken){
@@ -28,7 +28,7 @@ public class AuthController {
         return ResponseEntity.ok(tokenDto);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login/v1")
     public ResponseEntity<TokenDto> loginMember(
             @RequestBody MemberLoginRequestDto memberLoginRequestDto){
 
