@@ -3,8 +3,8 @@ package sheetplus.checkings.domain.entry.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sheetplus.checkings.domain.entry.dto.response.EntryInfoResponseDto;
-import sheetplus.checkings.domain.entry.dto.response.EntryResponseDto;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryInfoResponseDto;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryResponseDto;
 import sheetplus.checkings.domain.entry.entity.Entry;
 import sheetplus.checkings.domain.enums.EntryType;
 

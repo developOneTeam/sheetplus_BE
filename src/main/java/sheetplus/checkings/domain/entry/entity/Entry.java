@@ -3,7 +3,7 @@ package sheetplus.checkings.domain.entry.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import sheetplus.checkings.domain.contest.entity.Contest;
-import sheetplus.checkings.domain.entry.dto.request.EntryRequestDto;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryRequestDto;
 import sheetplus.checkings.domain.enums.EntryType;
 
 @Entity

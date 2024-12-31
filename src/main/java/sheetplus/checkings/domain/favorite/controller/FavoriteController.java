@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.domain.favorite.dto.request.FavoriteRequestDto;
-import sheetplus.checkings.domain.favorite.dto.response.FavoriteCreateResponseDto;
-import sheetplus.checkings.domain.favorite.dto.response.FavoriteResponseDto;
+import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteRequestDto;
+import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteCreateResponseDto;
+import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteResponseDto;
 import sheetplus.checkings.domain.favorite.service.FavoriteCRUDService;
 
 import java.util.List;

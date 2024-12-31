@@ -1,7 +1,7 @@
 package sheetplus.checkings.domain.token.dto;
 
 import lombok.*;
-import sheetplus.checkings.domain.member.dto.response.MemberInfoResponseDto;
+import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 
 @Getter @Setter
 @Builder @AllArgsConstructor

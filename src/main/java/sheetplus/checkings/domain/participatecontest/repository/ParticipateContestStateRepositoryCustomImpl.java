@@ -3,7 +3,7 @@ package sheetplus.checkings.domain.participatecontest.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import sheetplus.checkings.domain.member.dto.response.MemberInfoResponseDto;
+import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.participatecontest.dto.response.ParticipateInfoResponseDto;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.enums.MeritType;

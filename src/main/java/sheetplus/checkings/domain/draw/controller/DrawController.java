@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.domain.draw.dto.request.DrawEventRequestDto;
-import sheetplus.checkings.domain.draw.dto.response.DrawEventResponseDto;
-import sheetplus.checkings.domain.draw.dto.request.DrawUpdateRequestDto;
-import sheetplus.checkings.domain.draw.dto.response.DrawUpdateResponseDto;
+import sheetplus.checkings.domain.draw.dto.DrawDto.DrawEventRequestDto;
+import sheetplus.checkings.domain.draw.dto.DrawDto.DrawEventResponseDto;
+import sheetplus.checkings.domain.draw.dto.DrawDto.DrawUpdateRequestDto;
+import sheetplus.checkings.domain.draw.dto.DrawDto.DrawUpdateResponseDto;
 import sheetplus.checkings.domain.draw.service.DrawEventService;
 import sheetplus.checkings.deprecated.prize.PrizeConditionRequestDto;
 

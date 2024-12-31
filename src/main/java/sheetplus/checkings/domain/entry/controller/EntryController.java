@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.domain.entry.dto.request.EntryRequestDto;
-import sheetplus.checkings.domain.entry.dto.response.EntryResponseDto;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryRequestDto;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryResponseDto;
 import sheetplus.checkings.domain.entry.service.EntryCRUDService;
 
 import java.net.URI;

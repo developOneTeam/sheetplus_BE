@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.auth.dto.LoginDto;
-import sheetplus.checkings.domain.member.dto.request.MemberLoginRequestDto;
+import sheetplus.checkings.domain.member.dto.MemberDto.MemberLoginRequestDto;
 import sheetplus.checkings.domain.token.dto.TokenDto;
 import sheetplus.checkings.business.auth.service.AuthService;
 import sheetplus.checkings.business.email.service.EmailService;

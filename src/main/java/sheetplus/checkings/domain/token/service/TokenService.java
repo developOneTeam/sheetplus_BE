@@ -1,7 +1,5 @@
 package sheetplus.checkings.domain.token.service;
 
-
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +7,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.auth.dto.LoginDto;
-import sheetplus.checkings.domain.member.dto.response.MemberInfoResponseDto;
+import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.token.dto.TokenDto;
 import sheetplus.checkings.config.security.CustomUserDetailsService;
 import sheetplus.checkings.domain.member.entity.Member;

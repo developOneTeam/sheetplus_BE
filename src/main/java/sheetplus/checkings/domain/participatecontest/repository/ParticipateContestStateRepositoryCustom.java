@@ -1,6 +1,6 @@
 package sheetplus.checkings.domain.participatecontest.repository;
 
-import sheetplus.checkings.domain.member.dto.response.MemberInfoResponseDto;
+import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.participatecontest.dto.response.ParticipateInfoResponseDto;
 
 import java.util.List;

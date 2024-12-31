@@ -1,7 +1,7 @@
 package sheetplus.checkings.domain.entry.repository;
 
-import sheetplus.checkings.domain.entry.dto.response.EntryInfoResponseDto;
-import sheetplus.checkings.domain.entry.dto.response.EntryResponseDto;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryInfoResponseDto;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryResponseDto;
 
 import java.util.List;
 
