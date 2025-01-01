@@ -89,6 +89,9 @@ public class FavoriteCRUDService {
         chainListLink.add(linkTo(methodOn(FavoriteController.class)
                 .deleteFavorite(token, contest.getId(), "deviceToken"))
                 .withRel("즐겨찾기 삭제"));
+        chainListLink.add(linkTo(methodOn(FavoriteController.class)
+                .favoriteStatusCheck(favorite.getId(), "subscribe"))
+                .withRel("구독등록 상태 확인"));
 
 
         return FavoriteCreateResponseDto.builder()
