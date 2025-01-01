@@ -1,7 +1,6 @@
 package sheetplus.checkings.exception.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +65,7 @@ public class ApiExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.ERROR(HttpStatus.BAD_REQUEST,
                         e.getBindingResult().getFieldErrors().stream()
-                                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                                .map(p -> p.getField()+ ": "+ p.getDefaultMessage())
                                 .toList().toString()));
     }
 
