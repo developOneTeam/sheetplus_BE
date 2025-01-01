@@ -3,6 +3,7 @@ package sheetplus.checkings.domain.draw.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.draw.dto.DrawDto.DrawEventRequestDto;
 import sheetplus.checkings.domain.draw.dto.DrawDto.DrawEventResponseDto;
@@ -38,7 +39,7 @@ public class DrawController {
 
     @PostMapping("/draw/v1")
     public ResponseEntity<DrawEventResponseDto> createDraw(
-            @RequestBody DrawEventRequestDto drawEventRequestDto
+            @RequestBody @Validated DrawEventRequestDto drawEventRequestDto
     ){
         return ResponseEntity.created(URI.create(""))
                 .body(drawEventService.createDrawMember(drawEventRequestDto));
@@ -46,7 +47,7 @@ public class DrawController {
 
     @PatchMapping("/draw/v1")
     public ResponseEntity<DrawUpdateResponseDto> updateDrawEventReceiveCondition(
-            @RequestBody DrawUpdateRequestDto drawUpdateRequestDto
+            @RequestBody @Validated DrawUpdateRequestDto drawUpdateRequestDto
             ){
         
         return ResponseEntity.ok(drawEventService.updateDrawReceived(drawUpdateRequestDto));

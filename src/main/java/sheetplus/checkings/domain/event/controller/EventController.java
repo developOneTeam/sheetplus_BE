@@ -1,9 +1,11 @@
 package sheetplus.checkings.domain.event.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.event.dto.EventDto.EventRequestDto;
 import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
@@ -24,7 +26,7 @@ public class EventController {
     @PostMapping("/contests/{contest}/event/v1")
     public ResponseEntity<EventResponseDto> createEvent(
             @PathVariable(name = "contest") Long id,
-            @RequestBody EventRequestDto eventRequest) {
+            @RequestBody @Validated EventRequestDto eventRequest) {
         EventResponseDto eventResponseDto
                 = eventCRUDService.createEvent(id, eventRequest);
         eventSchedulerService.scheduleNewEvent(eventResponseDto);
@@ -34,9 +36,9 @@ public class EventController {
     }
 
     @PatchMapping("/events/{event}/v1")
-    public ResponseEntity<EventResponseDto> updateEvent(
+    public ResponseEntity<@Valid EventResponseDto> updateEvent(
             @PathVariable(name = "event") Long id,
-            @RequestBody EventRequestDto eventRequestDto){
+            @RequestBody @Validated EventRequestDto eventRequestDto){
         EventResponseDto eventResponseDto
                 = eventCRUDService.updateEvent(id, eventRequestDto);
         eventSchedulerService.scheduleUpdateEvent(eventResponseDto);

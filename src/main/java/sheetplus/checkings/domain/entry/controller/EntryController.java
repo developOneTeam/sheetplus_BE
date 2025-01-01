@@ -3,6 +3,7 @@ package sheetplus.checkings.domain.entry.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryRequestDto;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryResponseDto;
@@ -21,7 +22,7 @@ public class EntryController {
     @PostMapping("/contests/{contest}/entry/v1")
     public ResponseEntity<EntryResponseDto> createEntry(
             @PathVariable(name = "contest") Long contestId,
-            @RequestBody EntryRequestDto entryRequestDto) {
+            @RequestBody @Validated EntryRequestDto entryRequestDto) {
 
         return ResponseEntity.created(URI.create(""))
                 .body(entryCRUDService.createEntry(contestId, entryRequestDto));
@@ -31,7 +32,7 @@ public class EntryController {
     @PatchMapping("/entries/{entry}/v1")
     public ResponseEntity<EntryResponseDto> updateEntry(
             @PathVariable(name = "entry") Long entryId,
-            @RequestBody EntryRequestDto entryRequestDto
+            @RequestBody @Validated EntryRequestDto entryRequestDto
     ){
         return ResponseEntity.ok(entryCRUDService.updateEntry(entryId, entryRequestDto));
     }

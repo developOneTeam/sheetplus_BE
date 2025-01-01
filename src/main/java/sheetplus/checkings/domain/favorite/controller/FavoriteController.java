@@ -3,6 +3,7 @@ package sheetplus.checkings.domain.favorite.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteRequestDto;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteCreateResponseDto;
@@ -22,7 +23,7 @@ public class FavoriteController {
     @PostMapping("/favorite/v1")
     public ResponseEntity<FavoriteCreateResponseDto> createFavorite(
             @RequestHeader(value = "Authorization", required = false) String token,
-            @RequestBody FavoriteRequestDto favoriteRequestDto) {
+            @RequestBody @Validated FavoriteRequestDto favoriteRequestDto) {
 
         FavoriteCreateResponseDto favoriteCreateResponseDto =
                 favoriteCRUDService.createFavorite(token.replace("Bearer ", "")
