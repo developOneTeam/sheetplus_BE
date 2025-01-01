@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.auth.dto.LoginDto;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
+import sheetplus.checkings.domain.temporarymember.repository.TemporaryMemberRepository;
 import sheetplus.checkings.domain.token.dto.TokenDto;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.enums.MemberType;
@@ -25,6 +26,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final TokenService refreshTokenService;
+    private final TemporaryMemberRepository temporaryMemberRepository;
 
     // 최초 토큰 생성에 대해서 발급
     @Transactional
@@ -49,6 +51,7 @@ public class AuthService {
         String refreshToken = jwtUtil.createRefreshToken(loginDto);
 
         refreshTokenService.saveRefreshToken(loginDto.getId(), refreshToken);
+        temporaryMemberRepository.deleteById(loginDto.getEmail());
 
         return TokenDto.builder()
                 .accessToken(accessToken)
