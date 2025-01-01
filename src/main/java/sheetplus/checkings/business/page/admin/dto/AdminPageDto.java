@@ -1,6 +1,7 @@
 package sheetplus.checkings.business.page.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class AdminPageDto {
     @Builder
     @NoArgsConstructor @AllArgsConstructor
     public static class AdminHomeRequestDto{
+        @NotNull(message = "null은 허용하지 않습니다.")
         private Long contestId;
     }
 
