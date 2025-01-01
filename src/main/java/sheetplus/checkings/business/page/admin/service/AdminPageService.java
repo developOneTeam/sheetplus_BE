@@ -15,7 +15,7 @@ import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.entry.repository.EntryRepository;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
-import sheetplus.checkings.domain.participatecontest.dto.response.ParticipateInfoResponseDto;
+import sheetplus.checkings.domain.participatecontest.dto.ParticipateContestDto.ParticipateInfoResponseDto;
 import sheetplus.checkings.domain.participatecontest.repository.ParticipateContestStateRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
