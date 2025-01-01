@@ -6,6 +6,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.TopicManagementResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.hateoas.Link;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -15,12 +16,14 @@ import sheetplus.checkings.business.page.student.controller.StudentPageControlle
 import sheetplus.checkings.config.AsyncConfig;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
+import sheetplus.checkings.domain.enums.SubscribeStatus;
 import sheetplus.checkings.domain.event.entity.Event;
 import sheetplus.checkings.domain.event.repository.EventRepository;
 import sheetplus.checkings.domain.favorite.controller.FavoriteController;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteRequestDto;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteCreateResponseDto;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteResponseDto;
+import sheetplus.checkings.domain.favorite.dto.FavoriteDto.SubScribeResponseDTO;
 import sheetplus.checkings.domain.favorite.entity.Favorite;
 import sheetplus.checkings.domain.favorite.repository.FavoriteRepository;
 import sheetplus.checkings.domain.member.entity.Member;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -48,6 +52,7 @@ public class FavoriteCRUDService {
     private final EventRepository eventRepository;
     private final JwtUtil jwtUtil;
     private final AsyncConfig asyncConfig;
+    private final StringRedisTemplate redisTemplate;
 
     @Transactional
     public FavoriteCreateResponseDto createFavorite(String token, FavoriteRequestDto favoriteRequestDto){
@@ -73,8 +78,8 @@ public class FavoriteCRUDService {
                 .favoriteEvent(event)
                 .build();
         favorite.setMemberFavorite(member);
-        favoriteRepository.save(favorite);
-        subscribeTopics(favoriteRequestDto, event, contest);
+        Long favoriteId = favoriteRepository.save(favorite).getId();
+        subscribeTopics(favoriteRequestDto, event, contest, favoriteId.toString());
 
         List<Link> chainListLink = new ArrayList<>();
         chainListLink.add(linkTo(methodOn(FavoriteController.class)
@@ -105,7 +110,10 @@ public class FavoriteCRUDService {
                     maxDelay = 600000
             )
     )
-    public void subscribeTopics(FavoriteRequestDto favoriteRequestDto, Event event, Contest contest) {
+    public void subscribeTopics(FavoriteRequestDto favoriteRequestDto, Event event, Contest contest, String favoriteId) {
+        redisTemplate.opsForValue()
+                .set(favoriteId+"_subscribe", SubscribeStatus.PENDING.getStatus(), 300, TimeUnit.SECONDS);
+
         ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
                 .getInstance()
                 .subscribeToTopicAsync(Collections.singletonList(favoriteRequestDto.getDeviceToken())
@@ -115,11 +123,51 @@ public class FavoriteCRUDService {
             try{
                 TopicManagementResponse response = apiFuture.get();
                 log.info("토픽 구독 성공: {}", response.getSuccessCount());
+
+                if(response.getFailureCount() > 0){
+                    log.info("토픽 구독 실패: {}", response.getFailureCount());
+                    redisTemplate.opsForValue()
+                            .set(favoriteId+"_subscribe", SubscribeStatus.FAILED.getStatus(), 600, TimeUnit.SECONDS);
+                    favoriteRepository.deleteById(Long.parseLong(favoriteId));
+                    return;
+                }
+
+                redisTemplate.opsForValue()
+                        .set(favoriteId+"_subscribe", SubscribeStatus.SUCCESS.getStatus(), 600, TimeUnit.SECONDS);
             } catch (ExecutionException | InterruptedException e) {
                 log.error("토픽 구독 관련 예외 발생: {}", e.getMessage());
+                redisTemplate.opsForValue()
+                        .set(favoriteId+"_subscribe", SubscribeStatus.FAILED.getStatus(), 600, TimeUnit.SECONDS);
+                favoriteRepository.deleteById(Long.parseLong(favoriteId));
                 throw new RuntimeException();
             }
         }, asyncConfig.getSubscribeFcmExecutor());
+    }
+
+    public SubScribeResponseDTO getFavoriteStatus(Long id, String type){
+        String status = redisTemplate.opsForValue().get(id.toString() + "_"+type);
+        if(status == null){
+            throw new ApiException(SUBSCRIBE_STATUS_NOT_FOUND);
+        }
+
+        if(status.equals(SubscribeStatus.FAILED.getStatus())){
+            return SubScribeResponseDTO.builder()
+                    .statusType(SubscribeStatus.FAILED.getStatus())
+                    .statusMessage(SubscribeStatus.FAILED.getMessage())
+                    .build();
+        }
+
+        if(status.equals(SubscribeStatus.SUCCESS.getStatus())){
+            return SubScribeResponseDTO.builder()
+                    .statusType(SubscribeStatus.SUCCESS.getStatus())
+                    .statusMessage(SubscribeStatus.SUCCESS.getMessage())
+                    .build();
+        }
+
+        return SubScribeResponseDTO.builder()
+                .statusType(SubscribeStatus.PENDING.getStatus())
+                .statusMessage(SubscribeStatus.PENDING.getMessage())
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -156,8 +204,6 @@ public class FavoriteCRUDService {
 
         if(favorite.getFavoriteMember().getId().equals(member.getId())){
             unSubscribeTopics(deviceToken, favorite);
-
-            favoriteRepository.deleteById(favoriteId);
         }
     }
 
@@ -172,6 +218,8 @@ public class FavoriteCRUDService {
             )
     )
     private void unSubscribeTopics(String deviceToken, Favorite favorite) {
+        redisTemplate.opsForValue()
+                .set(favorite.getId()+"_unsubscribe", SubscribeStatus.PENDING.getStatus(), 300, TimeUnit.SECONDS);
         ApiFuture<TopicManagementResponse> apiFuture = FirebaseMessaging
                 .getInstance()
                 .unsubscribeFromTopicAsync(Collections.singletonList(deviceToken)
@@ -183,8 +231,22 @@ public class FavoriteCRUDService {
             try{
                 TopicManagementResponse response = apiFuture.get();
                 log.info("토픽 구독취소 성공: {}", response.getSuccessCount());
+
+                if(response.getFailureCount() > 0){
+                    log.info("토픽 구독취소 실패: {}", response.getFailureCount());
+                    redisTemplate.opsForValue()
+                            .set(favorite.getId()+"_unsubscribe", SubscribeStatus.FAILED.getStatus(), 600, TimeUnit.SECONDS);
+                    favoriteRepository.deleteById(Long.parseLong(favorite.getId()+"_unsubscribe"));
+                    return;
+                }
+
+                redisTemplate.opsForValue()
+                        .set(favorite.getId()+"_unsubscribe", SubscribeStatus.SUCCESS.getStatus(), 600, TimeUnit.SECONDS);
+                favoriteRepository.deleteById(favorite.getId());
             }catch (ExecutionException | InterruptedException e) {
                 log.error("토픽 구독취소 관련 예외 발생: {}", e.getMessage());
+                redisTemplate.opsForValue()
+                        .set(favorite.getId()+"_unsubscribe", SubscribeStatus.FAILED.getStatus(), 600, TimeUnit.SECONDS);
                 throw new RuntimeException(e);
             }
         }, asyncConfig.getSubscribeFcmExecutor());
