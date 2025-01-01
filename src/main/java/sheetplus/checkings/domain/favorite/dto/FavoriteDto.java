@@ -62,4 +62,12 @@ public class FavoriteDto {
 
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor @AllArgsConstructor
+    public static class SubScribeResponseDTO{
+        private String statusType;
+        private String statusMessage;
+    }
+
 }
