@@ -38,6 +38,7 @@ public enum ApiError implements ErrorCodeIfs {
     EXPIRED_QR_CODES(HttpStatus.UNAUTHORIZED, "이미 만료된 QR코드 요청입니다."),
     ROLE_ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없는 사용자입니다."),
     HTTP_INPUT_NOT_READABLE(HttpStatus.BAD_REQUEST, "잘못된 HTTP 입력 요청"),
+    SUBSCRIBE_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "구독 상태정보를 찾을 수 없습니다.")
     ;
 
 
