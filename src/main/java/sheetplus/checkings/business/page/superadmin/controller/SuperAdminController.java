@@ -25,7 +25,7 @@ public class SuperAdminController {
     private final MemberCRUDService memberCRUDService;
 
 
-    @GetMapping("admins")
+    @GetMapping("admins/v1")
     public ResponseEntity<List<AdminAcceptListResponseDto>> readAdminList(){
 
         List<AdminAcceptCons> admins = superAdminService.readAdmins();
@@ -43,7 +43,7 @@ public class SuperAdminController {
         );
     }
 
-    @PostMapping("admins")
+    @PostMapping("admins/v1")
     public ResponseEntity<MemberInfoResponseDto> updateAndCreateAdmin(
             @RequestBody AdminAcceptAndCreateRequestDto adminAcceptAndCreateRequestDto){
         MemberRequestDto memberRequestDto
@@ -62,7 +62,7 @@ public class SuperAdminController {
     }
 
 
-    @DeleteMapping("admins/{admin}")
+    @DeleteMapping("admins/{admin}/v1")
     public ResponseEntity<String> deleteAdmin(
             @PathVariable("admin") String email){
         superAdminService.deleteAdmin(email);

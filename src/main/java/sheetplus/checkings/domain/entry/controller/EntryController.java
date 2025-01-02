@@ -18,7 +18,7 @@ public class EntryController {
 
     private final EntryCRUDService entryCRUDService;
 
-    @PostMapping("/contests/{contest}/entry")
+    @PostMapping("/contests/{contest}/entry/v1")
     public ResponseEntity<EntryResponseDto> createEntry(
             @PathVariable(name = "contest") Long contestId,
             @RequestBody EntryRequestDto entryRequestDto) {
@@ -28,7 +28,7 @@ public class EntryController {
     }
 
 
-    @PatchMapping("/entries/{entry}")
+    @PatchMapping("/entries/{entry}/v1")
     public ResponseEntity<EntryResponseDto> updateEntry(
             @PathVariable(name = "entry") Long entryId,
             @RequestBody EntryRequestDto entryRequestDto
@@ -36,7 +36,7 @@ public class EntryController {
         return ResponseEntity.ok(entryCRUDService.updateEntry(entryId, entryRequestDto));
     }
 
-    @DeleteMapping("/entries/{entry}")
+    @DeleteMapping("/entries/{entry}/v1")
     public ResponseEntity<String> deleteEntry(
             @PathVariable(name = "entry") Long entryId
     ){

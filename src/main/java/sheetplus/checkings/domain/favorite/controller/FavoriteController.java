@@ -19,7 +19,7 @@ public class FavoriteController {
 
     private final FavoriteCRUDService favoriteCRUDService;
 
-    @PostMapping("/favorite")
+    @PostMapping("/favorite/v1")
     public ResponseEntity<FavoriteCreateResponseDto> createFavorite(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody FavoriteRequestDto favoriteRequestDto) {
@@ -33,7 +33,7 @@ public class FavoriteController {
     }
 
 
-    @GetMapping("/contests/{contest}/favorites")
+    @GetMapping("/contests/{contest}/favorites/v1")
     public ResponseEntity<List<FavoriteResponseDto>> getFavorites(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable(name = "contest") Long contestId){
@@ -44,7 +44,7 @@ public class FavoriteController {
     }
 
 
-    @DeleteMapping("/favorites/{favorite}/devices/{deviceToken}")
+    @DeleteMapping("/favorites/{favorite}/devices/{deviceToken}/v1")
     public ResponseEntity<String> deleteFavorite(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable(name = "favorite") Long id,

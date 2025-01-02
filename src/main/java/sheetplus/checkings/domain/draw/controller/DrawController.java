@@ -36,7 +36,7 @@ public class DrawController {
 
     }
 
-    @PostMapping("/draw")
+    @PostMapping("/draw/v1")
     public ResponseEntity<DrawEventResponseDto> createDraw(
             @RequestBody DrawEventRequestDto drawEventRequestDto
     ){
@@ -44,7 +44,7 @@ public class DrawController {
                 .body(drawEventService.createDrawMember(drawEventRequestDto));
     }
 
-    @PatchMapping("/draw")
+    @PatchMapping("/draw/v1")
     public ResponseEntity<DrawUpdateResponseDto> updateDrawEventReceiveCondition(
             @RequestBody DrawUpdateRequestDto drawUpdateRequestDto
             ){
@@ -52,7 +52,7 @@ public class DrawController {
         return ResponseEntity.ok(drawEventService.updateDrawReceived(drawUpdateRequestDto));
     }
     
-    @DeleteMapping("/draw/{draw}")
+    @DeleteMapping("/draw/{draw}/v1")
     public ResponseEntity<String> deleteDrawEventReceiveCondition(
             @PathVariable(name = "draw") Long id
     ){

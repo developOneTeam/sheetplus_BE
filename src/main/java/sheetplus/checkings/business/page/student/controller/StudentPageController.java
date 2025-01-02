@@ -23,7 +23,7 @@ public class StudentPageController {
     private final FavoriteCRUDService favoriteCRUDService;
 
 
-    @GetMapping("private/student/{contest}/home")
+    @GetMapping("private/student/{contest}/home/v1")
     public ResponseEntity<StudentHomePageResponseDto> readStudentHome(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable("contest") Long contestId){
@@ -33,14 +33,14 @@ public class StudentPageController {
         return ResponseEntity.ok(studentPageService.readStudentHomePage(token, contestId));
     }
 
-    @GetMapping("public/{contest}/schedule")
+    @GetMapping("public/{contest}/schedule/v1")
     public ResponseEntity<List<EventResponseDto>> readStudentSchedule(
             @PathVariable("contest") Long contestId){
 
         return ResponseEntity.ok(studentPageService.readStudentSchedulePage(contestId));
     }
 
-    @GetMapping("private/student/{contest}/activities")
+    @GetMapping("private/student/{contest}/activities/v1")
     public ResponseEntity<StudentPageActivitiesResponseDto> readStudentActivities(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable("contest") Long contestId){

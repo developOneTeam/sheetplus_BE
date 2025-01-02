@@ -19,7 +19,7 @@ public class MailController {
 
     private final EmailService emailService;
 
-    @PostMapping("/auth/mails")
+    @PostMapping("/auth/mails/v1")
     public ResponseEntity<Void> sendMail(
             @RequestBody EmailRequestDto emailRequestDto){
         emailService.verifyEmailDomain(emailRequestDto.getReceiver());

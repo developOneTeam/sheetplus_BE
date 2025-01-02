@@ -21,7 +21,7 @@ public class EventController {
     private final EventCRUDService eventCRUDService;
     private final EventSchedulerService eventSchedulerService;
 
-    @PostMapping("/contests/{contest}/event")
+    @PostMapping("/contests/{contest}/event/v1")
     public ResponseEntity<EventResponseDto> createEvent(
             @PathVariable(name = "contest") Long id,
             @RequestBody EventRequestDto eventRequest) {
@@ -33,7 +33,7 @@ public class EventController {
                 .body(eventResponseDto);
     }
 
-    @PatchMapping("/events/{event}")
+    @PatchMapping("/events/{event}/v1")
     public ResponseEntity<EventResponseDto> updateEvent(
             @PathVariable(name = "event") Long id,
             @RequestBody EventRequestDto eventRequestDto){
@@ -45,7 +45,7 @@ public class EventController {
     }
 
 
-    @DeleteMapping("/events/{event}")
+    @DeleteMapping("/events/{event}/v1")
     public ResponseEntity<String> deleteEvent(
             @PathVariable(name = "event") Long id
     ){

@@ -20,7 +20,7 @@ public class CommonPageController {
 
     private final CommonPageService commonPageService;
 
-    @GetMapping("contests")
+    @GetMapping("contests/v1")
     public ResponseEntity<List<ContestInfoResponseDto>> readContestInfo(){
         return ResponseEntity.ok(commonPageService.readContestInfo());
     }
