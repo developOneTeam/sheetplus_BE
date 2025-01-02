@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.domain.event.dto.request.EventRequestDto;
-import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventRequestDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.event.service.EventCRUDService;
 import sheetplus.checkings.business.notifications.service.EventSchedulerService;
 

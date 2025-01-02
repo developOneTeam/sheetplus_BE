@@ -1,6 +1,6 @@
 package sheetplus.checkings.domain.contest.repository;
 
-import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.enums.EventCategory;
 
 import java.util.List;

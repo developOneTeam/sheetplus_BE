@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sheetplus.checkings.domain.contest.dto.response.ContestInfoResponseDto;
+import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
 import sheetplus.checkings.business.page.common.service.CommonPageService;
 
 import java.util.List;

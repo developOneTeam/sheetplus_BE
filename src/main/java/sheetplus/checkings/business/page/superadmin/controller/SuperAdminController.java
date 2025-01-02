@@ -3,13 +3,12 @@ package sheetplus.checkings.business.page.superadmin.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.domain.adminacceptcons.dto.request.AdminAcceptAndCreateRequestDto;
-import sheetplus.checkings.domain.adminacceptcons.dto.response.AdminAcceptListResponseDto;
+import sheetplus.checkings.domain.adminacceptcons.dto.AdminAcceptDto.AdminAcceptAndCreateRequestDto;
+import sheetplus.checkings.domain.adminacceptcons.dto.AdminAcceptDto.AdminAcceptListResponseDto;
 import sheetplus.checkings.domain.adminacceptcons.entity.AdminAcceptCons;
-import sheetplus.checkings.domain.member.dto.request.MemberRequestDto;
-import sheetplus.checkings.domain.member.dto.response.MemberInfoResponseDto;
+import sheetplus.checkings.domain.member.dto.MemberDto.MemberRequestDto;
+import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.member.entity.Member;
-import sheetplus.checkings.business.auth.service.AuthService;
 import sheetplus.checkings.domain.member.service.MemberCRUDService;
 import sheetplus.checkings.business.page.superadmin.service.SuperAdminService;
 

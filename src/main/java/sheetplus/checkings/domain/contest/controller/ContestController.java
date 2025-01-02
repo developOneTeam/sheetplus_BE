@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.domain.contest.dto.request.ContestRequestDto;
-import sheetplus.checkings.domain.contest.dto.response.ContestResponseDto;
+import sheetplus.checkings.domain.contest.dto.ContestDto.ContestRequestDto;
+import sheetplus.checkings.domain.contest.dto.ContestDto.ContestResponseDto;
 import sheetplus.checkings.domain.contest.service.ContestCRUDService;
 
 import java.net.URI;

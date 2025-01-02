@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sheetplus.checkings.business.email.dto.EmailRequestDto;
+import sheetplus.checkings.business.email.dto.EmailDto.EmailRequestDto;
 import sheetplus.checkings.business.email.service.EmailService;
 
 

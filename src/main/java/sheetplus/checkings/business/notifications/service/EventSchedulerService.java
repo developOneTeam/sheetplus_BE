@@ -9,7 +9,7 @@ import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.enums.SendingStatus;
 import sheetplus.checkings.domain.enums.SendingType;
-import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.eventSending.entity.EventSending;
 import sheetplus.checkings.domain.eventSending.repository.EventSendingRepository;
 import sheetplus.checkings.domain.event.entity.Event;

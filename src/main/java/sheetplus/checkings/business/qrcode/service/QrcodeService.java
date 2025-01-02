@@ -7,9 +7,9 @@ import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.student.controller.StudentPageController;
-import sheetplus.checkings.business.qrcode.dto.QrcodeCreateResponseDto;
-import sheetplus.checkings.business.qrcode.dto.QrcodeRequestDto;
-import sheetplus.checkings.business.qrcode.dto.QrcodeResponseDto;
+import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeCreateResponseDto;
+import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeRequestDto;
+import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.enums.*;
 import sheetplus.checkings.domain.event.entity.Event;
@@ -159,7 +159,7 @@ public class QrcodeService {
      *
      * @param token - member token
      * @param id - Event PK
-     * @return QrcodeCreateResponseDto - 암호화 Event PK/만료시간 암호화 키
+     * @retrun QrcodeCreateResponseDto - 암호화 Event PK/만료시간 암호화 키
      */
     @Transactional
     public QrcodeCreateResponseDto createQrcode(String token, Long id){

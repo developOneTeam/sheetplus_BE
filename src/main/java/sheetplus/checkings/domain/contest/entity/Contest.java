@@ -4,7 +4,7 @@ package sheetplus.checkings.domain.contest.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import sheetplus.checkings.domain.contest.dto.request.ContestRequestDto;
+import sheetplus.checkings.domain.contest.dto.ContestDto.ContestRequestDto;
 import sheetplus.checkings.domain.draw.entity.Draw;
 import sheetplus.checkings.domain.entry.entity.Entry;
 import sheetplus.checkings.domain.event.entity.Event;

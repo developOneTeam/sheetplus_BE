@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.business.qrcode.dto.QrcodeCreateResponseDto;
-import sheetplus.checkings.business.qrcode.dto.QrcodeRequestDto;
-import sheetplus.checkings.business.qrcode.dto.QrcodeResponseDto;
+import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeCreateResponseDto;
+import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeRequestDto;
+import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeResponseDto;
 import sheetplus.checkings.business.qrcode.service.QrcodeService;
 
 

@@ -5,10 +5,10 @@ import sheetplus.checkings.domain.enums.MemberType;
 
 @Getter @Setter
 @Builder
-@AllArgsConstructor @NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public class LoginDto {
 
-    Long id;
+    private Long id;
     private String email;
     private MemberType memberType;
 

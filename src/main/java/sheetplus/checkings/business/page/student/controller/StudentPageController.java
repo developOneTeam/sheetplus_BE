@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.business.page.student.dto.ActivitiesResponseDto;
-import sheetplus.checkings.domain.event.dto.response.EventResponseDto;
-import sheetplus.checkings.business.page.student.dto.StudentHomePageResponseDto;
-import sheetplus.checkings.business.page.student.dto.StudentPageActivitiesResponseDto;
+import sheetplus.checkings.business.page.student.dto.StudentPageDto.ActivitiesResponseDto;
+import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentHomePageResponseDto;
+import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentPageActivitiesResponseDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.business.page.student.service.StudentPageService;
-import sheetplus.checkings.domain.favorite.dto.response.FavoriteResponseDto;
+import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteResponseDto;
 import sheetplus.checkings.domain.favorite.service.FavoriteCRUDService;
 
 import java.util.List;
