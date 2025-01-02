@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteRequestDto;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteCreateResponseDto;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteResponseDto;
+import sheetplus.checkings.domain.favorite.dto.FavoriteDto.SubScribeResponseDTO;
 import sheetplus.checkings.domain.favorite.service.FavoriteCRUDService;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class FavoriteController {
 
 
     @DeleteMapping("/favorites/{favorite}/devices/{deviceToken}/v1")
-    public ResponseEntity<String> deleteFavorite(
+    public ResponseEntity<Void> deleteFavorite(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable(name = "favorite") Long id,
             @PathVariable(name = "deviceToken") String deviceToken
@@ -55,5 +56,14 @@ public class FavoriteController {
         return ResponseEntity.accepted().build();
     }
 
+    @GetMapping("/favorites/{favorite}/status/{statusType}/v1")
+    public ResponseEntity<SubScribeResponseDTO> favoriteStatusCheck(
+            @PathVariable(name = "favorite") Long id,
+            @PathVariable(name = "statusType") String type
+    ){
+        SubScribeResponseDTO subScribeResponseDTO = favoriteCRUDService.getFavoriteStatus(id, type);
+
+        return ResponseEntity.ok(subScribeResponseDTO);
+    }
 
 }

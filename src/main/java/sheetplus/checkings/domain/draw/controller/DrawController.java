@@ -45,7 +45,7 @@ public class DrawController {
                 .body(drawEventService.createDrawMember(drawEventRequestDto));
     }
 
-    @PatchMapping("/draw/v1")
+    @PutMapping("/draw/v1")
     public ResponseEntity<DrawUpdateResponseDto> updateDrawEventReceiveCondition(
             @RequestBody @Validated DrawUpdateRequestDto drawUpdateRequestDto
             ){

@@ -54,7 +54,7 @@ public class MemberController {
 
 
 
-    @PatchMapping("private/member/v1")
+    @PutMapping("private/member/v1")
     public ResponseEntity<MemberUpdateRequestDto> updateMember(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody @Validated MemberUpdateRequestDto memberUpdateRequestDto

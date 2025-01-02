@@ -28,7 +28,7 @@ public class ContestController {
                 .body(contestCRUDService.createContest(contestRequestDto));
     }
 
-    @PatchMapping("/contests/{contest}/v1")
+    @PutMapping("/contests/{contest}/v1")
     public ResponseEntity<ContestResponseDto> updateContest(
             @PathVariable("contest") Long contestId,
             @RequestBody @Validated ContestRequestDto contestRequestDto

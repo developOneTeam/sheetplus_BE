@@ -29,7 +29,7 @@ public class EntryController {
     }
 
 
-    @PatchMapping("/entries/{entry}/v1")
+    @PutMapping("/entries/{entry}/v1")
     public ResponseEntity<EntryResponseDto> updateEntry(
             @PathVariable(name = "entry") Long entryId,
             @RequestBody @Validated EntryRequestDto entryRequestDto
