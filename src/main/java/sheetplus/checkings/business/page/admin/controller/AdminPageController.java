@@ -3,6 +3,7 @@ package sheetplus.checkings.business.page.admin.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminHomeResponseDto;
@@ -29,8 +30,14 @@ public class AdminPageController {
 
     @GetMapping("/contests/{contest}/draw/members/v1")
     public ResponseEntity<List<MemberInfoResponseDto>> readDrawMemberList(
-            @PathVariable("contest") Long contestId){
-        return ResponseEntity.ok(adminPageService.readDrawMemberList(contestId));
+            @PathVariable("contest") Long contestId,
+            @RequestParam(value = "offset", required = false)
+            Integer offset,
+            @RequestParam(value = "limit", required = false)
+            Integer limit
+    ){
+        return ResponseEntity.ok(adminPageService
+                .readDrawMemberList(contestId, PageRequest.of(offset-1, limit)));
     }
 
 
