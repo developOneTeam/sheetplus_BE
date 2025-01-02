@@ -3,6 +3,7 @@ package sheetplus.checkings.business.auth.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.auth.dto.LoginDto;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberLoginRequestDto;
@@ -30,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login/v1")
     public ResponseEntity<TokenDto> loginMember(
-            @RequestBody MemberLoginRequestDto memberLoginRequestDto){
+            @RequestBody @Validated MemberLoginRequestDto memberLoginRequestDto){
 
         emailService.verifyEmail(memberLoginRequestDto.getEmail(),
                 memberLoginRequestDto.getCode());

@@ -3,6 +3,7 @@ package sheetplus.checkings.business.qrcode.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeCreateResponseDto;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeRequestDto;
@@ -21,7 +22,7 @@ public class QrController {
     @PostMapping("/student/qrcode/v1")
     public ResponseEntity<QrcodeResponseDto> qrcodeCheck(
             @RequestHeader(value = "Authorization", required = false) String token,
-            @RequestBody QrcodeRequestDto qrcodeRequestDto){
+            @RequestBody @Validated QrcodeRequestDto qrcodeRequestDto){
 
         QrcodeResponseDto qrcodeResponseDto
                 = qrcodeService.createParticipation(

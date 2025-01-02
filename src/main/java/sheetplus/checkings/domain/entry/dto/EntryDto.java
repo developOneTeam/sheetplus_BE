@@ -1,5 +1,7 @@
 package sheetplus.checkings.domain.entry.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,13 +20,31 @@ public class EntryDto {
     @Builder
     @NoArgsConstructor @AllArgsConstructor
     public static class EntryRequestDto{
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String name;
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String location;
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String building;
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
+
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String teamNumber;
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String professorName;
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String major;
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String leaderName;
+        @NotNull(message = "null은 허용하지 않습니다.")
         private EntryType entryType;
     }
 

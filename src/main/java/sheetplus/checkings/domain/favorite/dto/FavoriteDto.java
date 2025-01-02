@@ -1,6 +1,8 @@
 package sheetplus.checkings.domain.favorite.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +20,12 @@ public class FavoriteDto {
     @Builder
     @NoArgsConstructor @AllArgsConstructor
     public static class FavoriteRequestDto{
+        @NotNull(message = "null은 허용하지 않습니다.")
         private Long contestId;
+        @NotNull(message = "null은 허용하지 않습니다.")
         private Long eventId;
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String deviceToken;
 
     }

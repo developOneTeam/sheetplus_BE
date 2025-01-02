@@ -1,5 +1,7 @@
 package sheetplus.checkings.business.qrcode.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +26,11 @@ public class QrCodeDto {
     @Builder
     @NoArgsConstructor @AllArgsConstructor
     public static class QrcodeRequestDto{
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String secureCode;
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @NotBlank(message = "공백을 허용하지 않습니다.")
         private String secureExpireTime;
     }
 

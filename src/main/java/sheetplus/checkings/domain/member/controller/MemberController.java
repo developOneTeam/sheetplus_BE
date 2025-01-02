@@ -3,6 +3,7 @@ package sheetplus.checkings.domain.member.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.auth.dto.LoginDto;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberRequestDto;
@@ -28,7 +29,7 @@ public class MemberController {
 
     @PostMapping("public/member/v1")
     public ResponseEntity<TokenDto> createMember(
-            @RequestBody MemberRequestDto memberRequestDto){
+            @RequestBody @Validated MemberRequestDto memberRequestDto){
 
         emailService.verifyEmail(memberRequestDto.getUniversityEmail(),
                 memberRequestDto.getCode());
@@ -56,7 +57,7 @@ public class MemberController {
     @PatchMapping("private/member/v1")
     public ResponseEntity<MemberUpdateRequestDto> updateMember(
             @RequestHeader(value = "Authorization", required = false) String token,
-            @RequestBody MemberUpdateRequestDto memberUpdateRequestDto
+            @RequestBody @Validated MemberUpdateRequestDto memberUpdateRequestDto
     ){
 
         MemberUpdateRequestDto updatedMember
