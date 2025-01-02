@@ -3,6 +3,7 @@ package sheetplus.checkings.domain.contest.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.event.entity.Event;
@@ -24,7 +25,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<EventResponseDto> findTodayEvents(Long contestId) {
+    public List<EventResponseDto> findTodayEvents(Long contestId, Pageable pageable) {
         Contest findContest = queryFactory.selectFrom(contest)
                 .where(contest.id.eq(contestId))
                 .fetchFirst();
@@ -38,6 +39,8 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                         .and(event.startTime.dayOfMonth().eq(LocalDateTime.now().getDayOfMonth())
                                 .or(event.endTime.dayOfMonth().eq(LocalDateTime.now().getDayOfMonth())))
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         return getEventResponseDtos(events);
