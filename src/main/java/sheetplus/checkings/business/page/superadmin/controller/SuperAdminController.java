@@ -1,6 +1,7 @@
 package sheetplus.checkings.business.page.superadmin.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.adminacceptcons.dto.AdminAcceptDto.AdminAcceptAndCreateRequestDto;
@@ -25,9 +26,14 @@ public class SuperAdminController {
 
 
     @GetMapping("admins/v1")
-    public ResponseEntity<List<AdminAcceptListResponseDto>> readAdminList(){
+    public ResponseEntity<List<AdminAcceptListResponseDto>> readAdminList(
+            @RequestParam(value = "offset", required = false)
+            Integer offset,
+            @RequestParam(value = "limit", required = false)
+            Integer limit
+    ){
 
-        List<AdminAcceptCons> admins = superAdminService.readAdmins();
+        List<AdminAcceptCons> admins = superAdminService.readAdmins(PageRequest.of(offset-1, limit));
 
         return ResponseEntity.ok(
                 admins.stream()

@@ -6,6 +6,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.TopicManagementResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.hateoas.Link;
 import org.springframework.retry.annotation.Backoff;
@@ -83,7 +84,8 @@ public class FavoriteCRUDService {
 
         List<Link> chainListLink = new ArrayList<>();
         chainListLink.add(linkTo(methodOn(FavoriteController.class)
-                .getFavorites(token, contest.getId())).withRel("즐겨찾기 조회"));
+                .getFavorites(token, contest.getId(),
+                        0, 1)).withRel("즐겨찾기 조회"));
         chainListLink.add(linkTo(methodOn(StudentPageController.class)
                 .readStudentActivities(token,contest.getId())).withRel("학생 활동 페이지"));
         chainListLink.add(linkTo(methodOn(FavoriteController.class)
@@ -174,10 +176,12 @@ public class FavoriteCRUDService {
     }
 
     @Transactional(readOnly = true)
-    public List<FavoriteResponseDto> getFavorites(String token, Long contestId) {
-        ArrayList<Favorite> favorites
+    public List<FavoriteResponseDto> getFavorites(String token, Long contestId, Pageable pageable) {
+        List<Favorite> favorites
                 = favoriteRepository
-                .findByFavoriteMember_IdAndFavoriteContest_Id(jwtUtil.getMemberId(token), contestId);
+                .findAllByFavoriteMember_IdAndFavoriteContest_Id(
+                        jwtUtil.getMemberId(token), contestId, pageable)
+                .getContent();
 
         return favorites.stream()
                 .map(p -> FavoriteResponseDto.builder()

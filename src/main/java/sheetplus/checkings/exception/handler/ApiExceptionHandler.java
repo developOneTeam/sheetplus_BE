@@ -57,7 +57,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> constraintDeclarationExceptionHandler(
+    public ResponseEntity<ErrorResponse> methodArgumentNotValidExceptionHandler(
             MethodArgumentNotValidException e
     ){
 

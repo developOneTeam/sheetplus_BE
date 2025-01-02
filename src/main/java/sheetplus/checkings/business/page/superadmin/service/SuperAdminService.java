@@ -2,6 +2,7 @@ package sheetplus.checkings.business.page.superadmin.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
@@ -69,8 +70,8 @@ public class SuperAdminService {
 
 
     @Transactional(readOnly = true)
-    public List<AdminAcceptCons> readAdmins(){
-        return adminAcceptConsRepository.findAll();
+    public List<AdminAcceptCons> readAdmins(Pageable pageable){
+        return adminAcceptConsRepository.findAll(pageable).getContent();
     }
 
     @Transactional

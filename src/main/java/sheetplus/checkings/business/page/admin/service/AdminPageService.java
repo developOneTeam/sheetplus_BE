@@ -3,6 +3,7 @@ package sheetplus.checkings.business.page.admin.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminHomeResponseDto;
@@ -125,11 +126,11 @@ public class AdminPageService {
     }
 
 
-    public List<MemberInfoResponseDto> readDrawMemberList(Long contestId){
+    public List<MemberInfoResponseDto> readDrawMemberList(Long contestId, Pageable pageable){
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         return participateContestStateRepository
-                .drawMemberInfoRead(contest.getId());
+                .drawMemberInfoRead(contest.getId(), pageable);
     }
 
 

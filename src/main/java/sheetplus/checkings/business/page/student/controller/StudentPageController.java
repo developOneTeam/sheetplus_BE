@@ -2,6 +2,7 @@ package sheetplus.checkings.business.page.student.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.page.student.dto.StudentPageDto.ActivitiesResponseDto;
@@ -9,8 +10,6 @@ import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentHomeP
 import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentPageActivitiesResponseDto;
 import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.business.page.student.service.StudentPageService;
-import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteResponseDto;
-import sheetplus.checkings.domain.favorite.service.FavoriteCRUDService;
 
 import java.util.List;
 
@@ -20,7 +19,6 @@ import java.util.List;
 public class StudentPageController {
 
     private final StudentPageService studentPageService;
-    private final FavoriteCRUDService favoriteCRUDService;
 
 
     @GetMapping("private/student/{contest}/home/v1")
@@ -35,9 +33,14 @@ public class StudentPageController {
 
     @GetMapping("public/{contest}/schedule/v1")
     public ResponseEntity<List<EventResponseDto>> readStudentSchedule(
-            @PathVariable("contest") Long contestId){
-
-        return ResponseEntity.ok(studentPageService.readStudentSchedulePage(contestId));
+            @PathVariable("contest") Long contestId,
+            @RequestParam(value = "offset", required = false)
+            Integer offset,
+            @RequestParam(value = "limit", required = false)
+            Integer limit
+    ){
+        return ResponseEntity.ok(studentPageService
+                .readStudentSchedulePage(contestId, PageRequest.of(offset-1, limit)));
     }
 
     @GetMapping("private/student/{contest}/activities/v1")
@@ -48,14 +51,11 @@ public class StudentPageController {
         token = token.replace("Bearer ", "");
         ActivitiesResponseDto activitiesResponseDto
                 = studentPageService.readStudentActivitiesPage(token, contestId);
-        List<FavoriteResponseDto> favoriteResponseDto
-                = favoriteCRUDService.getFavorites(token, contestId);
 
 
         return ResponseEntity.ok(StudentPageActivitiesResponseDto
                 .builder()
                 .activitiesResponseDto(activitiesResponseDto)
-                .favorites(favoriteResponseDto)
                 .build());
     }
 

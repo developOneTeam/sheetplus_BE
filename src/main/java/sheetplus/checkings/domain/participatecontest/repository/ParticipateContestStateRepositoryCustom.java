@@ -1,5 +1,6 @@
 package sheetplus.checkings.domain.participatecontest.repository;
 
+import org.springframework.data.domain.Pageable;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.participatecontest.dto.ParticipateContestDto.ParticipateInfoResponseDto;
 
@@ -9,7 +10,7 @@ public interface ParticipateContestStateRepositoryCustom {
 
     void targetUpdates(int condition);
     ParticipateInfoResponseDto participateContestCounts(Long id);
-    List<MemberInfoResponseDto> drawMemberInfoRead(Long contestId);
+    List<MemberInfoResponseDto> drawMemberInfoRead(Long contestId, Pageable pageable);
 
 
     /**

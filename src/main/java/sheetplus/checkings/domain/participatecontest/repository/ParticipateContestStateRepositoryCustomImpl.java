@@ -3,6 +3,7 @@ package sheetplus.checkings.domain.participatecontest.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.participatecontest.dto.ParticipateContestDto.ParticipateInfoResponseDto;
 import sheetplus.checkings.domain.member.entity.Member;
@@ -78,13 +79,15 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
     }
 
     @Override
-    public List<MemberInfoResponseDto> drawMemberInfoRead(Long contestId) {
+    public List<MemberInfoResponseDto> drawMemberInfoRead(Long contestId, Pageable pageable) {
         List<Member> members = queryFactory
                 .select(participateContest.memberParticipateContestState)
                 .from(participateContest)
                 .where(participateContest.contestParticipateContestState.id.eq(contestId).and(
                         participateContest.eventsCount.goe(5)
                 ))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         return members.stream()

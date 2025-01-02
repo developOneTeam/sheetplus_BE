@@ -2,6 +2,7 @@ package sheetplus.checkings.domain.favorite.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +39,15 @@ public class FavoriteController {
     @GetMapping("/contests/{contest}/favorites/v1")
     public ResponseEntity<List<FavoriteResponseDto>> getFavorites(
             @RequestHeader(value = "Authorization", required = false) String token,
-            @PathVariable(name = "contest") Long contestId){
+            @PathVariable(name = "contest") Long contestId,
+            @RequestParam(value = "offset", required = false)
+            Integer offset,
+            @RequestParam(value = "limit", required = false)
+            Integer limit
+            ){
         List<FavoriteResponseDto> favorites
-                = favoriteCRUDService.getFavorites(token.replace("Bearer ", ""), contestId);
+                = favoriteCRUDService.getFavorites(token.replace("Bearer ", "")
+                , contestId, PageRequest.of(offset-1, limit));
 
         return ResponseEntity.ok(favorites);
     }
