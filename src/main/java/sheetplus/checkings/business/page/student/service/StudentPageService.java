@@ -3,6 +3,7 @@ package sheetplus.checkings.business.page.student.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.student.dto.StudentPageDto.ActivitiesResponseDto;
@@ -58,8 +59,8 @@ public class StudentPageService {
 
 
     @Transactional(readOnly = true)
-    public List<EventResponseDto> readStudentSchedulePage(Long contestId){
-        return contestRepository.findTodayEvents(contestId);
+    public List<EventResponseDto> readStudentSchedulePage(Long contestId, Pageable pageable){
+        return contestRepository.findTodayEvents(contestId, pageable);
     }
 
     @Transactional(readOnly = true)
