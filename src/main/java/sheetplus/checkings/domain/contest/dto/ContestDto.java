@@ -1,6 +1,7 @@
 package sheetplus.checkings.domain.contest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -50,7 +51,11 @@ public class ContestDto {
     @Builder
     @NoArgsConstructor @AllArgsConstructor
     public static class ContestInfoResponseDto{
+        @Schema(description = "Contest PK",
+                example = "1", type = "Long")
         private Long contestId;
+        @Schema(description = "Contest 이름",
+                example = "contest", type = "String")
         private String contestName;
     }
 
