@@ -29,7 +29,7 @@ public class StudentPageController {
     @GetMapping("/contests/{contest}/home/v1")
     @Operation(summary = "Student-Page Home GET", description = "학생 페이지 Home 화면 데이터를 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "이벤트 즐겨찾기 조회 성공",
+            @ApiResponse(responseCode = "200", description = "학생 페이지 Home 화면 데이터 조회 성공",
                     content = @Content(schema =
                     @Schema(implementation = StudentHomePageResponseDto.class),
                             mediaType = "application/json")),
