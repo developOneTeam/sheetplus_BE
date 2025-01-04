@@ -89,7 +89,8 @@ public class ContestController {
     @DeleteMapping("/contests/{contest}/v1")
     @Operation(summary = "Contest DELETE", description = "Contest를 삭제했습니다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Contest를 삭제했습니다."),
+            @ApiResponse(responseCode = "204", description = "Contest를 삭제했습니다.",
+                    content = @Content(mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),

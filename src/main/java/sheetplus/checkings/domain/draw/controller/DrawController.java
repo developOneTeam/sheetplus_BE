@@ -101,7 +101,8 @@ public class DrawController {
     @DeleteMapping("/draw/{draw}/v1")
     @Operation(summary = "Draw DELETE", description = "추첨 Event Member의 수령 내역을 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "추첨 Event Member의 수령 내역을 삭제했습니다"),
+            @ApiResponse(responseCode = "204", description = "추첨 Event Member의 수령 내역을 삭제했습니다",
+                    content = @Content(mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),

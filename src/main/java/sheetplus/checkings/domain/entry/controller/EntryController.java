@@ -87,7 +87,8 @@ public class EntryController {
     @DeleteMapping("/entries/{entry}/v1")
     @Operation(summary = "Entry DELETE", description = "Entry를 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Entry를 삭제합니다"),
+            @ApiResponse(responseCode = "204", description = "Entry를 삭제합니다",
+                    content = @Content(mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
@@ -101,7 +102,7 @@ public class EntryController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json"))
     })
-    public ResponseEntity<String> deleteEntry(
+    public ResponseEntity<Void> deleteEntry(
             @Parameter(description = "Entry PK", example = "1")
             @PathVariable(name = "entry") Long entryId
     ){

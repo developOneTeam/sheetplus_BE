@@ -115,7 +115,8 @@ public class FavoriteController {
     @DeleteMapping("/favorites/{favorite}/devices/{deviceToken}/v1")
     @Operation(summary = "Favorite DELETE", description = "FCM 구독삭제 진행, 삭제 성공하면 이벤트 즐겨찾기 삭제")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "FCM 구독삭제 진행", content = {}),
+            @ApiResponse(responseCode = "202", description = "FCM 구독삭제 진행",
+                    content = @Content(mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),

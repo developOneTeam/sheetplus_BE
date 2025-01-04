@@ -102,7 +102,8 @@ public class EventController {
     @DeleteMapping("/events/{event}/v1")
     @Operation(summary = "Event DELETE", description = "Event를 삭제합니다..")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Event를 삭제했습니다."),
+            @ApiResponse(responseCode = "204", description = "Event를 삭제했습니다.",
+                    content = @Content(mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
@@ -116,7 +117,7 @@ public class EventController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json"))
     })
-    public ResponseEntity<String> deleteEvent(
+    public ResponseEntity<Void> deleteEvent(
             @Parameter(description = "Event PK", example = "1")
             @PathVariable(name = "event") Long id
     ){

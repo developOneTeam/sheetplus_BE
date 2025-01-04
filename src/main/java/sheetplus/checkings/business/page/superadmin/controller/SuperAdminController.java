@@ -128,7 +128,8 @@ public class SuperAdminController {
     @DeleteMapping("admins/{admin}/v1")
     @Operation(summary = "Admin Delete", description = "Admin Member를 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Admin Member를 삭제했습니다."),
+            @ApiResponse(responseCode = "204", description = "Admin Member를 삭제했습니다.",
+            content = @Content(mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "요청한 입력값이 지정된 검증을 실패했습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
