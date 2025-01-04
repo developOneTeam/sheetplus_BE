@@ -34,13 +34,13 @@ public class EventDto {
         @NotNull(message = "null은 허용하지 않습니다.")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "이벤트 시작시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startTime;
 
         @NotNull(message = "null은 허용하지 않습니다.")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "이벤트 시작시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime endTime;
 
         @NotNull(message = "null은 허용하지 않습니다.")
@@ -98,12 +98,12 @@ public class EventDto {
         private String name;
 
         @Schema(description = "이벤트 시작시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime startTime;
 
         @Schema(description = "이벤트 종료시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime endTime;
 

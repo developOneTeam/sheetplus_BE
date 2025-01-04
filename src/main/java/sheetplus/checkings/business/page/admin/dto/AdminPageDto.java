@@ -44,7 +44,7 @@ public class AdminPageDto {
                 example = "15", type = "String")
         private String moreThanOneCounts;
         @Schema(description = "이벤트 참여 횟수가 5 이상인 Member 수",
-                example = "4", type = "String")
+                example = "4", type = "string")
         private String moreThanFiveCounts;
 
         // 우상 제목
@@ -53,11 +53,11 @@ public class AdminPageDto {
         private String contestName;
         // 우상 1
         @Schema(description = "Contest 시작시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime contestStart;
         @Schema(description = "Contest 종료시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime contestEnd;
         // 우상 2

@@ -30,13 +30,13 @@ public class ContestDto {
         @NotNull(message = "null은 허용하지 않습니다.")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "Contest 시작시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss")
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startDateTime;
 
         @NotNull(message = "null은 허용하지 않습니다.")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "Contest 종료시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime endDateTime;
 
         @NotNull(message = "null은 허용하지 않습니다.")
@@ -60,12 +60,12 @@ public class ContestDto {
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "Contest 시작시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime startDate;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "Contest 종료시간",
-                example = "2025-01-04 12:09:01", type = "LocalDateTime", pattern = "yyyy-MM-dd HH:mm:ss" )
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime endDate;
         @Schema(description = "Contest 진행 상태 메세지",
                 example = "진행중", type = "String")
