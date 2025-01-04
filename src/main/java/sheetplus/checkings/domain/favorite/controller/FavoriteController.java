@@ -36,8 +36,7 @@ public class FavoriteController {
     @Operation(summary = "Favorite CREATE", description = "즐겨찾기 이벤트를 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "이벤트 즐겨찾기 생성 및 FCM 구독등록 진행",
-                    content = @Content(schema = @Schema(implementation = FavoriteCreateResponseDto.class),
-                            mediaType = "application/json")),
+                    content = {}),
             @ApiResponse(responseCode = "400", description = "요청한 입력값이 지정된 검증을 실패했습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
@@ -108,9 +107,7 @@ public class FavoriteController {
     @DeleteMapping("/favorites/{favorite}/devices/{deviceToken}/v1")
     @Operation(summary = "Favorite DELETE", description = "FCM 구독삭제 진행, 삭제 성공하면 이벤트 즐겨찾기 삭제")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "FCM 구독삭제 진행",
-                    content = @Content(schema = @Schema(implementation = FavoriteResponseDto.class),
-                            mediaType = "application/json")),
+            @ApiResponse(responseCode = "202", description = "FCM 구독삭제 진행", content = {}),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),

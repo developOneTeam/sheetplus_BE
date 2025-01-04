@@ -31,9 +31,7 @@ public class MailController {
     @PostMapping("/auth/mails/v1")
     @Operation(summary = "Sending Email", description = "인증 이메일을 발송합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "인증 이메일 발송",
-                    content = @Content(schema = @Schema(implementation = EmailRequestDto.class),
-                            mediaType = "application/json")),
+            @ApiResponse(responseCode = "202", description = "인증 이메일 발송", content = {}),
             @ApiResponse(responseCode = "400", description = "요청한 입력값이 지정된 검증을 실패했습니다.",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                     mediaType = "application/json")),
