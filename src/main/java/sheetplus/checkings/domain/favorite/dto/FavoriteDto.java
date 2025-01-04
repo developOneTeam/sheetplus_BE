@@ -43,6 +43,7 @@ public class FavoriteDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Favorite Create Response Dto", contentMediaType = "application/json")
     public static class FavoriteCreateResponseDto{
         @Schema(description = "Favorite PK",
                 example = "1", type = "Long")
@@ -121,6 +122,7 @@ public class FavoriteDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Subscribe Response Dto", contentMediaType = "application/json")
     public static class SubScribeResponseDTO{
         @Schema(description = "구독 작업상태 유형",
                 example = "SUCCESS", type = "String")

@@ -20,6 +20,7 @@ public class AdminPageDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Admin Home Request Dto", contentMediaType = "application/json")
     public static class AdminHomeRequestDto{
         @NotNull(message = "null은 허용하지 않습니다.")
         @Schema(description = "Contest PK",
@@ -30,6 +31,7 @@ public class AdminPageDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Email Response Dto", contentMediaType = "application/json")
     public static class AdminHomeResponseDto{
         // 좌상
         @Schema(description = "Member 수",

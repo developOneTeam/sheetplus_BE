@@ -17,6 +17,7 @@ public class StudentPageDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Student Page Activities Response Dto", contentMediaType = "application/json")
     public static class StudentPageActivitiesResponseDto{
         @Schema(description = "모든 Activities", implementation = ActivitiesResponseDto.class)
         private ActivitiesResponseDto activitiesResponseDto;
@@ -27,6 +28,7 @@ public class StudentPageDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Student Home Page Response Dto", contentMediaType = "application/json")
     public static class StudentHomePageResponseDto{
         @Schema(description = "학생 이름",
                 example = "studentMember", type = "String")
@@ -45,6 +47,7 @@ public class StudentPageDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Activities Response Dto", contentMediaType = "application/json")
     public static class ActivitiesResponseDto{
         @Schema(description = "전체 이벤트 수",
                 example = "100", type = "String")
