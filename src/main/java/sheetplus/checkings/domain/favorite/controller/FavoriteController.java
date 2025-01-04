@@ -36,7 +36,8 @@ public class FavoriteController {
     @Operation(summary = "Favorite CREATE", description = "즐겨찾기 이벤트를 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "이벤트 즐겨찾기 생성 및 FCM 구독등록 진행",
-                    content = {}),
+            content = @Content(schema = @Schema(implementation = FavoriteCreateResponseDto.class),
+                    mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "요청한 입력값이 지정된 검증을 실패했습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
