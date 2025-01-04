@@ -147,7 +147,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "FCM 구독작업 진행상태 조회 성공",
                     content = @Content(array = @ArraySchema(schema =
-                    @Schema(implementation = FavoriteResponseDto.class)),
+                    @Schema(implementation = SubScribeResponseDTO.class)),
                             mediaType = "application/json"),
                     headers = {@Header(name = "etag",
                             description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),

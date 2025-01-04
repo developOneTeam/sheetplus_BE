@@ -69,7 +69,7 @@ public class StudentPageController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "학생 페이지 Activity 화면 데이터 조회 성공",
                     content = @Content(schema =
-                    @Schema(implementation = StudentHomePageResponseDto.class),
+                    @Schema(implementation = StudentPageActivitiesResponseDto.class),
                             mediaType = "application/json"),
                     headers = {@Header(name = "etag",
                             description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
