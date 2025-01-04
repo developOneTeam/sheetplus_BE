@@ -32,7 +32,7 @@ public class QrController {
     @PostMapping("/student/qrcode/v1")
     @Operation(summary = "QRcode register", description = "QRcode 인증을 진행합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "QRcode 인증을 성공했습니다. 참여자로 등록합니다.",
+            @ApiResponse(responseCode = "200", description = "QRcode 인증을 성공했습니다. 참여자를 등록하거나 참여기록을 갱신합니다.",
                     content = @Content(schema = @Schema(implementation = QrcodeResponseDto.class),
                             mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "요청한 입력값이 지정된 검증을 실패했습니다.",
@@ -64,7 +64,7 @@ public class QrController {
     @GetMapping("/admin/events/{eventId}/qrcode/v1")
     @Operation(summary = "QRcode CREATE", description = "QRcode를 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "QRcode를 생성합니다",
+            @ApiResponse(responseCode = "201", description = "QRcode를 생성합니다",
                     content = @Content(schema = @Schema(implementation = QrcodeCreateResponseDto.class),
                             mediaType = "application/json"),
                     headers =@Header(name = "Cache-Control", description = "보안키가 포함되어 있으므로 캐싱하면 안 됩니다.")

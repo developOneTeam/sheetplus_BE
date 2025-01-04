@@ -87,7 +87,7 @@ public class SuperAdminController {
     @PostMapping("admins/v1")
     @Operation(summary = "Admin Accept and CREATE ", description = "Admin Member를 승인하고, 새로운 Admin Member를 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Admin Member 승인 및 생성 성공",
+            @ApiResponse(responseCode = "201", description = "Admin Member 승인 및 생성 성공",
                     content = @Content(schema =
                     @Schema(implementation = MemberInfoResponseDto.class),
                             mediaType = "application/json")),
