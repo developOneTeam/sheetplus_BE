@@ -25,9 +25,9 @@ public class SwaggerConfig {
                         .addList("JWT RefreshToken"))
                 .components(new Components().addSecuritySchemes("JWT AccessToken", createAccessTokenScheme())
                         .addSecuritySchemes("JWT RefreshToken", createRefreshTokenScheme()))
-                .info(new Info().title("Chekcing App API")
-                        .description("This is How to Use API")
-                        .version("v0.1"));
+                .info(new Info().title("SheetPlus Application Server API")
+                        .description("SheetPlus Application Server API를 명세한 문서입니다.")
+                        .version("1.0 ver"));
     }
 
 
