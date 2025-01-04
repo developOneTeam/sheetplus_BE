@@ -3,6 +3,7 @@ package sheetplus.checkings.business.page.admin.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,7 +38,13 @@ public class AdminPageController {
             @ApiResponse(responseCode = "200", description = "Admin-Page Home화면 조회를 성공했습니다",
                     content = @Content(array = @ArraySchema(schema =
                     @Schema(implementation = FavoriteResponseDto.class)),
-                            mediaType = "application/json")),
+                            mediaType = "application/json"),
+                    headers = {@Header(name = "etag",
+                    description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
+                    @Header(name = "Cache-Control",
+                            description = "클라이언트 캐시 사용, 캐싱 최대유효시간 1시간, 유효시간 지난 후에는 반드시 서버로 재요청하세요")}),
+            @ApiResponse(responseCode = "304", description = "캐시 데이터의 변경사항이 없습니다. 로컬 캐시 데이터를 사용하세요",
+                    content = @Content (mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
@@ -59,13 +66,20 @@ public class AdminPageController {
         return ResponseEntity.ok(adminHomeResponseDto);
     }
 
+
     @GetMapping("/contests/{contest}/draw/members/v1")
     @Operation(summary = "Admin-Page Draw-Member", description = "Admin-Page Draw-Member 조회 화면")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Draw-Member 조회를 성공했습니다.",
                     content = @Content(array = @ArraySchema(schema =
                     @Schema(implementation = MemberInfoResponseDto.class)),
-                            mediaType = "application/json")),
+                            mediaType = "application/json"),
+                    headers = {@Header(name = "etag",
+                            description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
+                            @Header(name = "Cache-Control",
+                                    description = "클라이언트 캐시 사용, 캐싱 최대유효시간 1시간, 유효시간 지난 후에는 반드시 서버로 재요청하세요")}),
+            @ApiResponse(responseCode = "304", description = "캐시 데이터의 변경사항이 없습니다. 로컬 캐시 데이터를 사용하세요",
+                    content = @Content (mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
@@ -94,7 +108,6 @@ public class AdminPageController {
         return ResponseEntity.ok(adminPageService
                 .readDrawMemberList(contestId, PageRequest.of(offset-1, limit)));
     }
-
 
     /**
      *

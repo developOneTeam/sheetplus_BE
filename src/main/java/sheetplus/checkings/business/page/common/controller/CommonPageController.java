@@ -3,6 +3,7 @@ package sheetplus.checkings.business.page.common.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,7 +38,13 @@ public class CommonPageController {
             @ApiResponse(responseCode = "200", description = "모든 Contest 데이터 조회 성공",
                     content = @Content(array = @ArraySchema(schema =
                     @Schema(implementation = ContestInfoResponseDto.class)),
-                            mediaType = "application/json")),
+                            mediaType = "application/json"),
+                    headers = {@Header(name = "etag",
+                    description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
+                    @Header(name = "Cache-Control",
+                            description = "클라이언트 캐시 사용, 캐싱 최대유효시간 1시간, 유효시간 지난 후에는 반드시 서버로 재요청하세요")}),
+            @ApiResponse(responseCode = "304", description = "캐시 데이터의 변경사항이 없습니다. 로컬 캐시 데이터를 사용하세요",
+                    content = @Content (mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json"))
@@ -60,7 +67,13 @@ public class CommonPageController {
             @ApiResponse(responseCode = "200", description = "일정 페이지 데이터 조회 성공",
                     content = @Content(array = @ArraySchema(schema =
                     @Schema(implementation = StudentHomePageResponseDto.class)),
-                            mediaType = "application/json")),
+                            mediaType = "application/json"),
+                    headers = {@Header(name = "etag",
+                            description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
+                            @Header(name = "Cache-Control",
+                                    description = "클라이언트 캐시 사용, 캐싱 최대유효시간 1시간, 유효시간 지난 후에는 반드시 서버로 재요청하세요")}),
+            @ApiResponse(responseCode = "304", description = "캐시 데이터의 변경사항이 없습니다. 로컬 캐시 데이터를 사용하세요",
+                    content = @Content (mediaType = "None")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json"))

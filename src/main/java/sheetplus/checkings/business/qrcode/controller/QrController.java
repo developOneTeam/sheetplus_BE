@@ -2,6 +2,7 @@ package sheetplus.checkings.business.qrcode.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -65,7 +66,9 @@ public class QrController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "QRcode를 생성합니다",
                     content = @Content(schema = @Schema(implementation = QrcodeCreateResponseDto.class),
-                            mediaType = "application/json")),
+                            mediaType = "application/json"),
+                    headers =@Header(name = "Cache-Control", description = "보안키가 포함되어 있으므로 캐싱하면 안 됩니다.")
+            ),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
