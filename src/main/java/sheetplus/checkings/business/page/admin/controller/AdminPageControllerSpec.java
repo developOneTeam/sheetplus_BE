@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminHomeResponseDto;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
@@ -15,6 +16,7 @@ import sheetplus.checkings.exception.error.ErrorResponse;
 
 import java.util.List;
 
+@Tag(name = "Admin-Page", description = "Admin-Page Service API")
 public interface AdminPageControllerSpec {
 
     @Operation(summary = "Admin-Page Home", description = "Admin-Page Home화면 데이터를 조회합니다")

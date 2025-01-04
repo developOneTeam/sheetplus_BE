@@ -1,7 +1,6 @@
 package sheetplus.checkings.business.page.admin.controller;
 
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +16,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("private/admin")
-@Tag(name = "Admin-Page", description = "Admin-Page Service API")
 public class AdminPageController implements AdminPageControllerSpec{
 
     private final AdminPageService adminPageService;
