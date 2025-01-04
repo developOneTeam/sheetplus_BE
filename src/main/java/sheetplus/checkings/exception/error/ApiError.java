@@ -32,7 +32,7 @@ public enum ApiError implements ErrorCodeIfs {
     EVENT_ALREADY_PARTICIPATE(HttpStatus.CONFLICT, "이미 참여한 행사입니다."),
     REFRESH_TOKEN_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰이거나 찾을 수 없습니다."),
     COMMON_START_AFTER_END(HttpStatus.CONFLICT, "시작시간이 종료시간보다 뒤에 있습니다."),
-    CONTEST_EVENT_START_AFTER_END(HttpStatus.BAD_REQUEST, "이벤트 시간은 대회 시작/종료 기간 안에 포함되어야 합니다."),
+    CONTEST_EVENT_START_AFTER_END(HttpStatus.CONFLICT, "이벤트 시간은 대회 시작/종료 기간 안에 포함되어야 합니다."),
     FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "즐겨찾기정보를 찾을 수 없음"),
     FAVORITE_EXISTS(HttpStatus.CONFLICT, "이미 등록된 즐겨찾기 이벤트입니다."),
     EXPIRED_QR_CODES(HttpStatus.UNAUTHORIZED, "이미 만료된 QR코드 요청입니다."),
