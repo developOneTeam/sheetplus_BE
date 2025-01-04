@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
+import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class CommonPageService {
                         .contestName(a.getName())
                         .build())
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<EventResponseDto> readStudentSchedulePage(Long contestId, Pageable pageable){
+        return contestRepository.findTodayEvents(contestId, pageable);
     }
 
 }

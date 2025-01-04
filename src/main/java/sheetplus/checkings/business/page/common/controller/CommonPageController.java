@@ -13,12 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentHomePageResponseDto;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
 import sheetplus.checkings.business.page.common.service.CommonPageService;
+import sheetplus.checkings.domain.event.dto.EventDto;
 import sheetplus.checkings.exception.error.ErrorResponse;
 
 import java.util.List;
@@ -35,7 +34,7 @@ public class CommonPageController {
     @GetMapping("contests/v1")
     @Operation(summary = "CommonPage GET", description = "모든 Contest를 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "이벤트 즐겨찾기 조회 성공",
+            @ApiResponse(responseCode = "200", description = "모든 Contest 데이터 조회 성공",
                     content = @Content(array = @ArraySchema(schema =
                     @Schema(implementation = ContestInfoResponseDto.class)),
                             mediaType = "application/json")),
@@ -53,6 +52,36 @@ public class CommonPageController {
     ){
         return ResponseEntity.ok(commonPageService
                 .readContestInfo(PageRequest.of(offset-1, limit)));
+    }
+
+    @GetMapping("public/contests/{contest}/schedules/v1")
+    @Operation(summary = "Schedule Page GET", description = "일정 페이지 데이터를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "일정 페이지 데이터 조회 성공",
+                    content = @Content(array = @ArraySchema(schema =
+                    @Schema(implementation = StudentHomePageResponseDto.class)),
+                            mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "액세스 토큰이 없습니다",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            mediaType = "application/json"))
+    })
+    public ResponseEntity<List<EventDto.EventResponseDto>> readStudentSchedule(
+            @Parameter(description = "Contest PK", example = "1")
+            @PathVariable("contest") Long contestId,
+
+            @Parameter(description = "조회할 페이지 번호", example = "1")
+            @RequestParam(value = "offset", required = false)
+            Integer offset,
+
+            @Parameter(description = "페이지당 조회할 데이터 개수", example = "1")
+            @RequestParam(value = "limit", required = false)
+            Integer limit
+    ){
+        return ResponseEntity.ok(commonPageService
+                .readStudentSchedulePage(contestId, PageRequest.of(offset-1, limit)));
     }
 
 }
