@@ -63,9 +63,6 @@ public class CommonPageController {
                             mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
-                            mediaType = "application/json")),
-            @ApiResponse(responseCode = "401", description = "액세스 토큰이 없습니다",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json"))
     })
     public ResponseEntity<List<EventDto.EventResponseDto>> readStudentSchedule(
