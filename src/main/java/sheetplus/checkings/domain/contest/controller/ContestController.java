@@ -61,7 +61,7 @@ public class ContestController {
             @ApiResponse(responseCode = "200", description = "Contest 데이터를 업데이트했습니다.",
                     content = @Content(schema = @Schema(implementation = ContestResponseDto.class),
                             mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "요청한 입력값이 지정된 검증을 실패했습니다.",
+            @ApiResponse(responseCode = "400", description = "잘못된 HTTP 입력 요청, 요청한 입력값이 지정된 검증을 실패했습니다.",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "액세스 토큰이 없습니다",
