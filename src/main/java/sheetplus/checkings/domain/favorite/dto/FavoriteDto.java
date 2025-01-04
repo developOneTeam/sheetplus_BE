@@ -76,7 +76,7 @@ public class FavoriteDto {
         private Long favoriteId;
 
         @Schema(description = "이벤트 이름",
-                example = "1", type = "String")
+                example = "eventName", type = "String")
         private String eventName;
 
         @Schema(description = "이벤트 시작시간",
