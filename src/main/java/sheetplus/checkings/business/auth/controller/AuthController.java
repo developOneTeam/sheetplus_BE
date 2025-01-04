@@ -33,10 +33,7 @@ public class AuthController {
 
     @PostMapping("/token/refresh/v1")
     @Operation(summary = "Access-Token refresh with Refresh-Token",
-            description = "Access-Token과 Refresh-Token을 재발급합니다.",
-            security = {@SecurityRequirement(name = "accessToken"),
-                    @SecurityRequirement(name = "refreshToken")
-            }
+            description = "Access-Token과 Refresh-Token을 재발급합니다."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "토큰 생성"
@@ -58,8 +55,7 @@ public class AuthController {
     }
 
     @PostMapping("/login/v1")
-    @Operation(summary = "Member login", description = "학교이메일로 Member 로그인을 진행합니다.",
-                security = @SecurityRequirement(name = "accessToken"))
+    @Operation(summary = "Member login", description = "학교이메일로 Member 로그인을 진행합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공",
                     content = {@Content(schema = @Schema(implementation = TokenDto.class),
