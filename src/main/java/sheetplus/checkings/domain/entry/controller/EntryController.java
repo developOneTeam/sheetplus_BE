@@ -15,7 +15,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RequestMapping("private/admin")
 @Slf4j
-public class EntryController {
+public class EntryController implements EntryControllerSpec{
 
     private final EntryCRUDService entryCRUDService;
 
@@ -38,7 +38,7 @@ public class EntryController {
     }
 
     @DeleteMapping("/entries/{entry}/v1")
-    public ResponseEntity<String> deleteEntry(
+    public ResponseEntity<Void> deleteEntry(
             @PathVariable(name = "entry") Long entryId
     ){
         entryCRUDService.deleteEntry(entryId);

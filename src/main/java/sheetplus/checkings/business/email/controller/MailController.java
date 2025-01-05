@@ -16,7 +16,7 @@ import sheetplus.checkings.business.email.service.EmailService;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("public")
-public class MailController {
+public class MailController implements MailControllerSpec{
 
     private final EmailService emailService;
 

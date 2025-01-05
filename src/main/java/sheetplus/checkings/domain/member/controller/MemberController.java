@@ -20,7 +20,7 @@ import java.net.URI;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class MemberController {
+public class MemberController implements MemberControllerSpec{
 
     private final MemberCRUDService memberCRUDService;
     private final AuthService authService;
@@ -69,7 +69,7 @@ public class MemberController {
 
 
     @DeleteMapping("private/member/v1")
-    public ResponseEntity<String> deleteMember(
+    public ResponseEntity<Void> deleteMember(
             @RequestHeader(value = "Authorization", required = false) String token){
         memberCRUDService.deleteMember(token.replace("Bearer ", ""));
         return ResponseEntity.noContent().build();

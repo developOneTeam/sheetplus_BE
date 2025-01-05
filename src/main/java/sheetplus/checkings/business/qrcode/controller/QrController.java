@@ -15,13 +15,14 @@ import sheetplus.checkings.business.qrcode.service.QrcodeService;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("private")
-public class QrController {
+public class QrController implements QrControllerSpec{
 
     private final QrcodeService qrcodeService;
 
     @PostMapping("/student/qrcode/v1")
     public ResponseEntity<QrcodeResponseDto> qrcodeCheck(
-            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false)
+            String token,
             @RequestBody @Validated QrcodeRequestDto qrcodeRequestDto){
 
         QrcodeResponseDto qrcodeResponseDto
@@ -33,7 +34,8 @@ public class QrController {
 
     @GetMapping("/admin/events/{eventId}/qrcode/v1")
     public ResponseEntity<QrcodeCreateResponseDto> createQrcode(
-            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false)
+            String token,
             @PathVariable(name = "eventId") Long id){
 
         QrcodeCreateResponseDto qrcodeCreateResponseDto

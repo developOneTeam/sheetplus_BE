@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("private/student")
-public class FavoriteController {
+public class FavoriteController implements FavoriteControllerSpec{
 
     private final FavoriteCRUDService favoriteCRUDService;
 
@@ -62,6 +62,7 @@ public class FavoriteController {
         favoriteCRUDService.deleteFavorites(id, token.replace("Bearer ", ""), deviceToken);
         return ResponseEntity.accepted().build();
     }
+
 
     @GetMapping("/favorites/{favorite}/status/{statusType}/v1")
     public ResponseEntity<SubScribeResponseDTO> favoriteStatusCheck(

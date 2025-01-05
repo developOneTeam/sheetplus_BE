@@ -18,7 +18,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RequestMapping("private/admin")
 @Slf4j
-public class DrawController {
+public class DrawController implements DrawControllerSpec{
 
     private final DrawEventService drawEventService;
 
@@ -54,7 +54,7 @@ public class DrawController {
     }
     
     @DeleteMapping("/draw/{draw}/v1")
-    public ResponseEntity<String> deleteDrawEventReceiveCondition(
+    public ResponseEntity<Void> deleteDrawEventReceiveCondition(
             @PathVariable(name = "draw") Long id
     ){
         drawEventService.deleteDraw(id);

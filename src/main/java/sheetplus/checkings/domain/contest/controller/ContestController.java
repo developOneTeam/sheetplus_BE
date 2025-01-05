@@ -16,7 +16,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("private/admin")
-public class ContestController {
+public class ContestController implements ContestControllerSpec{
 
     private final ContestCRUDService contestCRUDService;
 

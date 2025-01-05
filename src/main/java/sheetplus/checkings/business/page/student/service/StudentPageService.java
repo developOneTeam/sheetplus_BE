@@ -3,12 +3,10 @@ package sheetplus.checkings.business.page.student.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.student.dto.StudentPageDto.ActivitiesResponseDto;
 import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentHomePageResponseDto;
-import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.participatecontest.entity.ParticipateContest;
 import sheetplus.checkings.domain.enums.EventCategory;
@@ -58,10 +56,7 @@ public class StudentPageService {
     }
 
 
-    @Transactional(readOnly = true)
-    public List<EventResponseDto> readStudentSchedulePage(Long contestId, Pageable pageable){
-        return contestRepository.findTodayEvents(contestId, pageable);
-    }
+
 
     @Transactional(readOnly = true)
     public ActivitiesResponseDto readStudentActivitiesPage(

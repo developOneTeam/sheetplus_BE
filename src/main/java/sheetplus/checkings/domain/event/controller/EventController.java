@@ -1,7 +1,6 @@
 package sheetplus.checkings.domain.event.controller;
 
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("private/admin")
-public class EventController {
+public class EventController implements EventControllerSpec{
 
     private final EventCRUDService eventCRUDService;
     private final EventSchedulerService eventSchedulerService;
@@ -36,7 +35,7 @@ public class EventController {
     }
 
     @PutMapping("/events/{event}/v1")
-    public ResponseEntity<@Valid EventResponseDto> updateEvent(
+    public ResponseEntity<EventResponseDto> updateEvent(
             @PathVariable(name = "event") Long id,
             @RequestBody @Validated EventRequestDto eventRequestDto){
         EventResponseDto eventResponseDto
@@ -48,7 +47,7 @@ public class EventController {
 
 
     @DeleteMapping("/events/{event}/v1")
-    public ResponseEntity<String> deleteEvent(
+    public ResponseEntity<Void> deleteEvent(
             @PathVariable(name = "event") Long id
     ){
         eventSchedulerService.scheduleDeleteEvent(id);

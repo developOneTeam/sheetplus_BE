@@ -11,11 +11,13 @@ import sheetplus.checkings.domain.token.dto.TokenDto;
 import sheetplus.checkings.business.auth.service.AuthService;
 import sheetplus.checkings.business.email.service.EmailService;
 
+import java.net.URI;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("public/auth")
 @Slf4j
-public class AuthController {
+public class AuthController implements AuthControllerSpec{
     public final AuthService authService;
     private final EmailService emailService;
 
@@ -26,7 +28,8 @@ public class AuthController {
         log.info("{}", refreshToken);
 
         TokenDto tokenDto = authService.refreshTokens(refreshToken);
-        return ResponseEntity.ok(tokenDto);
+        return ResponseEntity.created(URI.create(""))
+                .body(tokenDto);
     }
 
     @PostMapping("/login/v1")

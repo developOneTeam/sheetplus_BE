@@ -5,12 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
 import sheetplus.checkings.business.page.common.service.CommonPageService;
+import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 
 import java.util.List;
 
@@ -18,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("public/")
-public class CommonPageController {
+public class CommonPageController implements CommonPageControllerSpec {
 
     private final CommonPageService commonPageService;
 
@@ -29,7 +27,21 @@ public class CommonPageController {
             @RequestParam(value = "limit", required = false)
             Integer limit
     ){
-        return ResponseEntity.ok(commonPageService.readContestInfo(PageRequest.of(offset-1, limit)));
+        return ResponseEntity.ok(commonPageService
+                .readContestInfo(PageRequest.of(offset-1, limit)));
+    }
+
+    @GetMapping("public/contests/{contest}/schedules/v1")
+    public ResponseEntity<List<EventResponseDto>> readStudentSchedule(
+            @PathVariable("contest")
+            Long contestId,
+            @RequestParam(value = "offset", required = false)
+            Integer offset,
+            @RequestParam(value = "limit", required = false)
+            Integer limit
+    ){
+        return ResponseEntity.ok(commonPageService
+                .readStudentSchedulePage(contestId, PageRequest.of(offset-1, limit)));
     }
 
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("private/admin")
-public class AdminPageController {
+public class AdminPageController implements AdminPageControllerSpec{
 
     private final AdminPageService adminPageService;
 
@@ -27,6 +27,7 @@ public class AdminPageController {
                 adminPageService.adminHomeRead(contestId);
         return ResponseEntity.ok(adminHomeResponseDto);
     }
+
 
     @GetMapping("/contests/{contest}/draw/members/v1")
     public ResponseEntity<List<MemberInfoResponseDto>> readDrawMemberList(
@@ -40,11 +41,9 @@ public class AdminPageController {
                 .readDrawMemberList(contestId, PageRequest.of(offset-1, limit)));
     }
 
-
     /**
      *
-     * Deprecated
-     * 사유: 증정 기능 비즈니스 정책상 사용 보류
+     * @Deprecated 사유: 증정 기능 비즈니스 정책상 사용 보류
      *
      */
     //@GetMapping("/{contest}/eventManage/prize/member/list")

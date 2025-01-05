@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("private/super-admin/")
-public class SuperAdminController {
+public class SuperAdminController implements SuperAdminControllerSpec{
 
     private final SuperAdminService superAdminService;
     private final MemberCRUDService memberCRUDService;
@@ -33,7 +33,8 @@ public class SuperAdminController {
             Integer limit
     ){
 
-        List<AdminAcceptCons> admins = superAdminService.readAdmins(PageRequest.of(offset-1, limit));
+        List<AdminAcceptCons> admins = superAdminService
+                .readAdmins(PageRequest.of(offset-1, limit));
 
         return ResponseEntity.ok(
                 admins.stream()
@@ -68,8 +69,8 @@ public class SuperAdminController {
 
 
     @DeleteMapping("admins/{admin}/v1")
-    public ResponseEntity<String> deleteAdmin(
-            @PathVariable("admin") String email){
+    public ResponseEntity<Void> deleteAdmin(
+            @PathVariable(value = "admin") String email){
         superAdminService.deleteAdmin(email);
 
         return ResponseEntity.noContent().build();
