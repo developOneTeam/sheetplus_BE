@@ -30,8 +30,7 @@ public class Draw {
     @JoinColumn(name = "contest_id")
     private Contest drawContest;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @OneToOne(mappedBy = "memberDraw", cascade = CascadeType.REMOVE)
     private Member drawMember;
 
     public void setContestDraw(Contest contestDraw) {
