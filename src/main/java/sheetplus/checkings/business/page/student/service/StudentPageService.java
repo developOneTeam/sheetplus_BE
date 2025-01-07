@@ -35,21 +35,15 @@ public class StudentPageService {
 
     @Transactional(readOnly = true)
     public StudentHomePageResponseDto readStudentHomePage(String token, Long contestId) {
-        Member member = memberRepository.findById(jwtUtil.getMemberId(token))
+        Member member = memberRepository.findByIdAndWithGraph(jwtUtil.getMemberId(token))
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
-        Integer eventCounts = 0;
-        if(member.getMemberParticipateContestStates() != null){
-            eventCounts = member.getMemberParticipateContestStates()
-                    .getEventsCount();
-        }
-
-
+        Integer count = participateContestStateRepository.participateCounts(member.getId(), contestId);
 
 
         return StudentHomePageResponseDto.builder()
                 .studentName(member.getName())
                 .studentMajor(member.getMajor())
-                .eventCounts(eventCounts.toString())
+                .eventCounts(Integer.toString(count))
                 .events(contestRepository.findNowAfterEvents(
                         contestId))
                 .build();
