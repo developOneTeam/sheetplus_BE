@@ -43,10 +43,6 @@ public class Contest {
     @Column(nullable = false)
     private ContestCons cons;
 
-    @OneToMany(mappedBy = "contestParticipateContestState", cascade = CascadeType.REMOVE)
-    @Builder.Default
-    private List<ParticipateContest> participateContests = new ArrayList<>();
-
     @OneToMany(mappedBy = "entryContest", orphanRemoval = true)
     @Builder.Default
     private List<Entry> entries = new ArrayList<>();
