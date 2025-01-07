@@ -68,6 +68,7 @@ public class Event {
     private Contest eventContest;
 
     @OneToMany(mappedBy = "eventSendingEvent", cascade = CascadeType.REMOVE)
+    @Builder.Default
     private List<EventSending> eventSending = new ArrayList<>();
 
 
