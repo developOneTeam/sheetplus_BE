@@ -101,4 +101,13 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
                         .build())
                 .toList();
     }
+
+    @Override
+    public Integer participateCounts(Long memberId, Long contestId) {
+        return queryFactory.select(participateContest.eventsCount)
+                .from(participateContest)
+                .where(participateContest.memberParticipateContestState.id.eq(memberId)
+                        .and(participateContest.contestParticipateContestState.id.eq(contestId)))
+                .fetchFirst();
+    }
 }

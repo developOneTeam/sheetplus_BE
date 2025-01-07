@@ -11,7 +11,7 @@ public interface ParticipateContestStateRepositoryCustom {
     void targetUpdates(int condition);
     ParticipateInfoResponseDto participateContestCounts(Long id);
     List<MemberInfoResponseDto> drawMemberInfoRead(Long contestId, Pageable pageable);
-
+    Integer participateCounts(Long memberId, Long contestId);
 
     /**
      *
