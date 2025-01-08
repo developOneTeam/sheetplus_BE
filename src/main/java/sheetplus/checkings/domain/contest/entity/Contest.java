@@ -43,6 +43,9 @@ public class Contest {
     @Column(nullable = false)
     private ContestCons cons;
 
+    @OneToOne(mappedBy = "contestParticipateContestState")
+    private ParticipateContest participateContestStateContest;
+
     @OneToMany(mappedBy = "entryContest", orphanRemoval = true)
     @Builder.Default
     private List<Entry> entries = new ArrayList<>();
