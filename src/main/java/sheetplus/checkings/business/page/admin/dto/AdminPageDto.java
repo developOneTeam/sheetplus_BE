@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryResponseDto;
+import sheetplus.checkings.domain.enums.ContestCons;
 import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class AdminPageDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
-    @Schema(description = "Email Response Dto", contentMediaType = "application/json")
+    @Schema(description = "Admin Home Response Dto", contentMediaType = "application/json")
     public static class AdminHomeResponseDto{
         // 좌상
         @Schema(description = "Member 수",
@@ -105,5 +106,31 @@ public class AdminPageDto {
         private List<EntryResponseDto> entryPageable;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Contest Info With Counts", contentMediaType = "application/json")
+    public static class ContestInfoWithCounts{
+        @Schema(description = "이벤트 명",
+                example = "contestName", type = "String")
+        private String name;
+        @Schema(description = "Contest 시작시간",
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime startDate;
+        @Schema(description = "Contest 종료시간",
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime endDate;
+
+        @Schema(description = "대회 상태",
+                example = "EVENT_PROGRESS", type = "enum", enumAsRef = true)
+        private ContestCons cons;
+        @Schema(description = "이벤트 개수",
+                example = "50", type = "Integer")
+        private Integer eventCounts;
+        @Schema(description = "작품 개수",
+                example = "50", type = "Integer")
+        private Integer entryCounts;
+    }
 
 }
