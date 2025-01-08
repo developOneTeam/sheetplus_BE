@@ -63,6 +63,7 @@ public class EntryRepositoryCustomImpl implements EntryRepositoryCustom{
                         .id(p.getId())
                         .entryType(p.getEntryType().getMessage())
                         .professorName(p.getProfessorName())
+                        .major(p.getMajor())
                         .teamNumber(p.getTeamNumber())
                         .leaderName(p.getLeaderName())
                         .location(p.getLocation())
