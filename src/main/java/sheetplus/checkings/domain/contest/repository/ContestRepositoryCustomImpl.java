@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import sheetplus.checkings.business.page.admin.dto.AdminPageDto.ContestInfoWithCounts;
 import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.event.entity.Event;
@@ -107,5 +108,22 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
         }
 
         return getEventResponseDtos(events);
+    }
+
+    @Override
+    public List<ContestInfoWithCounts> findContestInfoWithCounts() {
+        return queryFactory.selectFrom(contest)
+                .leftJoin(contest.participateContestStateContest, participateContest)
+                .fetchJoin()
+                .fetch().stream()
+                .map(p -> ContestInfoWithCounts.builder()
+                        .name(p.getName())
+                        .startDate(p.getStartDate())
+                        .endDate(p.getEndDate())
+                        .cons(p.getCons())
+                        .eventCounts(p.getEvents().size())
+                        .entryCounts(p.getEntries().size())
+                        .build())
+                .toList();
     }
 }
