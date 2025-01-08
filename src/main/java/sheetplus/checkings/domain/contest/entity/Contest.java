@@ -4,6 +4,7 @@ package sheetplus.checkings.domain.contest.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestRequestDto;
 import sheetplus.checkings.domain.draw.entity.Draw;
 import sheetplus.checkings.domain.entry.entity.Entry;
@@ -46,10 +47,12 @@ public class Contest {
     @OneToOne(mappedBy = "contestParticipateContestState")
     private ParticipateContest participateContestStateContest;
 
+    @BatchSize(size = 1000)
     @OneToMany(mappedBy = "entryContest", orphanRemoval = true)
     @Builder.Default
     private List<Entry> entries = new ArrayList<>();
 
+    @BatchSize(size = 1000)
     @OneToMany(mappedBy = "eventContest", orphanRemoval = true)
     @Builder.Default
     private List<Event> events = new ArrayList<>();
