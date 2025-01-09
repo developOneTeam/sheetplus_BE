@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminHomeResponseDto;
+import sheetplus.checkings.business.page.admin.dto.AdminPageDto.ContestInfoWithCounts;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.event.entity.Event;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryInfoResponseDto;
@@ -80,9 +81,20 @@ public class AdminPageService {
         }
 
 
-
         EntryInfoResponseDto entryInfoResponseDto = entryRepository.entryInfoCounts();
-        List<EntryResponseDto> entryList = entryRepository.getEntry();
+        List<EntryResponseDto> entryList = contest.getEntries().stream()
+                .map(p -> EntryResponseDto.builder()
+                        .id(p.getId())
+                        .entryType(p.getEntryType().getMessage())
+                        .professorName(p.getProfessorName())
+                        .major(p.getMajor())
+                        .teamNumber(p.getTeamNumber())
+                        .leaderName(p.getLeaderName())
+                        .location(p.getLocation())
+                        .building(p.getBuilding())
+                        .name(p.getName())
+                        .build())
+                .toList();
 
 
         return AdminHomeResponseDto.builder()
@@ -126,11 +138,18 @@ public class AdminPageService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<MemberInfoResponseDto> readDrawMemberList(Long contestId, Pageable pageable){
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         return participateContestStateRepository
                 .drawMemberInfoRead(contest.getId(), pageable);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<ContestInfoWithCounts> readContestInfoWithCounts(){
+        return contestRepository.findContestInfoWithCounts();
     }
 
 

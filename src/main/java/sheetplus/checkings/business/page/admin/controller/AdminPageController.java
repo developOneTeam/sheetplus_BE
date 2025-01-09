@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminHomeResponseDto;
+import sheetplus.checkings.business.page.admin.dto.AdminPageDto.ContestInfoWithCounts;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.business.page.admin.service.AdminPageService;
 
@@ -39,6 +40,13 @@ public class AdminPageController implements AdminPageControllerSpec{
     ){
         return ResponseEntity.ok(adminPageService
                 .readDrawMemberList(contestId, PageRequest.of(offset-1, limit)));
+    }
+
+    @GetMapping("/contests/{contest}/v1")
+    public ResponseEntity<List<ContestInfoWithCounts>> readContestInfos(
+    ){
+        return ResponseEntity.ok(adminPageService
+                .readContestInfoWithCounts());
     }
 
     /**

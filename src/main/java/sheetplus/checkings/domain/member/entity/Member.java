@@ -18,6 +18,15 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
+@NamedEntityGraph(
+        name = "member.withParticipateContest",
+        attributeNodes ={
+            @NamedAttributeNode(value = "memberParticipateContestStates", subgraph = "participateContest.withContest")
+        },
+        subgraphs = @NamedSubgraph(name = "participateContest.withContest", attributeNodes = {
+                @NamedAttributeNode("contestParticipateContestState")
+        })
+)
 public class Member {
 
     @Id
@@ -43,10 +52,12 @@ public class Member {
     @Column(nullable = false)
     private MemberType memberType;
 
-    @OneToOne(mappedBy = "memberParticipateContestState", cascade = CascadeType.REMOVE)
-    private ParticipateContest memberParticipateContestStates;
+    @OneToMany(mappedBy = "memberParticipateContestState", cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<ParticipateContest> memberParticipateContestStates = new ArrayList<>();
 
-    @OneToOne(mappedBy = "drawMember", cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "draw_id")
     private Draw memberDraw;
 
     @OneToMany(mappedBy = "favoriteMember", orphanRemoval = true)
@@ -58,14 +69,6 @@ public class Member {
         this.name = memberUpdateRequestDto.getName();
         this.major = memberUpdateRequestDto.getMajor();
         this.studentId = memberUpdateRequestDto.getStudentId();
-    }
-
-    public void setMemberParticipateContestStates(
-            ParticipateContest memberParticipateContestStates) {
-        this.memberParticipateContestStates = memberParticipateContestStates;
-        if(memberParticipateContestStates.getMemberParticipateContestState() != this){
-            memberParticipateContestStates.setMemberParticipateContestStates(this);
-        }
     }
 
     public void setDrawMember(Draw draw){

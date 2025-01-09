@@ -16,7 +16,7 @@
 ![백엔드아키텍처](https://github.com/user-attachments/assets/8d3fe22f-0357-478c-8181-4130e73adeed)
 
 ## DB ERD
-![eventSending 추가 erd](https://github.com/user-attachments/assets/c8be2fd7-7ec8-4d73-8d65-816a6cc6aa26)
+![새로운ERD](https://github.com/user-attachments/assets/a9d6c562-afd9-4ac4-85f4-cb7d57240e98)
 
 
 ## 주요기능

@@ -50,11 +50,11 @@ public class ParticipateContest {
     @Column(nullable = false)
     private MeritType meritType;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member memberParticipateContestState;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "contest_id")
     private Contest contestParticipateContestState;
 
@@ -70,14 +70,11 @@ public class ParticipateContest {
 
     public void setMemberParticipateContestStates(Member member){
         this.memberParticipateContestState = member;
-        if(this.memberParticipateContestState.getMemberParticipateContestStates() != this){
-            member.setMemberParticipateContestStates(this);
-        }
+        member.getMemberParticipateContestStates().add(this);
     }
 
     public void setContestParticipateContestStates(Contest contest){
         this.contestParticipateContestState = contest;
-        contest.getParticipateContests().add(this);
     }
 
     public void addCounts(){
