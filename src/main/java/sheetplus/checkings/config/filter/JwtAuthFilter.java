@@ -66,7 +66,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (jwtUtil.validateToken(accessToken)) {
             Long userId = jwtUtil.getMemberId(accessToken);
             UserDetails userDetails = customUserDetailsService
-                    .loadUserByUsername(userId.toString());
+                    .loadUserById(userId);
             if(userDetails == null){
                 throw new JwtException(INVALID_TOKEN);
             }
