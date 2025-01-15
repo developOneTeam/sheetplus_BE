@@ -47,7 +47,7 @@ public class TokenService {
         log.info("request Token: {} ", refreshToken);
         log.info("find Token: {}", findToken);
 
-        LoginDto loginDto = customUserDetailsService.loadUserByMemberId(memberId);
+        LoginDto loginDto = customUserDetailsService.getLoginDto(memberId);
 
 
         String newAccessToken = jwtUtil.createAccessToken(loginDto);

@@ -2,6 +2,8 @@ package sheetplus.checkings.config.security;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,13 +40,19 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new CustomUserDetails(dto);
     }
+    public UserDetails loadUserById(Long memberId) throws UsernameNotFoundException {
+        LoginDto dto = ((CustomUserDetailsService) AopContext.currentProxy()).getLoginDto(memberId);
 
-    // 편의 메소드
-    public LoginDto loadUserByMemberId(Long memberId) {
+        return new CustomUserDetails(dto);
+    }
+
+    @Cacheable(value = "member", key = "#memberId", cacheManager = "cacheManager", unless = "#result == null")
+    public LoginDto getLoginDto(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
-        return LoginDto.builder()
+        return LoginDto
+                .builder()
                 .id(member.getId())
                 .email(member.getUniversityEmail())
                 .memberType(member.getMemberType())

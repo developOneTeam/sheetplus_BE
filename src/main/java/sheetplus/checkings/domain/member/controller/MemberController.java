@@ -14,6 +14,7 @@ import sheetplus.checkings.business.auth.service.AuthService;
 import sheetplus.checkings.business.email.service.EmailService;
 import sheetplus.checkings.domain.member.service.MemberCRUDService;
 import sheetplus.checkings.business.page.superadmin.service.SuperAdminService;
+import sheetplus.checkings.util.JwtUtil;
 
 import java.net.URI;
 
@@ -26,6 +27,7 @@ public class MemberController implements MemberControllerSpec{
     private final AuthService authService;
     private final SuperAdminService superAdminService;
     private final EmailService emailService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("public/member/v1")
     public ResponseEntity<TokenDto> createMember(
@@ -62,7 +64,7 @@ public class MemberController implements MemberControllerSpec{
 
         MemberUpdateRequestDto updatedMember
                 = memberCRUDService.updateMember(memberUpdateRequestDto,
-                token.replace("Bearer ", ""));
+                jwtUtil.getMemberId(token.replace("Bearer ", "")));
 
         return ResponseEntity.ok(updatedMember);
     }
@@ -71,7 +73,8 @@ public class MemberController implements MemberControllerSpec{
     @DeleteMapping("private/member/v1")
     public ResponseEntity<Void> deleteMember(
             @RequestHeader(value = "Authorization", required = false) String token){
-        memberCRUDService.deleteMember(token.replace("Bearer ", ""));
+        memberCRUDService.deleteMember(
+                jwtUtil.getMemberId(token.replace("Bearer ", "")));
         return ResponseEntity.noContent().build();
     }
 

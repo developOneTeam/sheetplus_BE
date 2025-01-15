@@ -57,6 +57,7 @@ dependencies {
 	implementation 'org.springframework.retry:spring-retry:2.0.11'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 
 	// Firebase Admin SDK
 	implementation 'com.google.firebase:firebase-admin:9.4.2'

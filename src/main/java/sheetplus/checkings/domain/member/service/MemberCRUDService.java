@@ -1,6 +1,7 @@
 package sheetplus.checkings.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberRequestDto;
@@ -11,7 +12,6 @@ import sheetplus.checkings.domain.member.repository.MemberRepository;
 import sheetplus.checkings.domain.temporarymember.repository.TemporaryMemberRepository;
 import sheetplus.checkings.domain.token.service.TokenService;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
-import sheetplus.checkings.util.JwtUtil;
 
 import static sheetplus.checkings.exception.error.ApiError.*;
 
@@ -23,7 +23,6 @@ public class MemberCRUDService {
     private final MemberRepository memberRepository;
     private final AdminAcceptConsRepository adminAcceptConsRepository;
     private final TemporaryMemberRepository temporaryMemberRepository;
-    private final JwtUtil jwtUtil;
     private final TokenService tokenService;
 
     @Transactional
@@ -51,8 +50,8 @@ public class MemberCRUDService {
     }
 
     @Transactional
-    public MemberUpdateRequestDto updateMember(MemberUpdateRequestDto memberUpdateRequestDto, String token){
-        Member member = memberRepository.findById(jwtUtil.getMemberId(token))
+    public MemberUpdateRequestDto updateMember(MemberUpdateRequestDto memberUpdateRequestDto, Long id){
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
 
         member.memberInfoUpdate(memberUpdateRequestDto);
@@ -65,9 +64,9 @@ public class MemberCRUDService {
     }
 
 
+    @CacheEvict(value = "member", key = "#id")
     @Transactional
-    public void deleteMember(String token){
-        Long id = jwtUtil.getMemberId(token);
+    public void deleteMember(Long id){
         if(memberRepository.existsById(id)){
             memberRepository.deleteById(id);
             tokenService.deleteRefreshToken(id);
