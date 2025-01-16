@@ -56,9 +56,9 @@ public class Member {
     @Builder.Default
     private List<ParticipateContest> memberParticipateContestStates = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "draw_id")
-    private Draw memberDraw;
+    @OneToMany(mappedBy = "drawMember", cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<Draw> memberDraw = new ArrayList<>();
 
     @OneToMany(mappedBy = "favoriteMember", orphanRemoval = true)
     @Builder.Default
@@ -69,13 +69,6 @@ public class Member {
         this.name = memberUpdateRequestDto.getName();
         this.major = memberUpdateRequestDto.getMajor();
         this.studentId = memberUpdateRequestDto.getStudentId();
-    }
-
-    public void setDrawMember(Draw draw){
-        this.memberDraw = draw;
-        if(memberDraw.getDrawMember() != this){
-            memberDraw.setMemberDraw(this);
-        }
     }
 
 }

@@ -24,13 +24,15 @@ public class Draw {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Setter
     private ReceiveCons receiveCons;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contest_id")
     private Contest drawContest;
 
-    @OneToOne(mappedBy = "memberDraw", cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member drawMember;
 
     public void setContestDraw(Contest contestDraw) {
@@ -40,14 +42,8 @@ public class Draw {
 
     public void setMemberDraw(Member member){
         this.drawMember = member;
-        if(drawMember.getMemberDraw() != this){
-            member.setDrawMember(this);
-        }
-
+        drawMember.getMemberDraw().add(this);
     }
 
-    public void setReceiveCons(ReceiveCons receiveCons) {
-        this.receiveCons = receiveCons;
-    }
 
 }
