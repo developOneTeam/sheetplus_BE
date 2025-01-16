@@ -9,6 +9,7 @@ import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeCreateResponseDto
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeRequestDto;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeResponseDto;
 import sheetplus.checkings.business.qrcode.service.QrcodeService;
+import sheetplus.checkings.util.JwtUtil;
 
 
 @RestController
@@ -18,6 +19,7 @@ import sheetplus.checkings.business.qrcode.service.QrcodeService;
 public class QrController implements QrControllerSpec{
 
     private final QrcodeService qrcodeService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/student/qrcode/v1")
     public ResponseEntity<QrcodeResponseDto> qrcodeCheck(
@@ -27,7 +29,7 @@ public class QrController implements QrControllerSpec{
 
         QrcodeResponseDto qrcodeResponseDto
                 = qrcodeService.createParticipation(
-                        token.replace("Bearer","").trim(), qrcodeRequestDto);
+                jwtUtil.getMemberId(token.replace("Bearer","").trim()), qrcodeRequestDto);
 
         return ResponseEntity.ok(qrcodeResponseDto);
     }
