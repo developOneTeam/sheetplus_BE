@@ -23,9 +23,9 @@ public class QrCodeDto {
         @Schema(description = "암호화된 Event PK",
                 example = "987secure6543Id", type = "String")
         private String secureId;
-        @Schema(description = "만료시간을 암호화하는 Key",
-                example = "987secure6543Key", type = "String")
-        private String secretKey;
+        @Schema(description = "암호화된 만료시간",
+                example = "987secure6543expireTime", type = "String")
+        private String secretExpireTime;
     }
 
     @Getter
