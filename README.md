@@ -16,8 +16,7 @@
 ![백엔드아키텍처](https://github.com/user-attachments/assets/8d3fe22f-0357-478c-8181-4130e73adeed)
 
 ## DB ERD
-![새로운ERD](https://github.com/user-attachments/assets/a9d6c562-afd9-4ac4-85f4-cb7d57240e98)
-
+![새로운 ERD](https://github.com/user-attachments/assets/cf6332a4-50a2-4de0-a867-42ab9e140fb7)
 
 ## 주요기능
 ### 요약
