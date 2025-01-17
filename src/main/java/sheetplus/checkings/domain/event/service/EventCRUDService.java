@@ -6,7 +6,8 @@ import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.admin.controller.AdminPageController;
-import sheetplus.checkings.domain.event.controller.EventController;
+import sheetplus.checkings.domain.entry.controller.EntryController;
+import sheetplus.checkings.domain.entry.dto.EntryDto;
 import sheetplus.checkings.domain.event.dto.EventDto.EventRequestDto;
 import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
@@ -64,17 +65,6 @@ public class EventCRUDService {
 
         Long eventId = eventRepository.save(event).getId();
 
-        List<Link> lists = new ArrayList<>();
-        lists.add(linkTo(methodOn(AdminPageController.class)
-                .readAdminHome(contestId))
-                .withRel("관리자 페이지 Home"));
-        lists.add(linkTo(methodOn(EventController.class)
-                .updateEvent(eventId, EventRequestDto.builder().build()))
-                .withRel("이벤트 UPDATE"));
-        lists.add(linkTo(methodOn(EventController.class)
-                .deleteEvent(eventId))
-                .withRel("이벤트 DELETE"));
-
         return EventResponseDto.builder()
                 .id(eventId)
                 .name(event.getName())
@@ -87,7 +77,7 @@ public class EventCRUDService {
                 .categoryMessage(event.getEventCategory().getMessage())
                 .eventTypeMessage(event.getEventType().getMessage())
                 .conditionMessage(event.getEventCondition().getMessage())
-                .link(lists)
+                .link(hateoasLinks(contest.getId()))
                 .build();
     }
 
@@ -117,17 +107,6 @@ public class EventCRUDService {
 
         event.updateEvent(eventRequestDto);
 
-        List<Link> lists = new ArrayList<>();
-        lists.add(linkTo(methodOn(AdminPageController.class)
-                .readAdminHome(contest.getId()))
-                .withRel("관리자 페이지 Home"));
-        lists.add(linkTo(methodOn(EventController.class)
-                .createEvent(contest.getId(), EventRequestDto.builder().build()))
-                .withRel("이벤트 CREATE"));
-        lists.add(linkTo(methodOn(EventController.class)
-                .deleteEvent(eventId))
-                .withRel("이벤트 DELETE"));
-
         return EventResponseDto.builder()
                 .id(event.getId())
                 .name(event.getName())
@@ -140,7 +119,7 @@ public class EventCRUDService {
                 .categoryMessage(event.getEventCategory().getMessage())
                 .eventTypeMessage(event.getEventType().getMessage())
                 .conditionMessage(event.getEventCondition().getMessage())
-                .link(lists)
+                .link(hateoasLinks(contest.getId()))
                 .build();
     }
 
@@ -152,6 +131,25 @@ public class EventCRUDService {
             throw new ApiException(EVENT_NOT_FOUND);
         }
 
+    }
+
+    private List<Link> hateoasLinks(Long contestId) {
+        List<Link> lists = new ArrayList<>();
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHomeStampStats(contestId)).withRel("관리자 Home 페이지 - 스탬프 통계"));
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHomeContestStats(contestId)).withRel("관리자 Home 페이지 - Contest 통계"));
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHomeEventStats(contestId)).withRel("관리자 Home 페이지 - Event 통계"));
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHomeEntryStats(contestId)).withRel("관리자 Home 페이지 - Entry 통계"));
+        lists.add(linkTo(methodOn(EntryController.class)
+                .createEntry(contestId, EntryDto.EntryRequestDto.builder().build()))
+                .withRel("작품 CREATE"));
+        lists.add(linkTo(methodOn(EntryController.class)
+                .deleteEntry(contestId))
+                .withRel("작품 DELETE"));
+        return lists;
     }
 
 
