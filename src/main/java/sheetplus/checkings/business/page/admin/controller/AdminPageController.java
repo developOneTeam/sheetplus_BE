@@ -6,8 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminHomeResponseDto;
-import sheetplus.checkings.business.page.admin.dto.AdminPageDto.ContestInfoWithCounts;
+import sheetplus.checkings.business.page.admin.dto.AdminPageDto.*;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.business.page.admin.service.AdminPageService;
 
@@ -21,12 +20,38 @@ public class AdminPageController implements AdminPageControllerSpec{
 
     private final AdminPageService adminPageService;
 
-    @GetMapping("/contests/{contest}/home/v1")
-    public ResponseEntity<AdminHomeResponseDto> readAdminHome(
+    @GetMapping("/contests/{contest}/homes/stamp-stat/v2")
+    public ResponseEntity<AdminStampStatsDto> readAdminHomeStampStats(
             @PathVariable(name = "contest") Long contestId){
-        AdminHomeResponseDto adminHomeResponseDto =
-                adminPageService.adminHomeRead(contestId);
-        return ResponseEntity.ok(adminHomeResponseDto);
+
+        return ResponseEntity
+                .ok(adminPageService
+                        .stampStats(contestId));
+    }
+
+    @GetMapping("/contests/{contest}/homes/contest-stat/v2")
+    public ResponseEntity<AdminContestStatsDto> readAdminHomeContestStats(
+            @PathVariable(name = "contest") Long contestId){
+        return ResponseEntity
+                .ok(adminPageService
+                        .contestStatsDto(contestId));
+    }
+
+    @GetMapping("/contests/{contest}/homes/event-stat/v2")
+    public ResponseEntity<AdminEventStatsDto> readAdminHomeEventStats(
+            @PathVariable(name = "contest") Long contestId){
+
+        return ResponseEntity
+                .ok(adminPageService
+                        .eventStatsDto(contestId));
+    }
+
+    @GetMapping("/contests/{contest}/homes/entry-stat/v2")
+    public ResponseEntity<AdminEntryStatsDto> readAdminHomeEntryStats(
+            @PathVariable(name = "contest") Long contestId){
+        return ResponseEntity
+                .ok(adminPageService
+                        .entryStatsDto(contestId));
     }
 
 

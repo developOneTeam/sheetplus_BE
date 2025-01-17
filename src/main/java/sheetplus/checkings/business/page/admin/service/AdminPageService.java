@@ -6,8 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminHomeResponseDto;
-import sheetplus.checkings.business.page.admin.dto.AdminPageDto.ContestInfoWithCounts;
+import sheetplus.checkings.business.page.admin.dto.AdminPageDto.*;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.event.entity.Event;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryInfoResponseDto;
@@ -37,14 +36,25 @@ public class AdminPageService {
     private final EntryRepository entryRepository;
 
     @Transactional(readOnly = true)
-    public AdminHomeResponseDto adminHomeRead(Long contestId){
+    public AdminStampStatsDto stampStats(Long contestId){
         Contest contest = contestRepository
                 .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
+
         long memberCounts = memberRepository.count();
         ParticipateInfoResponseDto participateInfoResponseDto = participateContestStateRepository
                 .participateContestCounts(contest.getId());
-        List<Event> events = contest.getEvents();
 
+        return AdminStampStatsDto.builder()
+                .memberCounts(memberCounts)
+                .participateInfoResponseDto(participateInfoResponseDto)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public AdminContestStatsDto contestStatsDto(Long contestId){
+        Contest contest = contestRepository
+                .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
+        List<Event> events = contest.getEvents();
 
         long remain = 0;
         long finish = 0;
@@ -79,45 +89,33 @@ public class AdminPageService {
                 }
             }
         }
-
-
         EntryInfoResponseDto entryInfoResponseDto = entryRepository.entryInfoCounts();
-        List<EntryResponseDto> entryList = contest.getEntries().stream()
-                .map(p -> EntryResponseDto.builder()
-                        .id(p.getId())
-                        .entryType(p.getEntryType().getMessage())
-                        .professorName(p.getProfessorName())
-                        .major(p.getMajor())
-                        .teamNumber(p.getTeamNumber())
-                        .leaderName(p.getLeaderName())
-                        .location(p.getLocation())
-                        .building(p.getBuilding())
-                        .name(p.getName())
-                        .build())
-                .toList();
 
-
-        return AdminHomeResponseDto.builder()
-                .memberCounts(Long.toString(memberCounts))
-                .completeEventMemberCounts(participateInfoResponseDto
-                        .getCompleteEventMemberCounts().toString())
-                .moreThanOneCounts(participateInfoResponseDto
-                        .getMoreThanOneCounts().toString())
-                .moreThanFiveCounts(participateInfoResponseDto
-                        .getMoreThanFiveCounts().toString())
+        return AdminContestStatsDto.builder()
                 .contestName(contest.getName())
                 .contestStart(contest.getStartDate())
                 .contestEnd(contest.getEndDate())
                 .locationName(building.isEmpty() ? null : building.getFirst())
-                .locationCounts(String.valueOf(building.size()))
-                .remainEvents(String.valueOf(remain))
-                .finishEvents(String.valueOf(finish))
-                .notTodayEvents(String.valueOf((events.size() - (remain + finish))))
-                .entryMajorCounts(entryInfoResponseDto.getMajorCounts().toString())
-                .entryCounts(entryInfoResponseDto.getTotalCounts().toString())
-                .entryPreliminaryCounts(entryInfoResponseDto.getPreliminaryCounts().toString())
-                .entryFinalCounts(entryInfoResponseDto.getFinalCounts().toString())
-                .eventCounts(String.valueOf(events.size()))
+                .locationCounts(building.size())
+                .remainEvents(remain)
+                .finishEvents(finish)
+                .notTodayEvents((events.size() - (remain + finish)))
+                .entryMajorCounts(entryInfoResponseDto.getMajorCounts())
+                .entryCounts(entryInfoResponseDto.getTotalCounts())
+                .entryPreliminaryCounts(entryInfoResponseDto.getPreliminaryCounts())
+                .entryFinalCounts(entryInfoResponseDto.getFinalCounts())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public AdminEventStatsDto eventStatsDto(Long contestId){
+        Contest contest = contestRepository
+                .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
+        List<Event> events = contest.getEvents();
+
+        return AdminEventStatsDto
+                .builder()
+                .eventCounts(events.size())
                 .allEvents(events.stream()
                         .map(p -> EventResponseDto.builder()
                                 .id(p.getId())
@@ -133,6 +131,30 @@ public class AdminPageService {
                                 .categoryMessage(p.getEventCategory().getMessage())
                                 .build())
                         .toList())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public AdminEntryStatsDto entryStatsDto(Long contestId){
+        Contest contest = contestRepository
+                .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
+
+        List<EntryResponseDto> entryList = contest.getEntries().stream()
+                .map(p -> EntryResponseDto.builder()
+                        .id(p.getId())
+                        .entryType(p.getEntryType().getMessage())
+                        .professorName(p.getProfessorName())
+                        .major(p.getMajor())
+                        .teamNumber(p.getTeamNumber())
+                        .leaderName(p.getLeaderName())
+                        .location(p.getLocation())
+                        .building(p.getBuilding())
+                        .name(p.getName())
+                        .build())
+                .toList();
+
+        return AdminEntryStatsDto
+                .builder()
                 .entryPageable(entryList)
                 .build();
     }
