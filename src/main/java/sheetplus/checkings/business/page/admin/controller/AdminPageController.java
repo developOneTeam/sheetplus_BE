@@ -1,6 +1,8 @@
 package sheetplus.checkings.business.page.admin.controller;
 
 
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -39,28 +41,42 @@ public class AdminPageController implements AdminPageControllerSpec{
 
     @GetMapping("/contests/{contest}/homes/event-stat/v2")
     public ResponseEntity<AdminEventStatsDto> readAdminHomeEventStats(
-            @PathVariable(name = "contest") Long contestId){
+            @PathVariable(name = "contest") Long contestId,
+            @NotNull(message = "offset의 null값은 허용하지 않습니다.")
+            @Parameter(description = "조회할 페이지 번호", example = "1")
+            Integer offset,
+            @NotNull(message = "limit의 null값은 허용하지 않습니다.")
+            @Parameter(description = "페이지당 조회할 데이터 개수", example = "1")
+            Integer limit){
 
         return ResponseEntity
                 .ok(adminPageService
-                        .eventStatsDto(contestId));
+                        .eventStatsDto(contestId, PageRequest.of(offset-1, limit)));
     }
 
     @GetMapping("/contests/{contest}/homes/entry-stat/v2")
     public ResponseEntity<AdminEntryStatsDto> readAdminHomeEntryStats(
-            @PathVariable(name = "contest") Long contestId){
+            @PathVariable(name = "contest") Long contestId,
+            @NotNull(message = "offset의 null값은 허용하지 않습니다.")
+            @RequestParam(value = "offset")
+            Integer offset,
+            @NotNull(message = "limit의 null값은 허용하지 않습니다.")
+            @RequestParam(value = "limit")
+            Integer limit){
         return ResponseEntity
                 .ok(adminPageService
-                        .entryStatsDto(contestId));
+                        .entryStatsDto(contestId, PageRequest.of(offset, limit)));
     }
 
 
     @GetMapping("/contests/{contest}/draw/members/v1")
     public ResponseEntity<List<MemberInfoResponseDto>> readDrawMemberList(
             @PathVariable("contest") Long contestId,
-            @RequestParam(value = "offset", required = false)
+            @NotNull(message = "offset의 null값은 허용하지 않습니다.")
+            @RequestParam(value = "offset")
             Integer offset,
-            @RequestParam(value = "limit", required = false)
+            @NotNull(message = "limit의 null값은 허용하지 않습니다.")
+            @RequestParam(value = "limit")
             Integer limit
     ){
         return ResponseEntity.ok(adminPageService
