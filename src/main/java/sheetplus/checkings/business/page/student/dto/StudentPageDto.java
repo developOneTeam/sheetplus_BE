@@ -28,19 +28,26 @@ public class StudentPageDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
-    @Schema(description = "Student Home Page Response Dto", contentMediaType = "application/json")
-    public static class StudentHomePageResponseDto{
+    @Schema(description = "Member 및 Stamp정보 응답 Dto", contentMediaType = "application/json")
+    public static class StudentHomeMemberAndStampInfoResponseDto{
         @Schema(description = "학생 이름",
                 example = "studentMember", type = "String")
         private String studentName;
         @Schema(description = "학생 전공",
                 example = "studentMajor", type = "String")
         private String studentMajor;
-        @Schema(description = "전체 이벤트 수",
-                example = "100", type = "String")
-        private String eventCounts;
+        @Schema(description = "이벤트 참여 수",
+                example = "2", type = "String")
+        private Integer participateEventCounts;
+    }
 
-        @Schema(description = "모든 이벤트들", implementation = EventExceptLinksResponseDto.class)
+    @Getter
+    @Builder
+    @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "Student Home Page Response Dto", contentMediaType = "application/json")
+    public static class StudentHomeEventsInfoResponseDto{
+
+        @Schema(description = "오늘 참여할 수 있는 이벤트들", implementation = EventExceptLinksResponseDto.class)
         private List<EventExceptLinksResponseDto> events;
     }
 
