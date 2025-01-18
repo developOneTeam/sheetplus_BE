@@ -46,7 +46,8 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
                                         .otherwise(0L).as("moreThanFiveCounts")
                         )
                 ).from(participateContest)
-                .fetchOne();
+                .where(participateContest.contestParticipateContestState.id.eq(id))
+                .fetchFirst();
     }
 
 
