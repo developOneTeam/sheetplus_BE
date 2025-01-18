@@ -93,9 +93,9 @@ public class EntryCRUDService {
         lists.add(linkTo(methodOn(AdminPageController.class)
                 .readAdminHomeContestStats(contestId)).withRel("관리자 Home 페이지 - Contest 통계"));
         lists.add(linkTo(methodOn(AdminPageController.class)
-                .readAdminHomeEventStats(contestId)).withRel("관리자 Home 페이지 - Event 통계"));
+                .readAdminHomeEventStats(contestId,1,1)).withRel("관리자 Home 페이지 - Event 통계"));
         lists.add(linkTo(methodOn(AdminPageController.class)
-                .readAdminHomeEntryStats(contestId)).withRel("관리자 Home 페이지 - Entry 통계"));
+                .readAdminHomeEntryStats(contestId, 1,1)).withRel("관리자 Home 페이지 - Entry 통계"));
         lists.add(linkTo(methodOn(EntryController.class)
                 .createEntry(contestId, EntryRequestDto.builder().build()))
                 .withRel("작품 CREATE"));
