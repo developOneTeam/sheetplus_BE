@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryExceptLinksResponseDto;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryResponseDto;
 import sheetplus.checkings.domain.enums.ContestCons;
+import sheetplus.checkings.domain.event.dto.EventDto.EventExceptLinksResponseDto;
 import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.participatecontest.dto.ParticipateContestDto.ParticipateInfoResponseDto;
 
@@ -203,8 +205,8 @@ public class AdminPageDto {
         @Schema(description = "전체 이벤트 수",
                 example = "100", type = "String")
         private Integer eventCounts;
-        @Schema(description = "모든 이벤트들", implementation = EventResponseDto.class)
-        private List<EventResponseDto> allEvents;
+        @Schema(description = "모든 이벤트들", implementation = EventExceptLinksResponseDto.class)
+        private List<EventExceptLinksResponseDto> allEvents;
     }
 
     @Getter
@@ -214,7 +216,7 @@ public class AdminPageDto {
     public static class AdminEntryStatsDto{
 
         @Schema(description = "모든 출품작들", implementation = EntryResponseDto.class)
-        private List<EntryResponseDto> entryPageable;
+        private List<EntryExceptLinksResponseDto> entryPageable;
     }
 
 }
