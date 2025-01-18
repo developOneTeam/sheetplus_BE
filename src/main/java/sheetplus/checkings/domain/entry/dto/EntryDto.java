@@ -135,5 +135,48 @@ public class EntryDto {
 
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "HATEOAS를 제외한 Entry 응답 Dto", contentMediaType = "application/json")
+    public static class EntryExceptLinksResponseDto{
+        @Schema(description = "Entry PK",
+                example = "1", type = "Long")
+        private Long id;
+
+        @Schema(description = "Entry 이름",
+                example = "name", type = "String")
+        private String name;
+
+        @Schema(description = "Entry 위치",
+                example = "location", type = "String")
+        private String location;
+
+        @Schema(description = "Entry 건물",
+                example = "building", type = "String")
+        private String building;
+
+        @Schema(description = "Entry 팀번호",
+                example = "12", type = "String")
+        private String teamNumber;
+
+        @Schema(description = "Entry 학과",
+                example = "major", type = "String")
+        private String major;
+
+        @Schema(description = "Entry 지도교수명",
+                example = "professor", type = "String")
+        private String professorName;
+
+        @Schema(description = "Entry 리더명",
+                example = "leaderName", type = "String")
+        private String leaderName;
+
+        @Schema(description = "Entry 유형 메세지",
+                example = "본선작", type = "String")
+        private String entryType;
+
+    }
+
 
 }

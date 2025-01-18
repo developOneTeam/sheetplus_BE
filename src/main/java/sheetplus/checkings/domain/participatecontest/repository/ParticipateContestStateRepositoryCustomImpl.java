@@ -1,5 +1,7 @@
 package sheetplus.checkings.domain.participatecontest.repository;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,22 +33,21 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
 
     @Override
     public ParticipateInfoResponseDto participateContestCounts(Long id) {
-        Long countOne = queryFactory
-                .select(participateContest.count())
-                .from(participateContest)
-                .where(participateContest.eventsCount.goe(1))
-                .fetchOne();
-        Long countAll = queryFactory
-                .select(participateContest.count())
-                .from(participateContest)
-                .where(participateContest.eventsCount.goe(5))
-                .fetchOne();
-
-        return ParticipateInfoResponseDto.builder()
-                .completeEventMemberCounts(countAll)
-                .moreThanOneCounts(countOne)
-                .moreThanFiveCounts(countAll)
-                .build();
+        return queryFactory
+                .select(
+                        Projections.constructor(ParticipateInfoResponseDto.class,
+                                new CaseBuilder()
+                                        .when(participateContest.eventsCount.goe(1))
+                                        .then(participateContest.count())
+                                        .otherwise(0L).as("moreThanOneCounts"),
+                                new CaseBuilder()
+                                        .when(participateContest.eventsCount.goe(5))
+                                        .then(participateContest.count())
+                                        .otherwise(0L).as("moreThanFiveCounts")
+                        )
+                ).from(participateContest)
+                .where(participateContest.contestParticipateContestState.id.eq(id))
+                .fetchFirst();
     }
 
 

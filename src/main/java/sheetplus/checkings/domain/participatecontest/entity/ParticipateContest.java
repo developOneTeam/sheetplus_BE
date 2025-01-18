@@ -10,10 +10,13 @@ import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.enums.EventCategory;
 import sheetplus.checkings.domain.enums.MeritType;
 import sheetplus.checkings.domain.enums.ReceiveCons;
+import sheetplus.checkings.domain.event.entity.Event;
 import sheetplus.checkings.domain.member.entity.Member;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -66,6 +69,10 @@ public class ParticipateContest {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private Set<EventCategory> eventTypeSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "eventParticipateContest")
+    @Builder.Default
+    private List<Event> eventParticipateContest = new ArrayList<>();
 
 
     public void setMemberParticipateContestStates(Member member){

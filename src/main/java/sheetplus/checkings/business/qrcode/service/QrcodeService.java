@@ -55,25 +55,30 @@ public class QrcodeService {
      * 9. participateContest이 null이 아닌 경우, Event의 타입 포함여부 확인 - 포함된 경우 EVENT_ALREADY_PARTICIPATE 예외 발생
      * 10. 8번 이후, 참여대회 수, 참여 대회 타입 저장 - 변경감지로 DB UPDATE 반영
      *
-     * @param token - 사용자 정보
+     * @param memberId - 멤버 PK
      * @param qrcodeRequestDto - 암호화된 Event 엔티티 PK
      * @return QrcodeResponseDto - 학생명/학번/이름명 Return
      */
     @Transactional
-    public QrcodeResponseDto createParticipation(String token, QrcodeRequestDto qrcodeRequestDto){
+    public QrcodeResponseDto createParticipation(Long memberId, QrcodeRequestDto qrcodeRequestDto){
         // 1번 로직
         Long id = cryptoUtil.decrypt(qrcodeRequestDto.getSecureCode());
 
         // 2번 로직
         LocalDateTime expireTime = cryptoUtil
                 .decryptExpireTime(qrcodeRequestDto.getSecureExpireTime());
+        if(expireTime == null){
+            throw new ApiException(QR_EXPIRED_TIME_NOT_VALID);
+        }
+
         if(LocalDateTime.now().isBefore(expireTime.plusSeconds(3))
-        && LocalDateTime.now().isAfter(expireTime.minusMinutes(16))){
+        && LocalDateTime.now().isAfter(expireTime.minusSeconds(16))){
+            log.info("만료시간: {}", expireTime);
             throw new ApiException(EXPIRED_QR_CODES);
         }
 
         // 3번 로직
-        Member member = memberRepository.findById(jwtUtil.getMemberId(token))
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ApiException(EVENT_NOT_FOUND));
@@ -109,10 +114,13 @@ public class QrcodeService {
         }
         List<Link> links = new ArrayList<>();
         links.add(linkTo(methodOn(StudentPageController.class)
-                .readStudentHome(token, contest.getId()))
+                .readStudentHomeMemberWithStampInfo("인증 토큰", contest.getId()))
                 .withRel("학생 Home 페이지"));
         links.add(linkTo(methodOn(StudentPageController.class)
-                .readStudentActivities(token, contest.getId()))
+                .readStudentHomeEventInfo(contest.getId(), "인문과학관"))
+                .withRel("학생 Home 페이지"));
+        links.add(linkTo(methodOn(StudentPageController.class)
+                .readStudentActivities("인증 토큰", contest.getId()))
                 .withRel("학생 활동 페이지"));
 
         return QrcodeResponseDto.builder()
@@ -142,6 +150,7 @@ public class QrcodeService {
                 .build();
         participateContest.setContestParticipateContestStates(contest);
         participateContest.setMemberParticipateContestStates(member);
+        event.setEventParticipateContest(participateContest);
         participateContest.getEventTypeSet().add(event.getEventCategory());
         participateContestStateRepository.save(participateContest);
 
@@ -179,13 +188,13 @@ public class QrcodeService {
 
         // 3번 로직
         String secureId = cryptoUtil.encrypt(id);
-        String secretKey = cryptoUtil.getSECRET_KEY();
+        String secretExpireTime = cryptoUtil.encryptExpireTime(LocalDateTime.now());
 
 
         // 4번 로직
         return QrcodeCreateResponseDto.builder()
                 .secureId(secureId)
-                .secretKey(secretKey)
+                .secretExpireTime(secretExpireTime)
                 .build();
     }
 

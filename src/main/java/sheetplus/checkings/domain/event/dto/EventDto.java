@@ -140,4 +140,57 @@ public class EventDto {
 
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "HATEOAS를 제외한 Event 응답 DTO", contentMediaType = "application/json")
+    public static class EventExceptLinksResponseDto{
+        @Schema(description = "Event PK",
+                example = "1", type = "Long")
+        private Long id;
+
+        @Schema(description = "Event 이름",
+                example = "eventName", type = "String")
+        private String name;
+
+        @Schema(description = "이벤트 시작시간",
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime startTime;
+
+        @Schema(description = "이벤트 종료시간",
+                example = "2025-01-04 12:09:01", type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime endTime;
+
+        @Schema(description = "이벤트 장소",
+                example = "location", type = "String")
+        private String location;
+
+        @Schema(description = "이벤트 건물",
+                example = "building", type = "String")
+        private String building;
+
+        @Schema(description = "이벤트 발표자",
+                example = "speakerName", type = "String")
+        private String speakerName;
+
+        @Schema(description = "Member 전공",
+                example = "major", type = "String")
+        private String major;
+
+        @Schema(description = "이벤트 진행상태",
+                example = "EVENT_PROGRESS", type = "String")
+        private String conditionMessage;
+
+        @Schema(description = "이벤트 유형 - 스탬프지급 여부",
+                example = "1", type = "CHECKING")
+        private String eventTypeMessage;
+
+        @Schema(description = "이벤트 분류 - 이벤트 그룹",
+                example = "EVENT_ONE", type = "String")
+        private String categoryMessage;
+
+    }
+
 }

@@ -14,8 +14,9 @@ import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -26,7 +27,6 @@ public class CryptoUtil {
     @Value("${crypto.algorithm}")
     private String ALGORITHM;
 
-    @Getter
     @Value("${crypto.secret-key}")
     private String SECRET_KEY;
 
@@ -36,28 +36,32 @@ public class CryptoUtil {
             byte[] combined = Base64.getDecoder().decode(URLDecoder.decode(id, StandardCharsets.UTF_8));
             byte[] iv = Arrays.copyOfRange(combined, 0, 16);
             byte[] encryptedBytes = Arrays.copyOfRange(combined, 16, combined.length);
-            log.info("IV length: {}", iv.length);
-            log.info("Encrypted bytes length: {}", encryptedBytes.length);
 
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             IvParameterSpec ivSpec = new IvParameterSpec(iv);
             SecretKeySpec secretKey = generateKey();
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
-            log.info("Cipher initialized for CBC decryption");
 
             byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-            log.info("Decryption successful, decrypted bytes length: {}", decryptedBytes.length);
 
             return ByteBuffer.wrap(decryptedBytes).getLong();
         } catch (Exception e){
-            log.error("Decryption failed: ", e);
+            log.error("복호화 실패: ", e);
         }
         return null;
     }
 
     public LocalDateTime decryptExpireTime(String expireTime){
-        return LocalDateTime
-                .ofEpochSecond(decrypt(expireTime) / 1000, 0, ZoneOffset.UTC);
+        return Instant.ofEpochMilli(decrypt(expireTime))
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    public String encryptExpireTime(LocalDateTime expireTime){
+        return encrypt(expireTime
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli());
     }
 
 

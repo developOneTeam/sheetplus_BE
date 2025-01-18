@@ -48,15 +48,7 @@ public class EntryCRUDService {
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         entry.setContestEntry(contest);
         Long entryId = entryRepository.save(entry).getId();
-        List<Link> lists = new ArrayList<>();
-        lists.add(linkTo(methodOn(AdminPageController.class)
-                .readAdminHome(contestId)).withRel("관리자 Home 페이지"));
-        lists.add(linkTo(methodOn(EntryController.class)
-                .updateEntry(entryId, EntryRequestDto.builder().build()))
-                .withRel("작품 UPDATE"));
-        lists.add(linkTo(methodOn(EntryController.class)
-                .deleteEntry(entryId))
-                .withRel("작품 DELETE"));
+
 
 
         return EntryResponseDto.builder()
@@ -69,7 +61,7 @@ public class EntryCRUDService {
                 .leaderName(entry.getLeaderName())
                 .major(entry.getMajor())
                 .entryType(entry.getEntryType().getMessage())
-                .link(lists)
+                .link(hateoasLinks(contestId))
                 .build();
     }
 
@@ -79,18 +71,6 @@ public class EntryCRUDService {
                 .orElseThrow(() -> new ApiException(ENTRY_NOT_FOUND));;
         entry.updateEntry(entryRequestDto);
         Long contestId = entry.getEntryContest().getId();
-
-        List<Link> lists = new ArrayList<>();
-        lists.add(linkTo(methodOn(AdminPageController.class)
-                .readAdminHome(contestId))
-                .withRel("관리자 Home 페이지"));
-        lists.add(linkTo(methodOn(EntryController.class)
-                .createEntry(contestId, EntryRequestDto.builder().build()))
-                .withRel("작품 CREATE"));
-        lists.add(linkTo(methodOn(EntryController.class)
-                .deleteEntry(contestId))
-                .withRel("작품 DELETE"));
-
 
         return EntryResponseDto.builder()
                 .id(id)
@@ -102,8 +82,27 @@ public class EntryCRUDService {
                 .professorName(entry.getProfessorName())
                 .leaderName(entry.getLeaderName())
                 .entryType(entry.getEntryType().getMessage())
-                .link(lists)
+                .link(hateoasLinks(contestId))
                 .build();
+    }
+
+    private List<Link> hateoasLinks(Long contestId) {
+        List<Link> lists = new ArrayList<>();
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHomeStampStats(contestId)).withRel("관리자 Home 페이지 - 스탬프 통계"));
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHomeContestStats(contestId)).withRel("관리자 Home 페이지 - Contest 통계"));
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHomeEventStats(contestId,1,1)).withRel("관리자 Home 페이지 - Event 통계"));
+        lists.add(linkTo(methodOn(AdminPageController.class)
+                .readAdminHomeEntryStats(contestId, 1,1)).withRel("관리자 Home 페이지 - Entry 통계"));
+        lists.add(linkTo(methodOn(EntryController.class)
+                .createEntry(contestId, EntryRequestDto.builder().build()))
+                .withRel("작품 CREATE"));
+        lists.add(linkTo(methodOn(EntryController.class)
+                .deleteEntry(contestId))
+                .withRel("작품 DELETE"));
+        return lists;
     }
 
     @Transactional
