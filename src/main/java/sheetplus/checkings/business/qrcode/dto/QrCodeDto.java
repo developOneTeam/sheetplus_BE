@@ -18,6 +18,17 @@ public class QrCodeDto {
     @Getter
     @Builder
     @NoArgsConstructor @AllArgsConstructor
+    @Schema(description = "QRcode Create Request Dto", contentMediaType = "application/json")
+    public static class QrcodeCreateRequestDto{
+        @NotNull(message = "null은 허용하지 않습니다.")
+        @Schema(description = "Event PK",
+                example = "1", type = "String")
+        private Long eventId;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor @AllArgsConstructor
     @Schema(description = "QRcode Create Response Dto", contentMediaType = "application/json")
     public static class QrcodeCreateResponseDto{
         @Schema(description = "암호화된 Event PK",
@@ -66,6 +77,8 @@ public class QrCodeDto {
         @Schema(description = "HATEOAS 링크 - ref와 href만 제공")
         private List<Link> link;
     }
+
+
 
 
 }

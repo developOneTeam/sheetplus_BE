@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeCreateRequestDto;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeCreateResponseDto;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeRequestDto;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeResponseDto;
@@ -34,15 +35,15 @@ public class QrController implements QrControllerSpec{
         return ResponseEntity.ok(qrcodeResponseDto);
     }
 
-    @GetMapping("/admin/events/{eventId}/qrcode/v1")
+    @PostMapping("/admin/events/qrcode/v1")
     public ResponseEntity<QrcodeCreateResponseDto> createQrcode(
             @RequestHeader(value = "Authorization", required = false)
             String token,
-            @PathVariable(name = "eventId") Long id){
+            @RequestBody @Validated QrcodeCreateRequestDto qrcodeCreateRequestDto){
 
         QrcodeCreateResponseDto qrcodeCreateResponseDto
                 = qrcodeService.createQrcode(
-                        token.replace("Bearer","").trim(), id);
+                        token.replace("Bearer","").trim(), qrcodeCreateRequestDto.getEventId());
 
         return ResponseEntity.ok()
                 .header("Cache-Control", "no-store")
