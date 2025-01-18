@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
 import sheetplus.checkings.business.page.common.service.CommonPageService;
-import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventExceptLinksResponseDto;
+
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class CommonPageController implements CommonPageControllerSpec {
     }
 
     @GetMapping("public/contests/{contest}/schedules/v1")
-    public ResponseEntity<List<EventResponseDto>> readStudentSchedule(
+    public ResponseEntity<List<EventExceptLinksResponseDto>> readStudentSchedule(
             @PathVariable("contest")
             Long contestId,
             @RequestParam(value = "offset", required = false)

@@ -9,9 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
-import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventExceptLinksResponseDto;
+import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
 import java.util.List;
+
+import static sheetplus.checkings.exception.error.ApiError.CONTEST_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -22,19 +25,15 @@ public class CommonPageService {
 
     @Transactional(readOnly = true)
     public List<ContestInfoResponseDto> readContestInfo(Pageable pageable){
-        List<Contest> contests = contestRepository.findAll(pageable).getContent();
-
-        return contests.stream()
-                .map(a -> ContestInfoResponseDto.builder()
-                        .contestId(a.getId())
-                        .contestName(a.getName())
-                        .build())
-                .toList();
+        return contestRepository.findAllContestInfo(pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<EventResponseDto> readStudentSchedulePage(Long contestId, Pageable pageable){
-        return contestRepository.findTodayEvents(contestId, pageable);
+    public List<EventExceptLinksResponseDto> readStudentSchedulePage(Long contestId, Pageable pageable){
+        Contest contest = contestRepository.findById(contestId)
+                .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
+
+        return contestRepository.findTodayEvents(contest.getId(), pageable);
     }
 
 }
