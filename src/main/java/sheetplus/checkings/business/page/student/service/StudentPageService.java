@@ -6,18 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.student.dto.StudentPageDto.ActivitiesResponseDto;
-import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentHomePageResponseDto;
+import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentHomeEventsInfoResponseDto;
+import sheetplus.checkings.business.page.student.dto.StudentPageDto.StudentHomeMemberAndStampInfoResponseDto;
 import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.participatecontest.entity.ParticipateContest;
-import sheetplus.checkings.domain.enums.EventCategory;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
 import sheetplus.checkings.domain.participatecontest.repository.ParticipateContestStateRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 import sheetplus.checkings.util.JwtUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static sheetplus.checkings.exception.error.ApiError.MEMBER_NOT_FOUND;
 import static sheetplus.checkings.exception.error.ApiError.PARTICIPATE_NOT_FOUND;
@@ -34,19 +31,25 @@ public class StudentPageService {
 
 
     @Transactional(readOnly = true)
-    public StudentHomePageResponseDto readStudentHomePage(String token, Long contestId) {
+    public StudentHomeMemberAndStampInfoResponseDto readStudentHomeMemberAndStampInfo(String token, Long contestId) {
         Member member = memberRepository.findByIdAndWithGraph(jwtUtil.getMemberId(token))
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
         Integer count = participateContestStateRepository
                 .participateCounts(member.getId(), contestId);
 
 
-        return StudentHomePageResponseDto.builder()
+        return StudentHomeMemberAndStampInfoResponseDto.builder()
                 .studentName(member.getName())
                 .studentMajor(member.getMajor())
-                .eventCounts(Integer.toString(count))
+                .participateEventCounts(count == null ? 0 : count)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public StudentHomeEventsInfoResponseDto readStudentHomeEventInfo(Long contestId, String building) {
+        return StudentHomeEventsInfoResponseDto.builder()
                 .events(contestRepository.findNowAfterEvents(
-                        contestId))
+                        contestId, building))
                 .build();
     }
 
