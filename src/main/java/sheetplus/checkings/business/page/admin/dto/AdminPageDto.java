@@ -11,7 +11,6 @@ import sheetplus.checkings.domain.entry.dto.EntryDto.EntryExceptLinksResponseDto
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryResponseDto;
 import sheetplus.checkings.domain.enums.ContestCons;
 import sheetplus.checkings.domain.event.dto.EventDto.EventExceptLinksResponseDto;
-import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.participatecontest.dto.ParticipateContestDto.ParticipateInfoResponseDto;
 
 import java.time.LocalDateTime;
