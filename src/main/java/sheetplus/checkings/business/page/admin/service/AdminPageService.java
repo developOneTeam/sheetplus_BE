@@ -8,10 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.*;
 import sheetplus.checkings.domain.contest.entity.Contest;
+import sheetplus.checkings.domain.entry.dto.EntryDto.EntryExceptLinksResponseDto;
 import sheetplus.checkings.domain.event.entity.Event;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryInfoResponseDto;
-import sheetplus.checkings.domain.entry.dto.EntryDto.EntryResponseDto;
-import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.entry.repository.EntryRepository;
@@ -108,54 +107,22 @@ public class AdminPageService {
     }
 
     @Transactional(readOnly = true)
-    public AdminEventStatsDto eventStatsDto(Long contestId){
+    public AdminEventStatsDto eventStatsDto(Long contestId, Pageable pageable){
         Contest contest = contestRepository
                 .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
         List<Event> events = contest.getEvents();
 
-        return AdminEventStatsDto
-                .builder()
-                .eventCounts(events.size())
-                .allEvents(events.stream()
-                        .map(p -> EventResponseDto.builder()
-                                .id(p.getId())
-                                .name(p.getName())
-                                .startTime(p.getStartTime())
-                                .endTime(p.getEndTime())
-                                .location(p.getLocation())
-                                .building(p.getBuilding())
-                                .speakerName(p.getSpeakerName())
-                                .major(p.getMajor())
-                                .conditionMessage(p.getEventCondition().getMessage())
-                                .eventTypeMessage(p.getEventType().getMessage())
-                                .categoryMessage(p.getEventCategory().getMessage())
-                                .build())
-                        .toList())
-                .build();
+        return contestRepository.findContestWithEvents(contestId, pageable);
     }
 
     @Transactional(readOnly = true)
-    public AdminEntryStatsDto entryStatsDto(Long contestId){
-        Contest contest = contestRepository
-                .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
-
-        List<EntryResponseDto> entryList = contest.getEntries().stream()
-                .map(p -> EntryResponseDto.builder()
-                        .id(p.getId())
-                        .entryType(p.getEntryType().getMessage())
-                        .professorName(p.getProfessorName())
-                        .major(p.getMajor())
-                        .teamNumber(p.getTeamNumber())
-                        .leaderName(p.getLeaderName())
-                        .location(p.getLocation())
-                        .building(p.getBuilding())
-                        .name(p.getName())
-                        .build())
-                .toList();
+    public AdminEntryStatsDto entryStatsDto(Long contestId, Pageable pageable){
+        List<EntryExceptLinksResponseDto> entryPageable =
+                contestRepository.findContestWithEntries(contestId, pageable);
 
         return AdminEntryStatsDto
                 .builder()
-                .entryPageable(entryList)
+                .entryPageable(entryPageable)
                 .build();
     }
 
