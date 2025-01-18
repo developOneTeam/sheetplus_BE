@@ -114,7 +114,10 @@ public class QrcodeService {
         }
         List<Link> links = new ArrayList<>();
         links.add(linkTo(methodOn(StudentPageController.class)
-                .readStudentHome("인증 토큰", contest.getId()))
+                .readStudentHomeMemberWithStampInfo("인증 토큰", contest.getId()))
+                .withRel("학생 Home 페이지"));
+        links.add(linkTo(methodOn(StudentPageController.class)
+                .readStudentHomeEventInfo(contest.getId(), "인문과학관"))
                 .withRel("학생 Home 페이지"));
         links.add(linkTo(methodOn(StudentPageController.class)
                 .readStudentActivities("인증 토큰", contest.getId()))
