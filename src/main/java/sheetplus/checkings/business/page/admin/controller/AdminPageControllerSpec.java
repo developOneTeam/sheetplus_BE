@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.*;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
@@ -104,7 +105,13 @@ public interface AdminPageControllerSpec {
     })
     ResponseEntity<AdminEventStatsDto> readAdminHomeEventStats(
             @Parameter(description = "Contest PK", example = "1")
-            Long contestId);
+            Long contestId,
+            @NotNull(message = "offset의 null값은 허용하지 않습니다.")
+            @Parameter(description = "조회할 페이지 번호", example = "1")
+            Integer offset,
+            @NotNull(message = "limit의 null값은 허용하지 않습니다.")
+            @Parameter(description = "페이지당 조회할 데이터 개수", example = "1")
+            Integer limit);
 
     @Operation(summary = "어드민 홈페이지 - Entry 통계", description = "어드민 홈페이지 - Entry 통계 데이터를 조회합니다")
     @ApiResponses(value = {
@@ -133,7 +140,13 @@ public interface AdminPageControllerSpec {
     })
     ResponseEntity<AdminEntryStatsDto> readAdminHomeEntryStats(
             @Parameter(description = "Contest PK", example = "1")
-            Long contestId);
+            Long contestId,
+            @NotNull(message = "offset의 null값은 허용하지 않습니다.")
+            @Parameter(description = "조회할 페이지 번호", example = "1")
+            Integer offset,
+            @NotNull(message = "limit의 null값은 허용하지 않습니다.")
+            @Parameter(description = "페이지당 조회할 데이터 개수", example = "1")
+            Integer limit);
 
     @Operation(summary = "Admin-Page Draw-Member", description = "Admin-Page Draw-Member 조회 화면")
     @ApiResponses(value = {
@@ -163,8 +176,10 @@ public interface AdminPageControllerSpec {
     ResponseEntity<List<MemberInfoResponseDto>> readDrawMemberList(
             @Parameter(description = "Contest PK", example = "1")
             Long contestId,
+            @NotNull(message = "offset의 null값은 허용하지 않습니다.")
             @Parameter(description = "조회할 페이지 번호", example = "1")
             Integer offset,
+            @NotNull(message = "limit의 null값은 허용하지 않습니다.")
             @Parameter(description = "페이지당 조회할 데이터 개수", example = "1")
             Integer limit);
 
