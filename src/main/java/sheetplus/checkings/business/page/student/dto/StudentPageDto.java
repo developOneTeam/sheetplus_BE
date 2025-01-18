@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventExceptLinksResponseDto;
 import sheetplus.checkings.domain.favorite.dto.FavoriteDto.FavoriteResponseDto;
 
 import java.util.List;
@@ -40,8 +40,8 @@ public class StudentPageDto {
                 example = "100", type = "String")
         private String eventCounts;
 
-        @Schema(description = "모든 이벤트들", implementation = EventResponseDto.class)
-        private List<EventResponseDto> events;
+        @Schema(description = "모든 이벤트들", implementation = EventExceptLinksResponseDto.class)
+        private List<EventExceptLinksResponseDto> events;
     }
 
     @Getter
@@ -49,11 +49,11 @@ public class StudentPageDto {
     @NoArgsConstructor @AllArgsConstructor
     @Schema(description = "Activities Response Dto", contentMediaType = "application/json")
     public static class ActivitiesResponseDto{
-        @Schema(description = "전체 이벤트 수",
-                example = "100", type = "String")
-        private String eventCounts;
-        @Schema(description = "모든 이벤트들", implementation = EventResponseDto.class)
-        private List<EventResponseDto> events;
+        @Schema(description = "참여한 이벤트 수",
+                example = "3", type = "String")
+        private Integer eventCounts;
+        @Schema(description = "참여한 대회들", implementation = EventExceptLinksResponseDto.class)
+        private List<EventExceptLinksResponseDto> events;
     }
 
 
