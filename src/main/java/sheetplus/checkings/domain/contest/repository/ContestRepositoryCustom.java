@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ContestRepositoryCustom {
 
-    List<EventExceptLinksResponseDto> findNowAfterEvents(Long contestId);
+    List<EventExceptLinksResponseDto> findNowAfterEvents(Long contestId, String building);
     List<EventExceptLinksResponseDto> findTodayEvents(Long contestId, Pageable pageable);
     List<EventExceptLinksResponseDto> findParticipateEvents(Long ParticipateId);
     List<ContestInfoWithCounts> findContestInfoWithCounts();

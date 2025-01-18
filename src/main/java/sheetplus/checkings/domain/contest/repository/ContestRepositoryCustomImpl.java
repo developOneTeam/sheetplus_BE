@@ -88,7 +88,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
     }
 
     @Override
-    public List<EventExceptLinksResponseDto> findNowAfterEvents(Long contestId) {
+    public List<EventExceptLinksResponseDto> findNowAfterEvents(Long contestId, String building) {
         return queryFactory.select(
                         Projections.constructor(
                                 EventExceptLinksResponseDto.class,
@@ -130,13 +130,14 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                                         .otherwise("unknown Category")
                                         .as("categoryMessage")
                         )
-                )
+                ).distinct()
                 .from(event)
                 .innerJoin(contest)
                 .on(event.eventContest.id.eq(contestId))
                 .where(event.eventContest.id.eq(contestId)
                         .and(event.startTime.after(LocalDateTime.now())
                                 .or(event.endTime.after(LocalDateTime.now())))
+                        .and(event.building.eq(building))
                 )
                 .fetch();
     }
@@ -185,6 +186,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                                                 .as("categoryMessage")
                                 )
                         )
+                .distinct()
                 .from(event)
                 .innerJoin(participateContest)
                 .on(event.eventParticipateContest.id.eq(participateId))
@@ -227,6 +229,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                                 .otherwise("Unknown Type")
                                 .as("entryType")
                 ))
+                .distinct()
                 .from(contest)
                 .innerJoin(entry)
                 .on(entry.entryContest.id.eq(contestId))
