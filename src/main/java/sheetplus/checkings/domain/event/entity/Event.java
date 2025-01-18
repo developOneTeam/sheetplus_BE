@@ -9,6 +9,7 @@ import sheetplus.checkings.domain.enums.ContestCons;
 import sheetplus.checkings.domain.enums.EventCategory;
 import sheetplus.checkings.domain.enums.EventType;
 import sheetplus.checkings.domain.eventSending.entity.EventSending;
+import sheetplus.checkings.domain.participatecontest.entity.ParticipateContest;
 
 
 import java.time.LocalDateTime;
@@ -71,10 +72,18 @@ public class Event {
     @Builder.Default
     private List<EventSending> eventSending = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "participateContest_id")
+    private ParticipateContest eventParticipateContest;
 
     public void setContestEvent(Contest contest){
         this.eventContest = contest;
         eventContest.getEvents().add(this);
+    }
+
+    public void setEventParticipateContest(ParticipateContest participateContest){
+        this.eventParticipateContest = participateContest;
+        participateContest.getEventParticipateContest().add(this);
     }
 
 
