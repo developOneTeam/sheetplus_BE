@@ -65,7 +65,7 @@ public class AdminPageController implements AdminPageControllerSpec{
             Integer limit){
         return ResponseEntity
                 .ok(adminPageService
-                        .entryStatsDto(contestId, PageRequest.of(offset, limit)));
+                        .entryStatsDto(contestId, PageRequest.of(offset-1, limit)));
     }
 
 
