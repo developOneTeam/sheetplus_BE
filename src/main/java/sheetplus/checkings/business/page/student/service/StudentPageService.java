@@ -37,7 +37,8 @@ public class StudentPageService {
     public StudentHomePageResponseDto readStudentHomePage(String token, Long contestId) {
         Member member = memberRepository.findByIdAndWithGraph(jwtUtil.getMemberId(token))
                 .orElseThrow(() -> new ApiException(MEMBER_NOT_FOUND));
-        Integer count = participateContestStateRepository.participateCounts(member.getId(), contestId);
+        Integer count = participateContestStateRepository
+                .participateCounts(member.getId(), contestId);
 
 
         return StudentHomePageResponseDto.builder()
@@ -60,13 +61,10 @@ public class StudentPageService {
                         jwtUtil.getMemberId(token),contestId)
                 .orElseThrow(() -> new ApiException(PARTICIPATE_NOT_FOUND));
 
-        List<EventCategory> events = new ArrayList<>(participateContest.getEventTypeSet());
-
-
         return ActivitiesResponseDto
                 .builder()
-                .eventCounts(participateContest.getEventsCount().toString())
-                .events(contestRepository.findParticipateEvents(contestId, events))
+                .eventCounts(participateContest.getEventsCount())
+                .events(contestRepository.findParticipateEvents(participateContest.getId()))
                 .build();
     }
 
