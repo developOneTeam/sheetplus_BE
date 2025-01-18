@@ -24,7 +24,7 @@ public interface AdminPageControllerSpec {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Admin-Page Home화면의 스탬프 통계 데이터 조회를 성공했습니다",
                     content = @Content(array = @ArraySchema(schema =
-                    @Schema(implementation = AdminHomeResponseDto.class)),
+                    @Schema(implementation = AdminStampStatsDto.class)),
                             mediaType = "application/json"),
                     headers = {@Header(name = "etag",
                             description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
@@ -53,7 +53,7 @@ public interface AdminPageControllerSpec {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "어드민 페이지 Home화면의 Contest 통계 데이터 조회를 성공했습니다",
                     content = @Content(array = @ArraySchema(schema =
-                    @Schema(implementation = AdminHomeResponseDto.class)),
+                    @Schema(implementation = AdminContestStatsDto.class)),
                             mediaType = "application/json"),
                     headers = {@Header(name = "etag",
                             description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
@@ -82,7 +82,7 @@ public interface AdminPageControllerSpec {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "어드민 페이지 Home화면의 Event 통계 데이터 조회를 성공했습니다",
                     content = @Content(array = @ArraySchema(schema =
-                    @Schema(implementation = AdminHomeResponseDto.class)),
+                    @Schema(implementation = AdminEventStatsDto.class)),
                             mediaType = "application/json"),
                     headers = {@Header(name = "etag",
                             description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
@@ -117,7 +117,7 @@ public interface AdminPageControllerSpec {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "어드민 홈페이지 - Entry 통계 데이터 조회를 성공했습니다",
                     content = @Content(array = @ArraySchema(schema =
-                    @Schema(implementation = AdminHomeResponseDto.class)),
+                    @Schema(implementation = AdminEntryStatsDto.class)),
                             mediaType = "application/json"),
                     headers = {@Header(name = "etag",
                             description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
