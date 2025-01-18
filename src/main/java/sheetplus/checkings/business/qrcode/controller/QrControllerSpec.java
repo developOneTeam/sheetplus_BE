@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeCreateRequestDto;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeCreateResponseDto;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeRequestDto;
 import sheetplus.checkings.business.qrcode.dto.QrCodeDto.QrcodeResponseDto;
@@ -68,6 +69,6 @@ public interface QrControllerSpec{
             @Parameter(description = "액세스 토큰입니다 Header에 포함해서 요청하세요", hidden = true)
             String token,
             @Parameter(description = "Event PK", example = "1")
-            Long id);
+            QrcodeCreateRequestDto qrcodeCreateRequestDto);
 
 }
