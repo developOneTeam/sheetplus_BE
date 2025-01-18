@@ -147,6 +147,7 @@ public class QrcodeService {
                 .build();
         participateContest.setContestParticipateContestStates(contest);
         participateContest.setMemberParticipateContestStates(member);
+        event.setEventParticipateContest(participateContest);
         participateContest.getEventTypeSet().add(event.getEventCategory());
         participateContestStateRepository.save(participateContest);
 
