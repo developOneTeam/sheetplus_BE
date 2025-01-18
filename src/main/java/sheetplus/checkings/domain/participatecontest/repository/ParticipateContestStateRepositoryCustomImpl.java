@@ -35,7 +35,7 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
     public ParticipateInfoResponseDto participateContestCounts(Long id) {
         return queryFactory
                 .select(
-                        Projections.fields(ParticipateInfoResponseDto.class,
+                        Projections.constructor(ParticipateInfoResponseDto.class,
                                 new CaseBuilder()
                                         .when(participateContest.eventsCount.goe(1))
                                         .then(participateContest.count())
