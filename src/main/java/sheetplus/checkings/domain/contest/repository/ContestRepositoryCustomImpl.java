@@ -1,12 +1,12 @@
 package sheetplus.checkings.domain.contest.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminEventStatsDto;
-import sheetplus.checkings.business.page.admin.dto.AdminPageDto.ContestInfoWithCounts;
+import sheetplus.checkings.business.page.admin.dto.AdminPageDto.*;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryExceptLinksResponseDto;
 import sheetplus.checkings.domain.enums.ContestCons;
 import sheetplus.checkings.domain.enums.EntryType;
@@ -219,6 +219,102 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .builder()
                 .eventCounts(events.size())
                 .allEvents(events)
+                .build();
+    }
+
+    @Override
+    public AdminContestStatsDto findContestStats(Long contestId) {
+        AdminContestStatsAboutContestDto contestInfos = queryFactory
+                .select(
+                        Projections.constructor(
+                                AdminContestStatsAboutContestDto.class,
+                                contest.name.coalesce("Contest 이름 데이터가 없습니다.").as("contestName"),
+                                contest.startDate.coalesce(LocalDateTime.now()).as("contestStart"),
+                                contest.endDate.coalesce(LocalDateTime.now()).as("contestEnd")
+                        )
+                )
+                .from(contest)
+                .where(contest.id.eq(contestId))
+                .fetchFirst();
+
+        AdminContestStatsAboutEventDto adminContestStatsAboutEventDto
+                = queryFactory.select(
+                        Projections.constructor(
+                                AdminContestStatsAboutEventDto.class,
+                                event.location.min().coalesce("장소 없음").as("locationName"),
+                                event.location.countDistinct().coalesce(0L).as("locationCounts"),
+                                JPAExpressions
+                                        .select(event.countDistinct().coalesce(0L).as("remainEvents"))
+                                        .from(event).innerJoin(contest)
+                                        .on(event.eventContest.id.eq(contestId))
+                                        .where(event.startTime.dayOfMonth().loe(LocalDateTime.now().getDayOfMonth())
+                                                .and(event.endTime.dayOfMonth().goe(LocalDateTime.now().getDayOfMonth()))
+                                                .and(event.startTime.before(LocalDateTime.now())
+                                                        .and(event.endTime.after(LocalDateTime.now())))
+                                        )
+                                ,
+                                JPAExpressions
+                                        .select(event.countDistinct().coalesce(0L).as("finishEvents"))
+                                        .from(event).innerJoin(contest)
+                                        .on(event.eventContest.id.eq(contestId))
+                                        .where(event.endTime.before(LocalDateTime.now())
+                                                .and(event.startTime.dayOfMonth().loe(LocalDateTime.now().getDayOfMonth()))
+                                                .and(event.endTime.dayOfMonth().goe(LocalDateTime.now().getDayOfMonth()))
+                                        )
+                                ,
+                                JPAExpressions
+                                        .select(event.countDistinct().coalesce(0L).as("notTodayEvents"))
+                                        .from(event).innerJoin(contest)
+                                        .on(event.eventContest.id.eq(contestId))
+                                        .where(event.startTime.dayOfMonth().gt(LocalDateTime.now().getDayOfMonth())
+                                                .or(event.endTime.dayOfMonth().lt(LocalDateTime.now().getDayOfMonth()))
+                                        )
+                        )
+                )
+                .from(contest)
+                .innerJoin(event)
+                .on(event.eventContest.id.eq(contestId))
+                .fetchFirst();
+
+        AdminContestStatsAboutEntryDto adminContestStatsAboutEntryDto =
+                queryFactory.select(
+                        Projections.constructor(
+                                AdminContestStatsAboutEntryDto.class,
+                                entry.major.countDistinct().coalesce(0L)
+                                        .as("entryMajorCounts"),
+                                entry.countDistinct().coalesce(0L).as("entryCounts"),
+                                JPAExpressions
+                                        .select(entry.countDistinct().coalesce(0L).as("entryPreliminaryCounts"))
+                                        .from(entry).innerJoin(contest)
+                                        .on(entry.entryContest.id.eq(contestId))
+                                        .where(entry.entryType.eq(EntryType.PRELIMINARY))
+                                ,
+                                JPAExpressions
+                                        .select(entry.countDistinct().coalesce(0L).as("entryFinalCounts"))
+                                        .from(entry).innerJoin(contest)
+                                        .on(entry.entryContest.id.eq(contestId))
+                                        .where(entry.entryType.eq(EntryType.FINALS))
+
+                            )
+                        ).from(contest)
+                        .innerJoin(entry)
+                        .on(entry.entryContest.id.eq(contestId))
+                        .where(contest.id.eq(contestId))
+                        .fetchFirst();
+
+        return AdminContestStatsDto.builder()
+                .contestName(contestInfos.getContestName())
+                .contestStart(contestInfos.getContestStart())
+                .contestEnd(contestInfos.getContestEnd())
+                .locationName(adminContestStatsAboutEventDto.getLocationName())
+                .locationCounts(adminContestStatsAboutEventDto.getLocationCounts())
+                .remainEvents(adminContestStatsAboutEventDto.getRemainEvents())
+                .finishEvents(adminContestStatsAboutEventDto.getFinishEvents())
+                .notTodayEvents(adminContestStatsAboutEventDto.getNotTodayEvents())
+                .entryMajorCounts(adminContestStatsAboutEntryDto.getEntryMajorCounts())
+                .entryCounts(adminContestStatsAboutEntryDto.getEntryCounts())
+                .entryPreliminaryCounts(adminContestStatsAboutEntryDto.getEntryPreliminaryCounts())
+                .entryFinalCounts(adminContestStatsAboutEntryDto.getEntryFinalCounts())
                 .build();
     }
 }

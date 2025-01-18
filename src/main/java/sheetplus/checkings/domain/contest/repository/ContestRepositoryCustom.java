@@ -1,6 +1,7 @@
 package sheetplus.checkings.domain.contest.repository;
 
 import org.springframework.data.domain.Pageable;
+import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminContestStatsDto;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.AdminEventStatsDto;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.ContestInfoWithCounts;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryExceptLinksResponseDto;
@@ -17,4 +18,5 @@ public interface ContestRepositoryCustom {
     List<ContestInfoWithCounts> findContestInfoWithCounts();
     List<EntryExceptLinksResponseDto> findContestWithEntries(Long contestId, Pageable pageable);
     AdminEventStatsDto findContestWithEvents(Long contestId, Pageable pageable);
+    AdminContestStatsDto findContestStats(Long contestId);
 }
