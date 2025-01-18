@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
-import sheetplus.checkings.domain.event.dto.EventDto.EventResponseDto;
+import sheetplus.checkings.domain.event.dto.EventDto.EventExceptLinksResponseDto;
 import sheetplus.checkings.exception.error.ErrorResponse;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public interface CommonPageControllerSpec {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "일정 페이지 데이터 조회 성공",
                     content = @Content(array = @ArraySchema(schema =
-                    @Schema(implementation = EventResponseDto.class)),
+                    @Schema(implementation = EventExceptLinksResponseDto.class)),
                             mediaType = "application/json"),
                     headers = {@Header(name = "etag",
                             description = "\"etagexample\"과 같은 형태로 제공됩니다. If-None-Match속성에 Etag를 추가해서 요청하세요"),
@@ -60,7 +60,7 @@ public interface CommonPageControllerSpec {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                             mediaType = "application/json"))
     })
-    ResponseEntity<List<EventResponseDto>> readStudentSchedule(
+    ResponseEntity<List<EventExceptLinksResponseDto>> readStudentSchedule(
             @Parameter(description = "Contest PK", example = "1")
             Long contestId,
             @Parameter(description = "조회할 페이지 번호", example = "1")
