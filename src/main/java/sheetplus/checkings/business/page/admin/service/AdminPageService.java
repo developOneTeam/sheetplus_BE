@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.*;
 import sheetplus.checkings.domain.contest.entity.Contest;
+import sheetplus.checkings.domain.contest.repository.ContestQueryRepository;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryExceptLinksResponseDto;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
 import sheetplus.checkings.domain.participatecontest.dto.ParticipateContestDto.ParticipateInfoResponseDto;
-import sheetplus.checkings.domain.participatecontest.repository.ParticipateContestStateRepository;
+import sheetplus.checkings.domain.participatecontest.repository.ParticipateContestStateQueryRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
 import java.util.*;
@@ -27,7 +28,8 @@ public class AdminPageService {
 
     private final ContestRepository contestRepository;
     private final MemberRepository memberRepository;
-    private final ParticipateContestStateRepository participateContestStateRepository;
+    private final ParticipateContestStateQueryRepository participateContestStateQueryRepository;
+    private final ContestQueryRepository contestRepositoryCustom;
 
     @Transactional(readOnly = true)
     public AdminStampStatsDto stampStats(Long contestId){
@@ -35,7 +37,7 @@ public class AdminPageService {
                 .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
 
         long memberCounts = memberRepository.count();
-        ParticipateInfoResponseDto participateInfoResponseDto = participateContestStateRepository
+        ParticipateInfoResponseDto participateInfoResponseDto = participateContestStateQueryRepository
                 .participateContestCounts(contest.getId());
 
         return AdminStampStatsDto.builder()
@@ -48,7 +50,7 @@ public class AdminPageService {
     public AdminContestStatsDto contestStatsDto(Long contestId){
         Contest contest = contestRepository
                 .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
-        return contestRepository.findContestStats(contest.getId());
+        return contestRepositoryCustom.findContestStats(contest.getId());
     }
 
     @Transactional(readOnly = true)
@@ -56,7 +58,7 @@ public class AdminPageService {
         Contest contest = contestRepository
                 .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
 
-        return contestRepository.findContestWithEvents(contest.getId(), pageable);
+        return contestRepositoryCustom.findContestWithEvents(contest.getId(), pageable);
     }
 
     @Transactional(readOnly = true)
@@ -65,7 +67,7 @@ public class AdminPageService {
                 .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
 
         List<EntryExceptLinksResponseDto> entryPageable =
-                contestRepository.findContestWithEntries(contest.getId(), pageable);
+                contestRepositoryCustom.findContestWithEntries(contest.getId(), pageable);
 
         return AdminEntryStatsDto
                 .builder()
@@ -78,14 +80,14 @@ public class AdminPageService {
     public List<MemberInfoResponseDto> readDrawMemberList(Long contestId, Pageable pageable){
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
-        return participateContestStateRepository
+        return participateContestStateQueryRepository
                 .drawMemberInfoRead(contest.getId(), pageable);
     }
 
 
     @Transactional(readOnly = true)
     public List<ContestInfoWithCounts> readContestInfoWithCounts(){
-        return contestRepository.findContestInfoWithCounts();
+        return contestRepositoryCustom.findContestInfoWithCounts();
     }
 
 
@@ -98,7 +100,7 @@ public class AdminPageService {
     public List<MemberInfoResponseDto> readPrizeMemberList(Long contestId){
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
-        return participateContestStateRepository
+        return participateContestStateQueryRepository
                 .participateMemberInfoRead(contest.getId());
     }
 
