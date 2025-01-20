@@ -296,17 +296,6 @@ public class ContestQueryRepository {
                 .otherwise("Unknown Condition")
                 .as("conditionMessage");
     }
-    private static StringExpression getContestCondition() {
-        return contest.cons
-                .when(ContestCons.EVENT_PROGRESS)
-                .then(ContestCons.EVENT_PROGRESS.getMessage())
-                .when(ContestCons.EVENT_BEFORE)
-                .then(ContestCons.EVENT_BEFORE.getMessage())
-                .when(ContestCons.EVENT_FINISH)
-                .then(ContestCons.EVENT_FINISH.getMessage())
-                .otherwise("Unknown Condition")
-                .as("conditionMessage");
-    }
 
     private static StringExpression getEventTypeMessage() {
         return event.eventType

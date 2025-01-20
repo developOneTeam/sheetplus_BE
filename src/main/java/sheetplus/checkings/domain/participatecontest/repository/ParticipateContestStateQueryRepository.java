@@ -34,22 +34,32 @@ public class ParticipateContestStateQueryRepository{
     }
 
     
-    public ParticipateInfoResponseDto participateContestCounts(Long id) {
-        return queryFactory
+    public ParticipateInfoResponseDto participateContestCounts(Long contestId) {
+        ParticipateInfoResponseDto participateInfoResponseDto = queryFactory
                 .select(
-                        Projections.constructor(ParticipateInfoResponseDto.class,
+                        Projections.fields(
+                                ParticipateInfoResponseDto.class,
                                 new CaseBuilder()
                                         .when(participateContest.eventsCount.goe(1))
-                                        .then(participateContest.count())
-                                        .otherwise(0L).as("moreThanOneCounts"),
+                                        .then(participateContest.count().coalesce(0L))
+                                        .otherwise(0L).coalesce(0L).as("moreThanOneCounts"),
                                 new CaseBuilder()
                                         .when(participateContest.eventsCount.goe(5))
-                                        .then(participateContest.count())
-                                        .otherwise(0L).as("moreThanFiveCounts")
+                                        .then(participateContest.count().coalesce(0L))
+                                        .otherwise(0L).coalesce(0L).as("moreThanFiveCounts")
                         )
                 ).from(participateContest)
-                .where(participateContest.contestParticipateContestState.id.eq(id))
+                .where(participateContest.contestParticipateContestState.id.eq(contestId))
+                .groupBy(participateContest.eventsCount)
                 .fetchFirst();
+        if(participateInfoResponseDto == null){
+            participateInfoResponseDto = ParticipateInfoResponseDto.builder()
+                    .moreThanOneCounts(0L)
+                    .moreThanFiveCounts(0L)
+                    .build();
+        }
+
+        return participateInfoResponseDto;
     }
 
 
