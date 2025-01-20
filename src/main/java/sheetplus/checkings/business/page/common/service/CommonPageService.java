@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
 import sheetplus.checkings.domain.contest.entity.Contest;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
+import sheetplus.checkings.domain.contest.repository.ContestQueryRepository;
 import sheetplus.checkings.domain.event.dto.EventDto.EventExceptLinksResponseDto;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
@@ -22,10 +23,12 @@ import static sheetplus.checkings.exception.error.ApiError.CONTEST_NOT_FOUND;
 public class CommonPageService {
 
     private final ContestRepository contestRepository;
+    private final ContestQueryRepository contestRepositoryCustom;
+
 
     @Transactional(readOnly = true)
     public List<ContestInfoResponseDto> readContestInfo(Pageable pageable){
-        return contestRepository.findAllContestInfo(pageable);
+        return contestRepositoryCustom.findAllContestInfo(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -33,7 +36,7 @@ public class CommonPageService {
         Contest contest = contestRepository.findById(contestId)
                 .orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
 
-        return contestRepository.findTodayEvents(contest.getId(), pageable);
+        return contestRepositoryCustom.findTodayEvents(contest.getId(), pageable);
     }
 
 }

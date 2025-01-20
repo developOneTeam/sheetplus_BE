@@ -14,7 +14,7 @@ import sheetplus.checkings.domain.member.entity.Member;
 import sheetplus.checkings.domain.contest.repository.ContestRepository;
 import sheetplus.checkings.domain.draw.repository.DrawRepository;
 import sheetplus.checkings.domain.member.repository.MemberRepository;
-import sheetplus.checkings.domain.participatecontest.repository.ParticipateContestStateRepository;
+import sheetplus.checkings.domain.participatecontest.repository.ParticipateContestStateQueryRepository;
 import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
 import static sheetplus.checkings.exception.error.ApiError.*;
@@ -25,7 +25,7 @@ import static sheetplus.checkings.exception.error.ApiError.*;
 @Slf4j
 public class DrawEventService {
 
-    private final ParticipateContestStateRepository participateContestStateRepository;
+    private final ParticipateContestStateQueryRepository participateContestStateQueryRepository;
     private final DrawRepository drawRepository;
     private final MemberRepository memberRepository;
     private final ContestRepository contestRepository;
@@ -39,7 +39,7 @@ public class DrawEventService {
      */
     @Transactional
     public void participateStateRefresh(int condition){
-        participateContestStateRepository.targetUpdates(condition);
+        participateContestStateQueryRepository.targetUpdates(condition);
     }
 
     @Transactional
