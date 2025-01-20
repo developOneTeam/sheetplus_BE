@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 import sheetplus.checkings.domain.member.dto.MemberDto.MemberInfoResponseDto;
 import sheetplus.checkings.domain.participatecontest.dto.ParticipateContestDto.ParticipateInfoResponseDto;
 import sheetplus.checkings.domain.member.entity.Member;
@@ -18,11 +19,12 @@ import static sheetplus.checkings.domain.participatecontest.entity.QParticipateC
 
 @RequiredArgsConstructor
 @Slf4j
-public class ParticipateContestStateRepositoryCustomImpl implements ParticipateContestStateRepositoryCustom{
+@Repository
+public class ParticipateContestStateQueryRepository{
 
     private final JPAQueryFactory queryFactory;
 
-    @Override
+    
     public void targetUpdates(int condition) {
         queryFactory
                 .update(participateContest)
@@ -31,7 +33,7 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
                 .execute();
     }
 
-    @Override
+    
     public ParticipateInfoResponseDto participateContestCounts(Long id) {
         return queryFactory
                 .select(
@@ -57,7 +59,7 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
      * 사유: 증정 기능 비즈니스 정책상 사용 보류
      *
      */
-    @Override
+    
     public List<MemberInfoResponseDto> participateMemberInfoRead(Long contestId) {
         List<Member> members = queryFactory
                 .select(participateContest.memberParticipateContestState)
@@ -79,7 +81,7 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
                 .toList();
     }
 
-    @Override
+    
     public List<MemberInfoResponseDto> drawMemberInfoRead(Long contestId, Pageable pageable) {
         List<Member> members = queryFactory
                 .select(participateContest.memberParticipateContestState)
@@ -103,7 +105,7 @@ public class ParticipateContestStateRepositoryCustomImpl implements ParticipateC
                 .toList();
     }
 
-    @Override
+    
     public Integer participateCounts(Long memberId, Long contestId) {
         return queryFactory.select(participateContest.eventsCount)
                 .from(participateContest)

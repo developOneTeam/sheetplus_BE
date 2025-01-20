@@ -5,6 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import sheetplus.checkings.domain.contest.entity.Contest;
 
-public interface ContestRepository extends JpaRepository<Contest, Long>, ContestRepositoryCustom {
+public interface ContestRepository extends JpaRepository<Contest, Long>{
     Page<Contest> findAll(Pageable pageable);
 }

@@ -1,11 +1,13 @@
 package sheetplus.checkings.domain.contest.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 import sheetplus.checkings.business.page.admin.dto.AdminPageDto.*;
 import sheetplus.checkings.domain.contest.dto.ContestDto.ContestInfoResponseDto;
 import sheetplus.checkings.domain.entry.dto.EntryDto.EntryExceptLinksResponseDto;
@@ -25,11 +27,11 @@ import static sheetplus.checkings.domain.participatecontest.entity.QParticipateC
 
 @Slf4j
 @RequiredArgsConstructor
-public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
+@Repository
+public class ContestQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    @Override
     public List<EventExceptLinksResponseDto> findTodayEvents(Long contestId, Pageable pageable) {
         return queryFactory
                 .select(
@@ -43,35 +45,9 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                                 event.building,
                                 event.speakerName,
                                 event.major,
-                                event.eventCondition
-                                        .when(ContestCons.EVENT_PROGRESS)
-                                        .then(ContestCons.EVENT_PROGRESS.getMessage())
-                                        .when(ContestCons.EVENT_BEFORE)
-                                        .then(ContestCons.EVENT_BEFORE.getMessage())
-                                        .when(ContestCons.EVENT_FINISH)
-                                        .then(ContestCons.EVENT_FINISH.getMessage())
-                                        .otherwise("Unknown Condition")
-                                        .as("conditionMessage"),
-                                event.eventType
-                                        .when(EventType.NO_CHECKING)
-                                        .then(EventType.NO_CHECKING.getMessage())
-                                        .when(EventType.CHECKING)
-                                        .then(EventType.CHECKING.getMessage())
-                                        .otherwise("Unknown Type")
-                                        .as("eventTypeMessage"),
-                                event.eventCategory
-                                        .when(EventCategory.EVENT_ONE)
-                                        .then(EventCategory.EVENT_ONE.getMessage())
-                                        .when(EventCategory.EVENT_TWO)
-                                        .then(EventCategory.EVENT_TWO.getMessage())
-                                        .when(EventCategory.EVENT_THREE)
-                                        .then(EventCategory.EVENT_THREE.getMessage())
-                                        .when(EventCategory.EVENT_FOUR)
-                                        .then(EventCategory.EVENT_FOUR.getMessage())
-                                        .when(EventCategory.EVENT_FIVE)
-                                        .then(EventCategory.EVENT_FIVE.getMessage())
-                                        .otherwise("unknown Category")
-                                        .as("categoryMessage")
+                                getEventCondition(),
+                                getEventTypeMessage(),
+                                getEventCategory()
                         )
                 ).distinct()
                 .from(contest)
@@ -87,7 +63,9 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .fetch();
     }
 
-    @Override
+    
+
+    
     public List<EventExceptLinksResponseDto> findNowAfterEvents(Long contestId, String building) {
         return queryFactory.select(
                         Projections.constructor(
@@ -100,35 +78,9 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                                 event.building,
                                 event.speakerName,
                                 event.major,
-                                event.eventCondition
-                                        .when(ContestCons.EVENT_PROGRESS)
-                                        .then(ContestCons.EVENT_PROGRESS.getMessage())
-                                        .when(ContestCons.EVENT_BEFORE)
-                                        .then(ContestCons.EVENT_BEFORE.getMessage())
-                                        .when(ContestCons.EVENT_FINISH)
-                                        .then(ContestCons.EVENT_FINISH.getMessage())
-                                        .otherwise("Unknown Condition")
-                                        .as("conditionMessage"),
-                                event.eventType
-                                        .when(EventType.NO_CHECKING)
-                                        .then(EventType.NO_CHECKING.getMessage())
-                                        .when(EventType.CHECKING)
-                                        .then(EventType.CHECKING.getMessage())
-                                        .otherwise("Unknown Type")
-                                        .as("eventTypeMessage"),
-                                event.eventCategory
-                                        .when(EventCategory.EVENT_ONE)
-                                        .then(EventCategory.EVENT_ONE.getMessage())
-                                        .when(EventCategory.EVENT_TWO)
-                                        .then(EventCategory.EVENT_TWO.getMessage())
-                                        .when(EventCategory.EVENT_THREE)
-                                        .then(EventCategory.EVENT_THREE.getMessage())
-                                        .when(EventCategory.EVENT_FOUR)
-                                        .then(EventCategory.EVENT_FOUR.getMessage())
-                                        .when(EventCategory.EVENT_FIVE)
-                                        .then(EventCategory.EVENT_FIVE.getMessage())
-                                        .otherwise("unknown Category")
-                                        .as("categoryMessage")
+                                getEventCondition(),
+                                getEventTypeMessage(),
+                                getEventCategory()
                         )
                 ).distinct()
                 .from(event)
@@ -142,7 +94,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .fetch();
     }
 
-    @Override
+    
     public List<EventExceptLinksResponseDto> findParticipateEvents(Long participateId) {
         return queryFactory
                 .select(Projections.constructor(
@@ -155,35 +107,9 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                                         event.building,
                                         event.speakerName,
                                         event.major,
-                                        event.eventCondition
-                                                .when(ContestCons.EVENT_PROGRESS)
-                                                .then(ContestCons.EVENT_PROGRESS.getMessage())
-                                                .when(ContestCons.EVENT_BEFORE)
-                                                .then(ContestCons.EVENT_BEFORE.getMessage())
-                                                .when(ContestCons.EVENT_FINISH)
-                                                .then(ContestCons.EVENT_FINISH.getMessage())
-                                                .otherwise("Unknown Condition")
-                                                .as("conditionMessage"),
-                                        event.eventType
-                                                .when(EventType.NO_CHECKING)
-                                                .then(EventType.NO_CHECKING.getMessage())
-                                                .when(EventType.CHECKING)
-                                                .then(EventType.CHECKING.getMessage())
-                                                .otherwise("Unknown Type")
-                                                .as("eventTypeMessage"),
-                                        event.eventCategory
-                                                .when(EventCategory.EVENT_ONE)
-                                                .then(EventCategory.EVENT_ONE.getMessage())
-                                                .when(EventCategory.EVENT_TWO)
-                                                .then(EventCategory.EVENT_TWO.getMessage())
-                                                .when(EventCategory.EVENT_THREE)
-                                                .then(EventCategory.EVENT_THREE.getMessage())
-                                                .when(EventCategory.EVENT_FOUR)
-                                                .then(EventCategory.EVENT_FOUR.getMessage())
-                                                .when(EventCategory.EVENT_FIVE)
-                                                .then(EventCategory.EVENT_FIVE.getMessage())
-                                                .otherwise("unknown Category")
-                                                .as("categoryMessage")
+                                getEventCondition(),
+                                getEventTypeMessage(),
+                                getEventCategory()
                                 )
                         )
                 .distinct()
@@ -193,7 +119,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .fetch();
     }
 
-    @Override
+    
     public List<ContestInfoWithCounts> findContestInfoWithCounts() {
         return queryFactory.selectFrom(contest)
                 .leftJoin(contest.participateContestStateContest, participateContest)
@@ -210,7 +136,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .toList();
     }
 
-    @Override
+    
     public List<EntryExceptLinksResponseDto> findContestWithEntries(Long contestId, Pageable pageable) {
         return queryFactory
                 .select(Projections.constructor(
@@ -239,7 +165,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .fetch();
     }
 
-    @Override
+    
     public AdminEventStatsDto findContestWithEvents(Long contestId, Pageable pageable) {
         List<EventExceptLinksResponseDto> events = queryFactory.select(
                 Projections.constructor(
@@ -252,35 +178,9 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                                 event.building,
                                 event.speakerName,
                                 event.major,
-                                event.eventCondition
-                                        .when(ContestCons.EVENT_PROGRESS)
-                                        .then(ContestCons.EVENT_PROGRESS.getMessage())
-                                        .when(ContestCons.EVENT_BEFORE)
-                                        .then(ContestCons.EVENT_BEFORE.getMessage())
-                                        .when(ContestCons.EVENT_FINISH)
-                                        .then(ContestCons.EVENT_FINISH.getMessage())
-                                        .otherwise("Unknown Condition")
-                                        .as("conditionMessage"),
-                                event.eventType
-                                        .when(EventType.NO_CHECKING)
-                                        .then(EventType.NO_CHECKING.getMessage())
-                                        .when(EventType.CHECKING)
-                                        .then(EventType.CHECKING.getMessage())
-                                        .otherwise("Unknown Type")
-                                        .as("eventTypeMessage"),
-                                event.eventCategory
-                                        .when(EventCategory.EVENT_ONE)
-                                        .then(EventCategory.EVENT_ONE.getMessage())
-                                        .when(EventCategory.EVENT_TWO)
-                                        .then(EventCategory.EVENT_TWO.getMessage())
-                                        .when(EventCategory.EVENT_THREE)
-                                        .then(EventCategory.EVENT_THREE.getMessage())
-                                        .when(EventCategory.EVENT_FOUR)
-                                        .then(EventCategory.EVENT_FOUR.getMessage())
-                                        .when(EventCategory.EVENT_FIVE)
-                                        .then(EventCategory.EVENT_FIVE.getMessage())
-                                        .otherwise("unknown Category")
-                                        .as("categoryMessage")
+                        getEventCondition(),
+                        getEventTypeMessage(),
+                        getEventCategory()
                         )
                 )
                 .from(contest)
@@ -298,7 +198,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .build();
     }
 
-    @Override
+    
     public AdminContestStatsDto findContestStats(Long contestId) {
         AdminContestStatsAboutContestDto contestInfos = queryFactory
                 .select(
@@ -394,7 +294,7 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .build();
     }
 
-    @Override
+    
     public List<ContestInfoResponseDto> findAllContestInfo(Pageable pageable) {
         return queryFactory.
                 select(
@@ -407,5 +307,43 @@ public class ContestRepositoryCustomImpl implements ContestRepositoryCustom{
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private static StringExpression getEventCondition() {
+        return event.eventCondition
+                .when(ContestCons.EVENT_PROGRESS)
+                .then(ContestCons.EVENT_PROGRESS.getMessage())
+                .when(ContestCons.EVENT_BEFORE)
+                .then(ContestCons.EVENT_BEFORE.getMessage())
+                .when(ContestCons.EVENT_FINISH)
+                .then(ContestCons.EVENT_FINISH.getMessage())
+                .otherwise("Unknown Condition")
+                .as("conditionMessage");
+    }
+
+    private static StringExpression getEventTypeMessage() {
+        return event.eventType
+                .when(EventType.NO_CHECKING)
+                .then(EventType.NO_CHECKING.getMessage())
+                .when(EventType.CHECKING)
+                .then(EventType.CHECKING.getMessage())
+                .otherwise("Unknown Type")
+                .as("eventTypeMessage");
+    }
+
+    private static StringExpression getEventCategory() {
+        return event.eventCategory
+                .when(EventCategory.EVENT_ONE)
+                .then(EventCategory.EVENT_ONE.getMessage())
+                .when(EventCategory.EVENT_TWO)
+                .then(EventCategory.EVENT_TWO.getMessage())
+                .when(EventCategory.EVENT_THREE)
+                .then(EventCategory.EVENT_THREE.getMessage())
+                .when(EventCategory.EVENT_FOUR)
+                .then(EventCategory.EVENT_FOUR.getMessage())
+                .when(EventCategory.EVENT_FIVE)
+                .then(EventCategory.EVENT_FIVE.getMessage())
+                .otherwise("unknown Category")
+                .as("categoryMessage");
     }
 }
