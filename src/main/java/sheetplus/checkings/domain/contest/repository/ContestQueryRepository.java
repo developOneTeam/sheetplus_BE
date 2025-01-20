@@ -3,6 +3,7 @@ package sheetplus.checkings.domain.contest.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -129,14 +130,14 @@ public class ContestQueryRepository {
                         .name(p.getName())
                         .startDate(p.getStartDate())
                         .endDate(p.getEndDate())
-                        .cons(p.getCons())
+                        .cons(p.getCons().getMessage())
                         .eventCounts(p.getEvents().size())
                         .entryCounts(p.getEntries().size())
                         .build())
                 .toList();
     }
 
-    
+
     public List<EntryExceptLinksResponseDto> findContestWithEntries(Long contestId, Pageable pageable) {
         return queryFactory
                 .select(Projections.constructor(
@@ -149,11 +150,7 @@ public class ContestQueryRepository {
                         entry.major.as("major"),
                         entry.professorName.as("professorName"),
                         entry.leaderName.as("leaderName"),
-                        entry.entryType
-                                .when(EntryType.PRELIMINARY).then(EntryType.FINALS.getMessage())
-                                .when(EntryType.FINALS).then(EntryType.PRELIMINARY.getMessage())
-                                .otherwise("Unknown Type")
-                                .as("entryType")
+                        getEntryType()
                 ))
                 .distinct()
                 .from(contest)
@@ -165,7 +162,7 @@ public class ContestQueryRepository {
                 .fetch();
     }
 
-    
+
     public AdminEventStatsDto findContestWithEvents(Long contestId, Pageable pageable) {
         List<EventExceptLinksResponseDto> events = queryFactory.select(
                 Projections.constructor(
@@ -219,32 +216,9 @@ public class ContestQueryRepository {
                                 AdminContestStatsAboutEventDto.class,
                                 event.location.min().coalesce("장소 없음").as("locationName"),
                                 event.location.countDistinct().coalesce(0L).as("locationCounts"),
-                                JPAExpressions
-                                        .select(event.countDistinct().coalesce(0L).as("remainEvents"))
-                                        .from(event).innerJoin(contest)
-                                        .on(event.eventContest.id.eq(contestId))
-                                        .where(event.startTime.dayOfMonth().loe(LocalDateTime.now().getDayOfMonth())
-                                                .and(event.endTime.dayOfMonth().goe(LocalDateTime.now().getDayOfMonth()))
-                                                .and(event.startTime.before(LocalDateTime.now())
-                                                        .and(event.endTime.after(LocalDateTime.now())))
-                                        )
-                                ,
-                                JPAExpressions
-                                        .select(event.countDistinct().coalesce(0L).as("finishEvents"))
-                                        .from(event).innerJoin(contest)
-                                        .on(event.eventContest.id.eq(contestId))
-                                        .where(event.endTime.before(LocalDateTime.now())
-                                                .and(event.startTime.dayOfMonth().loe(LocalDateTime.now().getDayOfMonth()))
-                                                .and(event.endTime.dayOfMonth().goe(LocalDateTime.now().getDayOfMonth()))
-                                        )
-                                ,
-                                JPAExpressions
-                                        .select(event.countDistinct().coalesce(0L).as("notTodayEvents"))
-                                        .from(event).innerJoin(contest)
-                                        .on(event.eventContest.id.eq(contestId))
-                                        .where(event.startTime.dayOfMonth().gt(LocalDateTime.now().getDayOfMonth())
-                                                .or(event.endTime.dayOfMonth().lt(LocalDateTime.now().getDayOfMonth()))
-                                        )
+                                countRemainEvents(contestId),
+                                countFinishEvents(contestId),
+                                countNotTodayEvents(contestId)
                         )
                 )
                 .from(contest)
@@ -259,18 +233,8 @@ public class ContestQueryRepository {
                                 entry.major.countDistinct().coalesce(0L)
                                         .as("entryMajorCounts"),
                                 entry.countDistinct().coalesce(0L).as("entryCounts"),
-                                JPAExpressions
-                                        .select(entry.countDistinct().coalesce(0L).as("entryPreliminaryCounts"))
-                                        .from(entry).innerJoin(contest)
-                                        .on(entry.entryContest.id.eq(contestId))
-                                        .where(entry.entryType.eq(EntryType.PRELIMINARY))
-                                ,
-                                JPAExpressions
-                                        .select(entry.countDistinct().coalesce(0L).as("entryFinalCounts"))
-                                        .from(entry).innerJoin(contest)
-                                        .on(entry.entryContest.id.eq(contestId))
-                                        .where(entry.entryType.eq(EntryType.FINALS))
-
+                                countPreliminaryEntry(contestId),
+                                countFinalEntry(contestId)
                             )
                         ).from(contest)
                         .innerJoin(entry)
@@ -294,7 +258,9 @@ public class ContestQueryRepository {
                 .build();
     }
 
-    
+
+
+
     public List<ContestInfoResponseDto> findAllContestInfo(Pageable pageable) {
         return queryFactory.
                 select(
@@ -309,8 +275,29 @@ public class ContestQueryRepository {
                 .fetch();
     }
 
+
+
+    private static StringExpression getEntryType() {
+        return entry.entryType
+                .when(EntryType.PRELIMINARY).then(EntryType.FINALS.getMessage())
+                .when(EntryType.FINALS).then(EntryType.PRELIMINARY.getMessage())
+                .otherwise("Unknown Type")
+                .as("entryType");
+    }
+
     private static StringExpression getEventCondition() {
         return event.eventCondition
+                .when(ContestCons.EVENT_PROGRESS)
+                .then(ContestCons.EVENT_PROGRESS.getMessage())
+                .when(ContestCons.EVENT_BEFORE)
+                .then(ContestCons.EVENT_BEFORE.getMessage())
+                .when(ContestCons.EVENT_FINISH)
+                .then(ContestCons.EVENT_FINISH.getMessage())
+                .otherwise("Unknown Condition")
+                .as("conditionMessage");
+    }
+    private static StringExpression getContestCondition() {
+        return contest.cons
                 .when(ContestCons.EVENT_PROGRESS)
                 .then(ContestCons.EVENT_PROGRESS.getMessage())
                 .when(ContestCons.EVENT_BEFORE)
@@ -345,5 +332,54 @@ public class ContestQueryRepository {
                 .then(EventCategory.EVENT_FIVE.getMessage())
                 .otherwise("unknown Category")
                 .as("categoryMessage");
+    }
+
+    private static JPQLQuery<Long> countFinalEntry(Long contestId) {
+        return JPAExpressions
+                .select(entry.countDistinct().coalesce(0L).as("entryFinalCounts"))
+                .from(entry).innerJoin(contest)
+                .on(entry.entryContest.id.eq(contestId))
+                .where(entry.entryType.eq(EntryType.FINALS));
+    }
+
+    private static JPQLQuery<Long> countPreliminaryEntry(Long contestId) {
+        return JPAExpressions
+                .select(entry.countDistinct().coalesce(0L).as("entryPreliminaryCounts"))
+                .from(entry).innerJoin(contest)
+                .on(entry.entryContest.id.eq(contestId))
+                .where(entry.entryType.eq(EntryType.PRELIMINARY));
+    }
+
+    private static JPQLQuery<Long> countNotTodayEvents(Long contestId) {
+        return JPAExpressions
+                .select(event.countDistinct().coalesce(0L).as("notTodayEvents"))
+                .from(event).innerJoin(contest)
+                .on(event.eventContest.id.eq(contestId))
+                .where(event.startTime.dayOfMonth().gt(LocalDateTime.now().getDayOfMonth())
+                        .or(event.endTime.dayOfMonth().lt(LocalDateTime.now().getDayOfMonth()))
+                );
+    }
+
+    private static JPQLQuery<Long> countFinishEvents(Long contestId) {
+        return JPAExpressions
+                .select(event.countDistinct().coalesce(0L).as("finishEvents"))
+                .from(event).innerJoin(contest)
+                .on(event.eventContest.id.eq(contestId))
+                .where(event.endTime.before(LocalDateTime.now())
+                        .and(event.startTime.dayOfMonth().loe(LocalDateTime.now().getDayOfMonth()))
+                        .and(event.endTime.dayOfMonth().goe(LocalDateTime.now().getDayOfMonth()))
+                );
+    }
+
+    private static JPQLQuery<Long> countRemainEvents(Long contestId) {
+        return JPAExpressions
+                .select(event.countDistinct().coalesce(0L).as("remainEvents"))
+                .from(event).innerJoin(contest)
+                .on(event.eventContest.id.eq(contestId))
+                .where(event.startTime.dayOfMonth().loe(LocalDateTime.now().getDayOfMonth())
+                        .and(event.endTime.dayOfMonth().goe(LocalDateTime.now().getDayOfMonth()))
+                        .and(event.startTime.before(LocalDateTime.now())
+                                .and(event.endTime.after(LocalDateTime.now())))
+                );
     }
 }

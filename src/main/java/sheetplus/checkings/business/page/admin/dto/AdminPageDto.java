@@ -48,8 +48,8 @@ public class AdminPageDto {
         private LocalDateTime endDate;
 
         @Schema(description = "대회 상태",
-                example = "EVENT_PROGRESS", type = "enum", enumAsRef = true)
-        private ContestCons cons;
+                example = "대회 진행중", type = "String")
+        private String cons;
         @Schema(description = "이벤트 개수",
                 example = "50", type = "Integer")
         private Integer eventCounts;
