@@ -48,9 +48,7 @@ public class AdminPageService {
 
     @Transactional(readOnly = true)
     public AdminContestStatsDto contestStatsDto(Long contestId){
-        Contest contest = contestRepository
-                .findById(contestId).orElseThrow(() -> new ApiException(CONTEST_NOT_FOUND));
-        return contestRepositoryCustom.findContestStats(contest.getId());
+        return contestRepositoryCustom.findContestStats(contestId);
     }
 
     @Transactional(readOnly = true)
