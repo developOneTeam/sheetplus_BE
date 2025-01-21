@@ -17,6 +17,7 @@ import sheetplus.checkings.domain.enums.EntryType;
 import sheetplus.checkings.domain.enums.EventType;
 import sheetplus.checkings.domain.event.dto.EventDto.EventExceptLinksResponseDto;
 import sheetplus.checkings.domain.enums.EventCategory;
+import sheetplus.checkings.exception.exceptionMethod.ApiException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +26,7 @@ import static sheetplus.checkings.domain.contest.entity.QContest.contest;
 import static sheetplus.checkings.domain.entry.entity.QEntry.entry;
 import static sheetplus.checkings.domain.event.entity.QEvent.event;
 import static sheetplus.checkings.domain.participatecontest.entity.QParticipateContest.participateContest;
+import static sheetplus.checkings.exception.error.ApiError.CONTEST_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -197,65 +199,40 @@ public class ContestQueryRepository {
 
     
     public AdminContestStatsDto findContestStats(Long contestId) {
-        AdminContestStatsAboutContestDto contestInfos = queryFactory
-                .select(
-                        Projections.constructor(
-                                AdminContestStatsAboutContestDto.class,
-                                contest.name.coalesce("Contest 이름 데이터가 없습니다.").as("contestName"),
-                                contest.startDate.coalesce(LocalDateTime.now()).as("contestStart"),
-                                contest.endDate.coalesce(LocalDateTime.now()).as("contestEnd")
-                        )
-                )
-                .from(contest)
-                .where(contest.id.eq(contestId))
-                .fetchFirst();
 
-        AdminContestStatsAboutEventDto adminContestStatsAboutEventDto
+        AdminContestStatsDto adminContestStatsDto
                 = queryFactory.select(
                         Projections.constructor(
-                                AdminContestStatsAboutEventDto.class,
+                                AdminContestStatsDto.class,
+                                contest.name.coalesce("Contest 이름 데이터가 없습니다.").as("contestName"),
+                                contest.startDate.coalesce(LocalDateTime.now()).as("contestStart"),
+                                contest.endDate.coalesce(LocalDateTime.now()).as("contestEnd"),
                                 event.location.min().coalesce("장소 없음").as("locationName"),
                                 event.location.countDistinct().coalesce(0L).as("locationCounts"),
                                 countRemainEvents(contestId),
                                 countFinishEvents(contestId),
-                                countNotTodayEvents(contestId)
-                        )
-                )
-                .from(contest)
-                .innerJoin(event)
-                .on(event.eventContest.id.eq(contestId))
-                .fetchFirst();
-
-        AdminContestStatsAboutEntryDto adminContestStatsAboutEntryDto =
-                queryFactory.select(
-                        Projections.constructor(
-                                AdminContestStatsAboutEntryDto.class,
+                                countNotTodayEvents(contestId),
                                 entry.major.countDistinct().coalesce(0L)
                                         .as("entryMajorCounts"),
                                 entry.countDistinct().coalesce(0L).as("entryCounts"),
                                 countPreliminaryEntry(contestId),
                                 countFinalEntry(contestId)
-                            )
-                        ).from(contest)
-                        .innerJoin(entry)
-                        .on(entry.entryContest.id.eq(contestId))
-                        .where(contest.id.eq(contestId))
-                        .fetchFirst();
+                        )
+                )
+                .from(contest)
+                .leftJoin(event)
+                .on(event.eventContest.id.eq(contestId))
+                .leftJoin(entry)
+                .on(entry.entryContest.id.eq(contestId))
+                .where(contest.id.eq(contestId))
+                .groupBy(contest)
+                .fetchFirst();
 
-        return AdminContestStatsDto.builder()
-                .contestName(contestInfos.getContestName())
-                .contestStart(contestInfos.getContestStart())
-                .contestEnd(contestInfos.getContestEnd())
-                .locationName(adminContestStatsAboutEventDto.getLocationName())
-                .locationCounts(adminContestStatsAboutEventDto.getLocationCounts())
-                .remainEvents(adminContestStatsAboutEventDto.getRemainEvents())
-                .finishEvents(adminContestStatsAboutEventDto.getFinishEvents())
-                .notTodayEvents(adminContestStatsAboutEventDto.getNotTodayEvents())
-                .entryMajorCounts(adminContestStatsAboutEntryDto.getEntryMajorCounts())
-                .entryCounts(adminContestStatsAboutEntryDto.getEntryCounts())
-                .entryPreliminaryCounts(adminContestStatsAboutEntryDto.getEntryPreliminaryCounts())
-                .entryFinalCounts(adminContestStatsAboutEntryDto.getEntryFinalCounts())
-                .build();
+        if(adminContestStatsDto == null){
+            throw new ApiException(CONTEST_NOT_FOUND);
+        }
+
+        return adminContestStatsDto;
     }
 
 
