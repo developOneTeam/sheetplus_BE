@@ -25,6 +25,9 @@ jobs:
     - name: set up firebase config
       run: echo ${{secrets.FIREBASE_CONFIG}} > ./src/main/resources/config 
 
+    - name: Change gradlew permissions
+      run: chmod +x ./gradlew
+
     - name: build with gradle
       run: ./gradlew build
 
