@@ -30,12 +30,9 @@ jobs:
 
     - name: build with gradle
       run: ./gradlew build
-
-    - name: Create Dockerfile from Secret
-      run: echo ${{secrets.DOCKER_IMAGE}} > Dockerfile
-
+      
     - name: Build Docker Image
-      run: docker build -t hwangjeyeon/checking:2.7 -f Dockerfile .
+      run: docker build -t hwangjeyeon/checking:2.7 .
 
     - name: login docker
       run: echo ${{secrets.DOCKER_PASS}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
