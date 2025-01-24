@@ -1,0 +1,67 @@
+name: SheetPlus Backend API Server CI/CD
+
+on:
+  push:
+    branches: 
+      - main
+env:
+  DOCKER_IMAGE: 
+  SERVER_HOST: 
+  SERVER_SSH:
+  SERVER_PRIVATE_KEY: 
+
+jobs:
+  CI-build-and-push-docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: set up application.yml
+      run: echo ${{secrets.APPLICATION_YML}} > ./src/main/resources/application.yml
+
+    - name: set up firebase config
+      run: echo ${{secrets.FIREBASE_CONFIG}} > ./src/main/resources/config 
+    
+    - name: authorize firebase config 
+      run: chmod 644 src/main/resources/config/adminsdk.json
+
+    - name: build with gradle
+      run: ./gradlew build
+
+    - name: Build docker image
+      run: docker build -t hwangjeyeon/checking:2.7 -f ${{env.DOCKER_IMAGE}} .
+
+    - name: login docker
+      run: echo ${{secrets.DOCKER_PASS}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
+
+    - name: push docker image
+      run: docker push hwangjeyeon/checking:2.7
+
+  CD-DOCKER_COMPOSE-AND-EC2:
+    needs: CI-build-and-push-docker-image
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: deploy to ec2 with docker-compose
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{env.SERVER_HOST}}
+        USERNAME: ${{env.SERVER_SSH}}
+        key: ${{env.SERVER_PRIVATE_KEY}}
+        script: |
+          CONTAINER_ID=$(sudo docker ps -q --filter "publish=8081-8081")
+
+          if [ ! -z "$CONTAINER_ID" ]; then
+            sudo docker rm $CONTAINER_ID --force
+          fi
+
+          docker compose up -d server
+          docker logout
