@@ -38,7 +38,7 @@ jobs:
       run: echo ${{secrets.DOCKER_PASS}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
 
     - name: push docker image
-      run: docker push hwangjeyeon/checking:2.7 -f ${{secrets.SECRET_DOCKERFILE}}
+      run: docker build -t hwangjeyeon/checking:2.7 -f ${{secrets.SECRET_DOCKERFILE}} .
 
   CD-DOCKER_COMPOSE-AND-EC2:
     needs: CI-build-and-push-docker-image
