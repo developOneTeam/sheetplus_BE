@@ -5,6 +5,9 @@ on:
     branches: 
       - main
 
+permissions:
+  contents: read
+
 jobs:
   CI-build-and-push-docker-image:
     runs-on: ubuntu-latest
@@ -45,17 +48,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: deploy to ec2 with docker-compose
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{secrets.SERVER_HOST}}
-        USERNAME: ${{secrets.SERVER_SSH_NAME}}
-        key: ${{secrets.SERVER_PRIVATE_KEY}}
-        script: |
-          CONTAINER_ID=$(sudo docker ps -q --filter "publish=8081-8081")
-
-          if [ ! -z "$CONTAINER_ID" ]; then
-            sudo docker rm $CONTAINER_ID --force
-          fi
-          cd ~/checking
-          docker compose up -d server
+      - name: Get Github Actions IP
+        id: ip
+        uses: haythem/public-ip@v1.2
+    
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'ap-northeast-2'
+      - name: Add GitHub-Action IP
+        run: |
+          aws ec2 authorize-security-group-ingress \
+              --group-id ${{ secrets.SECURITY_GROUP_ID }} \
+              --protocol tcp \
+              --port 22 \
+              --cidr ${{ steps.ip.outputs.ipv4 }}/32
+    
+      - name: deploy to ec2 with docker-compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SERVER_HOST}}
+          USERNAME: ${{secrets.SERVER_SSH_NAME}}
+          key: ${{secrets.SERVER_PRIVATE_KEY}}
+          script: |
+            CONTAINER_ID=$(sudo docker ps -q --filter "publish=8081-8081")
+  
+            if [ ! -z "$CONTAINER_ID" ]; then
+              sudo docker rm $CONTAINER_ID --force
+            fi
+            cd ~/checking
+            docker compose up -d server
+          
+      - name: Remove GitHub-Action IP
+        run: |
+          aws ec2 revoke-security-group-ingress \
+              --group-id ${{ secrets.SECURITY_GROUP_ID }} \
+              --protocol tcp \
+              --port 22 \
+              --cidr ${{ steps.ip.outputs.ipv4 }}/32
