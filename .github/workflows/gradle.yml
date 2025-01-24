@@ -24,9 +24,6 @@ jobs:
 
     - name: set up firebase config
       run: echo ${{secrets.FIREBASE_CONFIG}} > ./src/main/resources/config 
-    
-    - name: authorize firebase config 
-      run: chmod 644 src/main/resources/config/adminsdk.json
 
     - name: build with gradle
       run: ./gradlew build
